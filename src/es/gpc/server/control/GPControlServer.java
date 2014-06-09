@@ -7,9 +7,7 @@ package es.gpc.server.control;
 
 import es.gpc.utils.Memory;
 import es.gpc.utils.Message;
-import es.gpc.gp.ec.EvolutionState;
 import es.gpc.gp.ec.Evolve;
-import static es.gpc.gp.ec.Evolve.loadParameterDatabase;
 import es.gpc.gp.ec.util.Parameter;
 import es.gpc.gp.ec.util.ParameterDatabase;
 import java.util.HashMap;

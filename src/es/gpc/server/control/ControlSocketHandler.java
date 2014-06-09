@@ -5,10 +5,6 @@
  */
 package es.gpc.server.control;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;

@@ -26,7 +26,7 @@ import java.util.*;
 public class Version
     {
     public static final String name = "GP-Control Genetic Programming core based on ECJ 21";
-    public static final String version = "1.0";
+    public static final String version = "0.1";
     public static final String copyright = "2014";
     public static final String author = "Marc Segond";
 //    public static final String contributors = "L. Panait, G. Balan, S. Paus, Z. Skolicki, R. Kicinger,";
