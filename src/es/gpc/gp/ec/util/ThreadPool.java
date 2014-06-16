@@ -15,7 +15,7 @@ import java.util.*;
 public class ThreadPool implements java.io.Serializable
     {
     // This list holds all the unused threads in the pool
-    transient LinkedList list = new LinkedList();
+    transient LinkedList<PoolThread> list = new LinkedList<>();
                     
     /** Starts and provides a thread on the given runnable, with the provided name.
         If no thread was avaialble in the pool, creates a new one. */ 
@@ -27,7 +27,7 @@ public class ThreadPool implements java.io.Serializable
         synchronized(this)
             {
             if (list == null) 
-            	list = new LinkedList();
+            	list = new LinkedList<>();
             if (!list.isEmpty())
                 p = (PoolThread)(list.removeLast());    // use the hot thread if you can
             }

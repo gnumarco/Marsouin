@@ -126,15 +126,17 @@ public class GPTreeConstraints implements Clique
         // Determine the validity of the function set
         // the way we do that is by gathering all the types that
         // are transitively used, starting with treetype, as in:
-        Hashtable typ = new Hashtable();
+        HashMap<GPType,GPType> typ = new HashMap<>();
         checkFunctionSetValidity(state, typ, treetype);
         // next we make sure that for every one of these types,
         // there's a terminal with that return type, and *maybe*
         // a nonterminal
-        Enumeration e = typ.elements();
-        while (e.hasMoreElements())
+        //Enumeration e = typ.elements();
+        Collection<GPType> e = typ.values();
+        for(GPType t:e)
+        //while (e.hasMoreElements())
             {
-            GPType t = (GPType)(e.nextElement());
+            //GPType t = (GPType)(e.nextElement());
             GPNode[] i = functionset.nodes[t.type];
             if (i.length==0) // yeesh
                 state.output.error("In function set " + functionset + " for the GPTreeConstraints " + this + ", no nodes at all are given with the return type " + t + " which is required by other functions in the function set or by the tree's return type.  This almost certainly indicates a serious typing error.", base);
@@ -157,7 +159,7 @@ public class GPTreeConstraints implements Clique
     // one nonterminal.
 
     private void checkFunctionSetValidity(final EvolutionState state,
-        final Hashtable done, 
+        final HashMap<GPType,GPType> done, 
         final GPType type)
         {
         // put type in the hashtable -- it's being used

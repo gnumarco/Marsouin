@@ -269,9 +269,9 @@ public class Subpopulation implements Group
             }
 
         // populating the remainder with random individuals
-        HashMap h = null;
+        HashMap<Individual,Individual> h = null;
         if (numDuplicateRetries >= 1)
-            h = new HashMap((individuals.length - start) / 2);  // seems reasonable
+            h = new HashMap<>((individuals.length - start) / 2);  // seems reasonable
 
         for(int x=start;x<individuals.length;x++) 
             {

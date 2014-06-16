@@ -156,10 +156,10 @@ public class Uniform extends GPNodeBuilder
     public GPFunctionSet[] functionsets;
     
     // Mapping of function sets to Integers
-    public Hashtable _functionsets;
+    public HashMap<GPFunctionSet,Integer> _functionsets;
     
     // Mapping of GPNodes to Integers (thus to ints)
-    public Hashtable funcnodes;
+    public HashMap<GPNode,Integer> funcnodes;
     
     // number of nodes
     public int numfuncnodes;
@@ -242,7 +242,7 @@ public class Uniform extends GPNodeBuilder
         
         // Put each function set into the arrays
         functionsets = new GPFunctionSet[functionSetRepository.size()];
-        _functionsets = new Hashtable();
+        _functionsets = new HashMap<>();
         Set<GPFunctionSet> e = functionSetRepository.entrySet();
         int count=0;
         for(GPFunctionSet set : e)
@@ -255,8 +255,8 @@ public class Uniform extends GPNodeBuilder
         
         // For each function set, assign each GPNode to a unique integer
         // so we can keep track of it (ick, this will be inefficient!)
-        funcnodes = new Hashtable();
-        HashMap t_nodes = new HashMap();
+        funcnodes = new HashMap<>();
+        HashMap<GPNode,GPNode> t_nodes = new HashMap<>();
         count = 0;
         maxarity=0;
         GPNode n;
@@ -267,7 +267,7 @@ public class Uniform extends GPNodeBuilder
                 }
             }
             // rehash with Integers, yuck
-            Set<GPNode> ee = t_nodes.entrySet();
+            Collection<GPNode> ee = t_nodes.values();
             //GPNode tmpn;
             for(GPNode tmpn : ee)
                 //while(e.hasMoreElements())
@@ -276,7 +276,7 @@ public class Uniform extends GPNodeBuilder
                 if (maxarity < tmpn.children.length) 
                     maxarity = tmpn.children.length;
                 if (!funcnodes.containsKey(tmpn))  // don't remap the node; it'd make holes
-                    funcnodes.put(tmpn,new Integer(count++));
+                    funcnodes.put(tmpn, count++);
             }
         }
         

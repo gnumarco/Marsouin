@@ -7,6 +7,7 @@
 
 package es.gpc.gp.ec.util;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Vector;
 import java.util.Enumeration;
 
@@ -90,8 +91,8 @@ public class Output implements Serializable
         }
     
     boolean errors;
-    Vector logs = new Vector();
-    Vector announcements = new Vector();
+    ArrayList<Log> logs = new ArrayList<>();
+    ArrayList<Announcement> announcements = new ArrayList<>();
     // boolean flush = true;
     boolean store = true;
     String filePrefix = "";
@@ -154,10 +155,11 @@ public class Output implements Serializable
         // just in case
         flush();
         
-        Enumeration e = logs.elements();
-        while(e.hasMoreElements())
+        //Enumeration e = logs.elements();
+        for(Log log:logs)
+        //while(e.hasMoreElements())
             {
-            Log log = (Log)e.nextElement();
+            //Log log = (Log)e.nextElement();
             if (!log.isLoggingToSystemOut)
                 log.writer.close();
             }
@@ -166,10 +168,11 @@ public class Output implements Serializable
     /** Flushes the logs */
     public synchronized void flush()
         {
-        Enumeration e = logs.elements();
-        while(e.hasMoreElements())
+        //Enumeration e = logs.elements();
+        for(Log log:logs)
+        //while(e.hasMoreElements())
             {
-            Log log = (Log)e.nextElement();
+            //Log log = (Log)e.nextElement();
             log.writer.flush();
             }
         // just in case...
@@ -260,7 +263,7 @@ public class Output implements Serializable
         {
         if (filePrefix != null && filePrefix.length()>0)
             file = new File(file.getParent(),filePrefix+file.getName());
-        logs.addElement(new Log(file,postAnnouncements,appendOnRestart,gzip));
+        logs.add(new Log(file,postAnnouncements,appendOnRestart,gzip));
         return logs.size()-1;
         }
         
@@ -357,7 +360,7 @@ public class Output implements Serializable
         int _verbosity,
         boolean postAnnouncements)
         {
-        logs.addElement(new Log(descriptor,postAnnouncements));
+        logs.add(new Log(descriptor,postAnnouncements));
         return logs.size()-1;
         }
 
@@ -393,7 +396,7 @@ public class Output implements Serializable
         boolean postAnnouncements,
         boolean repostAnnouncements)
         {
-        logs.addElement(new Log(writer,restarter,postAnnouncements,repostAnnouncements));
+        logs.add(new Log(writer,restarter,postAnnouncements,repostAnnouncements));
         return logs.size()-1;
         }
 
@@ -412,7 +415,7 @@ public class Output implements Serializable
         boolean postAnnouncements,
         boolean repostAnnouncements)
         {
-        logs.addElement(new Log(writer,restarter,postAnnouncements,repostAnnouncements));
+        logs.add(new Log(writer,restarter,postAnnouncements,repostAnnouncements));
         return logs.size()-1;
         }
 
@@ -425,7 +428,7 @@ public class Output implements Serializable
 
     public synchronized int addLog(Log l)
         {
-        logs.addElement(l);
+        logs.add(l);
         return logs.size()-1;
         }
 
@@ -438,14 +441,14 @@ public class Output implements Serializable
     /** Returns the given log. */
     public synchronized Log getLog(int x)
         {
-        return (Log)logs.elementAt(x);
+        return (Log)logs.get(x);
         }
 
     /** Removes the given log. */
     public synchronized Log removeLog(int x)
         {
         Log l = getLog(x);
-        logs.removeElementAt(x);
+        logs.remove(x);
         return l;
         }
     
@@ -595,7 +598,7 @@ public class Output implements Serializable
         println("WARNING:\n"+s, ALL_MESSAGE_LOGS, true);
         }
     
-    java.util.HashSet oneTimeWarnings = new java.util.HashSet();
+    java.util.HashSet<String> oneTimeWarnings = new java.util.HashSet<>();
     /** Posts a warning one time only. */
     public synchronized void warnOnce(String s)
         {
@@ -640,8 +643,8 @@ public class Output implements Serializable
     
     public synchronized void reopen(int _log) throws IOException
         {
-        Log oldlog = (Log)logs.elementAt(_log);
-        logs.setElementAt(oldlog.reopen(),_log);
+        Log oldlog = (Log)logs.get(_log);
+        logs.set(_log,oldlog.reopen());
         }
     
     /** Forces one or more file-based logs to reopen, erasing 
@@ -651,8 +654,8 @@ public class Output implements Serializable
         {
         for(int x=0;x<_logs.length;x++)
             {
-            Log oldlog = (Log)logs.elementAt(_logs[x]);
-            logs.setElementAt(oldlog.reopen(),_logs[x]);
+            Log oldlog = (Log)logs.get(_logs[x]);
+            logs.set(_logs[x],oldlog.reopen());
             }
         }
     
@@ -682,7 +685,7 @@ public class Output implements Serializable
         log.writer.flush();
         //...and stash it in memory maybe
         if (store && _announcement && !_reposting)
-            announcements.addElement(new Announcement(s));
+            announcements.add(new Announcement(s));
         }
 
 
@@ -699,13 +702,13 @@ public class Output implements Serializable
         if (log==NO_LOGS) return;
         if (log==ALL_MESSAGE_LOGS) for (int x = 0; x<logs.size();x++)
                                        {
-                                       Log l = (Log) logs.elementAt(x);
+                                       Log l = (Log) logs.get(x);
                                        if (l==null) throw new OutputException("Unknown log number" + l);
                                        println(s,_verbosity,l,_announcement,false);
                                        }
         else
             {
-            Log l = (Log) logs.elementAt(log);
+            Log l = (Log) logs.get(log);
             if (l==null) throw new OutputException("Unknown log number" + l);
             println(s,_verbosity,l,_announcement,false);
             }
@@ -735,7 +738,7 @@ public class Output implements Serializable
         for(int x=0;x<_logs.length;x++)
             {
             if (_logs[x]==NO_LOGS) break;
-            println(s,V_VERBOSE,(Log)(logs.elementAt(_logs[x])),false,false);
+            println(s,V_VERBOSE,(Log)(logs.get(_logs[x])),false,false);
             }
         }
 
@@ -750,7 +753,7 @@ public class Output implements Serializable
         int log) throws OutputException
         {
         if (log==NO_LOGS) return;
-        println(s,V_VERBOSE,(Log)(logs.elementAt(log)),false,false);
+        println(s,V_VERBOSE,(Log)(logs.get(log)),false,false);
         }
 
 
@@ -797,13 +800,13 @@ public class Output implements Serializable
         if (log==NO_LOGS) return;
         if (log==ALL_MESSAGE_LOGS) for (int x = 0; x<logs.size();x++)
                                        {
-                                       Log l = (Log) logs.elementAt(x);
+                                       Log l = (Log) logs.get(x);
                                        if (l==null) throw new OutputException("Unknown log number" + l);
                                        print(s,V_VERBOSE,l);
                                        }
         else
             {
-            Log l = (Log) logs.elementAt(log);
+            Log l = (Log) logs.get(log);
             if (l==null) throw new OutputException("Unknown log number" + l);
             print(s,V_VERBOSE,l);
             }
@@ -867,7 +870,7 @@ public class Output implements Serializable
     public synchronized void clearAnnouncements()
         {
         if (announcements!=null)
-            announcements = new Vector();
+            announcements = new ArrayList<>();
         }
 
     public synchronized void restart() throws IOException
@@ -876,14 +879,14 @@ public class Output implements Serializable
         int ls = logs.size();
         for(int x=0;x<ls;x++)
             {
-            Log l = (Log)(logs.elementAt(x));
-            logs.setElementAt(l = l.restarter.restart(l),x);
+            Log l = (Log)(logs.get(x));
+            logs.set(x,l = l.restarter.restart(l));
             if (l.repostAnnouncementsOnRestart && store)
                 {    
                 int as = announcements.size();
                 for (int y=0;y<as;y++)
                     {
-                    Announcement a = (Announcement)(announcements.elementAt(y));
+                    Announcement a = announcements.get(y);
                     println(a.text,V_VERBOSE,l,true,true);
                     }
                 }

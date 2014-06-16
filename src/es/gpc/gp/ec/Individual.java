@@ -74,7 +74,7 @@ import java.io.*;
  * @version 1.0
  */
 
-public abstract class Individual implements Prototype, Comparable
+public abstract class Individual implements Prototype, Comparable 
     {
     /** A reasonable parameter base element for individuals*/
     public static final String P_INDIVIDUAL = "individual";

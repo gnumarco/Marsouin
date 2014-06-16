@@ -381,7 +381,7 @@ public class ParameterDatabase extends Properties implements Serializable {
     String label;
 
     // the parents of this database
-    ArrayList parents;
+    ArrayList<ParameterDatabase> parents;
 
     // If the database was loaded via a file, this holds the directory of the database
     File directory;
@@ -390,8 +390,8 @@ public class ParameterDatabase extends Properties implements Serializable {
     boolean checked;
 
     // List of parameters which were requested and ones which furthermore were fulfilled
-    Hashtable gotten;
-    Hashtable accessed;
+    HashMap<String,Boolean> gotten;
+    HashMap<String,Object> accessed;
 
     // If the database was loaded via getResource(), this holds the class and relative path
     // used in that load
@@ -1610,9 +1610,11 @@ public class ParameterDatabase extends Properties implements Serializable {
      */
     public synchronized void listGotten(PrintWriter p) {
         ArrayList<String> vec = new ArrayList<>();
-        Enumeration<String> e = gotten.keys();
-        while (e.hasMoreElements()) {
-            vec.add(e.nextElement());
+        Set<String> e = gotten.keySet();
+        for(String s:e)
+        //while (e.hasMoreElements()) 
+        {
+            vec.add(s);
         }
 
         // sort the keys
@@ -1641,17 +1643,21 @@ public class ParameterDatabase extends Properties implements Serializable {
      * Prints out all the parameters NOT marked as used, plus their values.
      */
     public synchronized void listNotGotten(PrintWriter p) {
-        ArrayList vec = new ArrayList();
+        ArrayList<String> vec = new ArrayList<>();
 
-        Hashtable all = new Hashtable();
+        HashMap<String,Object> all = new HashMap<>();
         _list(null, false, null, all); // grab all the nonshadowed keys
-        Enumeration e = gotten.keys();
-        while (e.hasMoreElements()) {
-            all.remove(e.nextElement());
+        Set<String> e = gotten.keySet();
+        for(String s:e)
+        //while (e.hasMoreElements()) 
+        {
+            all.remove(s);
         }
-        e = all.keys();
-        while (e.hasMoreElements()) {
-            vec.add(e.nextElement());
+        e = all.keySet();
+        for(String s:e)
+        //while (e.hasMoreElements()) 
+        {
+            vec.add(s);
         }
 
         // sort the keys
@@ -1679,17 +1685,21 @@ public class ParameterDatabase extends Properties implements Serializable {
      * Prints out all the parameters NOT marked as used, plus their values.
      */
     public synchronized void listNotAccessed(PrintWriter p) {
-        ArrayList vec = new ArrayList();
+        ArrayList<String> vec = new ArrayList<>();
 
-        Hashtable all = new Hashtable();
+        HashMap<String,Object> all = new HashMap<>();
         _list(null, false, null, all); // grab all the nonshadowed keys
-        Enumeration e = accessed.keys();
-        while (e.hasMoreElements()) {
-            all.remove(e.nextElement());
+        Set<String> e = accessed.keySet();
+        for(String s:e)
+        //while (e.hasMoreElements()) 
+        {
+            all.remove(s);
         }
-        e = all.keys();
-        while (e.hasMoreElements()) {
-            vec.add(e.nextElement());
+        e = all.keySet();
+        for(String s:e)
+        //while (e.hasMoreElements()) 
+        {
+            vec.add(s);
         }
 
         // sort the keys
@@ -1719,10 +1729,12 @@ public class ParameterDatabase extends Properties implements Serializable {
      * UNKNOWN_VALUE ("?????"), that's a bug.
      */
     public synchronized void listAccessed(PrintWriter p) {
-        ArrayList vec = new ArrayList();
-        Enumeration e = accessed.keys();
-        while (e.hasMoreElements()) {
-            vec.add(e.nextElement());
+        ArrayList<String> vec = new ArrayList<>();
+        Set<String> e = accessed.keySet();
+        for(String s:e)
+        //while (e.hasMoreElements()) 
+        {
+            vec.add(s);
         }
 
         // sort the keys
@@ -1944,7 +1956,7 @@ public class ParameterDatabase extends Properties implements Serializable {
     }
 
 
-    /*protected*/ Set _getShadowedValues(Parameter parameter, Set vals) {
+    /*protected*/ Set<String> _getShadowedValues(Parameter parameter, Set<String> vals) {
         if (parameter == null) {
             return vals;
         }
@@ -1970,8 +1982,8 @@ public class ParameterDatabase extends Properties implements Serializable {
         return vals;
     }
 
-    public Set getShadowedValues(Parameter parameter) {
-        Set vals = new HashSet();
+    public Set<String> getShadowedValues(Parameter parameter) {
+        Set<String> vals = new HashSet<>();
         vals = _getShadowedValues(parameter, vals);
         uncheck();
         return vals;
@@ -2108,13 +2120,13 @@ public class ParameterDatabase extends Properties implements Serializable {
      */
     public ParameterDatabase() {
         super();
-        accessed = new Hashtable();
-        gotten = new Hashtable();
+        accessed = new HashMap<>();
+        gotten = new HashMap<>();
         directory = new File(new File("").getAbsolutePath()); // uses the user
         // path
         //filename = "";
         label = "Basic Database";
-        parents = new ArrayList();
+        parents = new ArrayList<>();
         checked = false; // unnecessary
         //listeners = new Vector();
     }
@@ -2586,13 +2598,15 @@ public class ParameterDatabase extends Properties implements Serializable {
         if (listShadowed) {
             _list(p, listShadowed, "root", null);
         } else {
-            Hashtable gather = new Hashtable();
+            HashMap<String, Object> gather = new HashMap<>();
             _list(null, listShadowed, "root", gather);
 
-            ArrayList vec = new ArrayList();
-            Enumeration e = gather.keys();
-            while (e.hasMoreElements()) {
-                vec.add(e.nextElement());
+            ArrayList<String> vec = new ArrayList<>();
+            Set<String> e = gather.keySet();
+            for(String s:e)
+            //while (e.hasMoreElements()) 
+            {
+                vec.add(s);
             }
 
             // sort the keys
@@ -2625,7 +2639,7 @@ public class ParameterDatabase extends Properties implements Serializable {
      * Private helper function.
      */
     void _list(PrintWriter p, boolean listShadowed,
-            String prefix, Hashtable gather) {
+            String prefix, HashMap<String,Object> gather) {
         if (listShadowed) {
             // Print out my header
             if (p != null) {

@@ -521,7 +521,7 @@ public class MetaProblem extends Problem implements SimpleProblemForm
         {
         if (ind.evaluated && !reevaluateIndividuals) return;
         
-        ArrayList fits = new ArrayList();
+        ArrayList<Fitness> fits = new ArrayList<>();
         
         Individual bestOfRuns = null;
         for(int run = 0; run < runs; run++)

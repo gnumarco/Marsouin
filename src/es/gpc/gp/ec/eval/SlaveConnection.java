@@ -55,7 +55,7 @@ class SlaveConnection
 
     // given that we expect the slave to return the evaluated individuals in the exact same order,
     // the jobs need to be represented as a queue.
-    private LinkedList jobs = new LinkedList();
+    private LinkedList<Job> jobs = new LinkedList<>();
 
     /**
        The constructor also creates the queue storing the jobs that the slave

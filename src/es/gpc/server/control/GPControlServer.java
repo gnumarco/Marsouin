@@ -13,6 +13,7 @@ import es.gpc.gp.ec.util.ParameterDatabase;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,9 +57,10 @@ public class GPControlServer implements es.gpc.generic.GPCApp {
         ParameterDatabase p = Evolve.loadParameterDatabase(new String[]{"-file", "control.params"});
         e.parameters = p;
         
-        Iterator it = map.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<String, String> pairs = (Map.Entry) it.next();
+        Iterator<Entry<String,String>> it = map.entrySet().iterator();
+        for(Map.Entry<String, String> pairs : map.entrySet()){
+        //while (it.hasNext()) {
+            //Map.Entry<String, String> pairs = it.next();
             e.parameters.set(new Parameter(pairs.getKey()), pairs.getValue());
             System.out.println("Set "+pairs.getKey() + " to " + pairs.getValue());
         }

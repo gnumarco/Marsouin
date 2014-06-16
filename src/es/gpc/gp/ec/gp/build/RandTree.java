@@ -29,7 +29,7 @@ public class RandTree extends GPNodeBuilder
     int[] arities;
     boolean aritySetupDone=false;
 
-    LinkedList permutations;
+    LinkedList<int[]> permutations;
 
     private class ArityObject extends Object
         {
@@ -88,7 +88,7 @@ public class RandTree extends GPNodeBuilder
     public void setupArities(final EvolutionState state,final GPFunctionSet set)
         {
         int noOfArities=0,current=0,marker=0,counter=0,a;
-        LinkedList initArities=new LinkedList();
+        LinkedList<ArityObject> initArities=new LinkedList<>();
         GPInitializer initializer = ((GPInitializer)state.initializer);
         // count available arities and place on linked list
         while(current<set.nodes[0].length)
@@ -191,7 +191,7 @@ public class RandTree extends GPNodeBuilder
         if (!aritySetupDone) { setupArities(state,set); }
 
         int[] temp=new int[arities.length];
-        permutations=new LinkedList();
+        permutations=new LinkedList<>();
         Permute(0,temp,treeSize-1);
         if (permutations.size()==0) { state.output.fatal("Not able to build combination of nodes."); }
         int[] scheme=select(permutations,treeSize);
@@ -377,7 +377,7 @@ public class RandTree extends GPNodeBuilder
         final String dyckWord) 
         {
         int counter=0;
-        Stack s=new Stack();
+        Stack<GPNode> s=new Stack<>();
         char nextChar;
 
         // Parsing dyck word from left to right and building tree

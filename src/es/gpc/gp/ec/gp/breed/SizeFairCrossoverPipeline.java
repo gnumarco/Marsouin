@@ -329,23 +329,22 @@ public class SizeFairCrossoverPipeline extends GPBreedingPipeline
 
             // lets walk on parent2 all nodes to get subtrees for each node, doing it once for O(N) and not O(N^2)
             // because depth etc are computed and not stored
-            ArrayList nodeToSubtrees = new ArrayList();
+            ArrayList<NodeInfo> nodeToSubtrees = new ArrayList<>();
             // also HashMap for size to List() of nodes in that size for O(1) lookup
-            HashMap sizeToNodes = new HashMap();
+            HashMap<Integer, LinkedList<NodeInfo>> sizeToNodes = new HashMap<>();
             this.traverseTreeForDepth(tree2.child, nodeToSubtrees, sizeToNodes);
             // sort the ArrayList with comparator that sorts by subtrees
-            Collections.sort(nodeToSubtrees, new Comparator() 
+            Collections.sort(nodeToSubtrees, new Comparator<NodeInfo>() 
                 {
-                public int compare(Object o1, Object o2) 
+                public int compare(NodeInfo o1, NodeInfo o2) 
                     {
-                    NodeInfo node1 = (NodeInfo)o1;
-                    NodeInfo node2 = (NodeInfo)o2;
+                    
                     int comparison = 0;
-                    if (node1.numberOfSubTreesBeneath > node2.numberOfSubTreesBeneath)
+                    if (o1.numberOfSubTreesBeneath > o2.numberOfSubTreesBeneath)
                         comparison = 1;
-                    else if (node1.numberOfSubTreesBeneath < node2.numberOfSubTreesBeneath)
+                    else if (o1.numberOfSubTreesBeneath < o2.numberOfSubTreesBeneath)
                         comparison = -1;
-                    else if (node1.numberOfSubTreesBeneath == node2.numberOfSubTreesBeneath)
+                    else if (o1.numberOfSubTreesBeneath == o2.numberOfSubTreesBeneath)
                         comparison = 0;
                     return comparison;
                     }
@@ -636,17 +635,17 @@ public class SizeFairCrossoverPipeline extends GPBreedingPipeline
      * @param nodeToDepth
      */
     public void traverseTreeForDepth(GPNode node,
-        ArrayList nodeToDepth,
-        HashMap sizeToNodes) 
+        ArrayList<NodeInfo> nodeToDepth,
+        HashMap<Integer,LinkedList<NodeInfo>> sizeToNodes) 
         {
         GPNode[] children = node.children;
         NodeInfo nodeInfo = new NodeInfo(node, node.numNodes(GPNode.NODESEARCH_NONTERMINALS));
         nodeToDepth.add(nodeInfo);
         // check to see if there is list in map for that size
-        LinkedList listForSize = (LinkedList)(sizeToNodes.get(new Integer(nodeInfo.numberOfSubTreesBeneath)));
+        LinkedList<NodeInfo> listForSize = sizeToNodes.get(new Integer(nodeInfo.numberOfSubTreesBeneath));
         if (listForSize == null) 
             {
-            listForSize = new LinkedList();
+            listForSize = new LinkedList<>();
             sizeToNodes.put(new Integer(nodeInfo.numberOfSubTreesBeneath), listForSize);
             }
         // add it to the list no matter what

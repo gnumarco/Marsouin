@@ -57,7 +57,7 @@ public abstract class Fitness implements Prototype, Comparable
         number of trials used to compute this Fitness value.  By default trials=null and stays that way. 
         If you set this variable, all of the elements of the ArrayList must be immutable -- once they're
         set they never change internally.  */
-    public ArrayList trials = null;
+    public ArrayList<Double> trials = null;
         
     /** Auxiliary variable, used by coevolutionary processes, to store the individuals
         involved in producing this given Fitness value.  By default context=null and stays that way.
@@ -313,9 +313,9 @@ public abstract class Fitness implements Prototype, Comparable
         int len = dataInput.readInt();
         if (len >= 0)
             {
-            trials = new ArrayList(len);
+            trials = new ArrayList<>();
             for(int i = 0; i < len; i++)
-                trials.add(new Double(dataInput.readDouble()));
+                trials.add(dataInput.readDouble());
             }
         }
 
@@ -387,7 +387,7 @@ public abstract class Fitness implements Prototype, Comparable
         try 
             {
             Fitness f = (Fitness)(super.clone());
-            if (f.trials != null) f.trials = new ArrayList(trials);  // we can do a light clone because trials must be immutable
+            if (f.trials != null) f.trials = new ArrayList<>(trials);  // we can do a light clone because trials must be immutable
             f.setContext(f.getContext()); // deep-clones and removes context just in case
             return f;
             }

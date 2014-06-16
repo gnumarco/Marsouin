@@ -8,8 +8,11 @@
 package es.gpc.gp.ec.gp;
 import es.gpc.gp.ec.util.Parameter;
 import es.gpc.gp.ec.EvolutionState;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Set;
 
 /* 
  * GPSetType.java
@@ -46,7 +49,7 @@ public final class GPSetType extends GPType
     public boolean[] types_sparse;
 
     /** The hashtable of types in the set */
-    public Hashtable types_h;
+    public HashMap<GPType,GPType> types_h;
 
     /** You should not construct new types. */
     public GPSetType() { }
@@ -59,10 +62,11 @@ public final class GPSetType extends GPType
         int x=0;
         types_packed = new int[types_h.size()];
         types_sparse = new boolean[totalAtomicTypes];
-        Enumeration e = types_h.elements();
-        while(e.hasMoreElements())
+        Collection<GPType> e = types_h.values();
+        for(GPType t:e)
+        //while(e.hasMoreElements())
             {
-            GPAtomicType t = (GPAtomicType)(e.nextElement());
+            //GPAtomicType t = (GPAtomicType)(e.nextElement());
             types_packed[x++] = t.type;
             types_sparse[t.type] = true;
             }
@@ -77,7 +81,7 @@ public final class GPSetType extends GPType
         super.setup(state,base);
         
         // Make my Hashtable
-        types_h = new Hashtable();
+        types_h = new HashMap<>();
 
         // How many atomic types do I have?
         int len = state.parameters.getInt(base.push(P_SIZE),null,1);

@@ -81,10 +81,10 @@ public class SlaveMonitor
         }
 
     // the slaves (not really a queue)
-    private LinkedList allSlaves = new LinkedList();
+    private LinkedList<SlaveConnection> allSlaves = new LinkedList<>();
 
     // the available slaves
-    private LinkedList availableSlaves = new LinkedList();
+    private LinkedList<SlaveConnection> availableSlaves = new LinkedList<>();
 
     // the maximum number of jobs per slave
     int maxJobsPerSlave;
@@ -395,7 +395,7 @@ public class SlaveMonitor
             }
         }
 
-    LinkedList evaluatedIndividuals =  new LinkedList();
+    LinkedList<QueueIndividual> evaluatedIndividuals =  new LinkedList<>();
 
     public boolean evaluatedIndividualAvailable()
         {

@@ -79,7 +79,7 @@ public class SteadyStateEvolutionState extends EvolutionState
     int[] individualCount; 
         
     /** Hash table to check for duplicate individuals */ 
-    HashMap[] individualHash; 
+    HashMap<Individual,Individual>[] individualHash; 
         
     /** Holds which subpopulation we are currently operating on */
     int whichSubpop;
@@ -148,7 +148,7 @@ public class SteadyStateEvolutionState extends EvolutionState
         whichSubpop=-1; 
                 
         individualHash = new HashMap[population.subpops.length];
-        for(int i=0;i<population.subpops.length; i++) individualHash[i] = new HashMap();
+        for(int i=0;i<population.subpops.length; i++) individualHash[i] = new HashMap<>();
                 
         individualCount = new int[population.subpops.length];
         for (int sub=0; sub < population.subpops.length; sub++)  

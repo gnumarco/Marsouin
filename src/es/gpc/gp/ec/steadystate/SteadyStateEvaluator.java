@@ -48,7 +48,7 @@ import es.gpc.gp.ec.eval.MasterProblem;
 
 public class SteadyStateEvaluator extends SimpleEvaluator
     {
-    LinkedList queue = new LinkedList();
+    LinkedList<QueueIndividual> queue = new LinkedList<>();
     
     /** Holds the subpopulation currently being evaluated.  */ 
     int subpopulationBeingEvaluated = -1;

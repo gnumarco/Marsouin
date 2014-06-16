@@ -138,7 +138,7 @@ public class MasterProblem extends Problem implements SimpleProblemForm, Grouped
     // prepare for a batch of evaluations
     public void prepareToEvaluate(final EvolutionState state, final int threadnum)
         {
-        if (jobSize > 1) queue = new ArrayList();
+        if (jobSize > 1) queue = new ArrayList<>();
         batchMode = true;
         }
 
@@ -170,7 +170,7 @@ public class MasterProblem extends Problem implements SimpleProblemForm, Grouped
         }
         
         
-    ArrayList queue;
+    ArrayList<QueueIndividual> queue;
     void flush(EvolutionState state, int threadnum)
         {
         int subpopulation;
@@ -186,7 +186,7 @@ public class MasterProblem extends Problem implements SimpleProblemForm, Grouped
                 }
             evaluate(state, inds, subpopulations, threadnum);
             }
-        queue = new ArrayList();
+        queue = new ArrayList<>();
         }
 
 
