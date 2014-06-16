@@ -238,45 +238,47 @@ public class Uniform extends GPNodeBuilder
         
         maxtreesize = _maxtreesize;
         
-        Hashtable functionSetRepository = ((GPInitializer)state.initializer).functionSetRepository;
+        HashMap functionSetRepository = ((GPInitializer)state.initializer).functionSetRepository;
         
         // Put each function set into the arrays
         functionsets = new GPFunctionSet[functionSetRepository.size()];
         _functionsets = new Hashtable();
-        Enumeration e = functionSetRepository.elements();
+        Set<GPFunctionSet> e = functionSetRepository.entrySet();
         int count=0;
-        while(e.hasMoreElements())
+        for(GPFunctionSet set : e)
+        //while(e.hasMoreElements())
             {
-            GPFunctionSet set = (GPFunctionSet)(e.nextElement());
-            _functionsets.put(set,new Integer(count));
+            //GPFunctionSet set = (GPFunctionSet)(e.nextElement());
+            _functionsets.put(set, count);
             functionsets[count++] = set;
             }
         
         // For each function set, assign each GPNode to a unique integer
         // so we can keep track of it (ick, this will be inefficient!)
         funcnodes = new Hashtable();
-        Hashtable t_nodes = new Hashtable();
+        HashMap t_nodes = new HashMap();
         count = 0;
         maxarity=0;
         GPNode n;
-        for(int x=0;x<functionsets.length;x++)
-            {
-            // hash all the nodes so we can remove duplicates
-            for(int typ=0;typ<functionsets[x].nodes.length;typ++)
-                for(int nod=0;nod<functionsets[x].nodes[typ].length;nod++)
-                    t_nodes.put(n=functionsets[x].nodes[typ][nod],n);
+        for (GPFunctionSet functionset : functionsets) {
+            for (GPNode[] node : functionset.nodes) {
+                for (GPNode node1 : node) {
+                    t_nodes.put(n = node1, n);
+                }
+            }
             // rehash with Integers, yuck
-            e = t_nodes.elements();
-            GPNode tmpn;
-            while(e.hasMoreElements())
-                {
-                tmpn = (GPNode)(e.nextElement());
+            Set<GPNode> ee = t_nodes.entrySet();
+            //GPNode tmpn;
+            for(GPNode tmpn : ee)
+                //while(e.hasMoreElements())
+            {
+                //tmpn = (GPNode)(e.nextElement());
                 if (maxarity < tmpn.children.length) 
                     maxarity = tmpn.children.length;
                 if (!funcnodes.containsKey(tmpn))  // don't remap the node; it'd make holes
                     funcnodes.put(tmpn,new Integer(count++));
-                }
             }
+        }
         
         numfuncnodes = funcnodes.size();
         

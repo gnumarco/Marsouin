@@ -1,10 +1,8 @@
 /*
-  Copyright 2006 by Sean Luke
-  Licensed under the Academic Free License version 3.0
-  See the file "LICENSE" for more information
-*/
-
-
+ Copyright 2006 by Sean Luke
+ Licensed under the Academic Free License version 3.0
+ See the file "LICENSE" for more information
+ */
 package es.gpc.gp.ec.util;
 
 import java.io.*;
@@ -17,42 +15,42 @@ import java.net.*;
  * ParameterDatabase.java
  * Created: Sat Aug  7 12:09:19 1999
  */
-
 /**
- * 
+ *
  * <p>
  * This extension of the Properties class allows you to set, get, and delete
  * Parameters in a hierarchical tree-like database. The database consists of a
  * list of Parameters, plus an array of "parent databases" which it falls back
  * on when it can't find the Parameter you're looking for. Parents may also have
  * arrays of parents, and so on..
- * 
+ *
  * <p>
  * The parameters are loaded from a Java property-list file, which is basically
  * a collection of parameter=value pairs, one per line. Empty lines and lines
  * beginning with # are ignored. These parameters and their values are
  * <b>case-sensitive </b>, and whitespace is trimmed I believe.
- * 
+ *
  * <p>
  * An optional set of parameters, "parent. <i>n </i>", where <i>n </i> are
  * consecutive integers starting at 0, define the filenames of the database's
  * parents.
- * 
+ *
  * <p>
  * An optional set of parameters, "print-params", specifies whether or not
  * parameters should be printed as they are used (through one of the get(...)
  * methods). If print-params is unset, or set to false or FALSE, nothing is
- * printed. If set to non-false, then the parameters are printed prepended with a "P:"
- * when their values are requested,  "E:" when their existence is tested.  Prior to the
- * "P:" or "E:" you may see a "!" (meaning that the parameter isn't in the database),
- * or a "&lt;" (meaning that the parameter was a default parameter which was never
- * looked up because the primary parameter contained the value).
- * 
+ * printed. If set to non-false, then the parameters are printed prepended with
+ * a "P:" when their values are requested, "E:" when their existence is tested.
+ * Prior to the "P:" or "E:" you may see a "!" (meaning that the parameter isn't
+ * in the database), or a "&lt;" (meaning that the parameter was a default
+ * parameter which was never looked up because the primary parameter contained
+ * the value).
+ *
  * <p>
  * <p>
  * When you create a ParameterDatabase using new ParameterDatabase(), it is
  * created thus:
- * 
+ *
  * <p>
  * <table border=0 cellpadding=0 cellspacing=0>
  * <tr>
@@ -64,13 +62,13 @@ import java.net.*;
  * <td><tt>&nbsp;(empty)</tt></td>
  * </tr>
  * </table>
- * 
- * 
+ *
+ *
  * <p>
  * When you create a ParameterDatabase using new ParameterDatabase( <i>file
  * </i>), it is created by loading the database file, and its parent file tree,
  * thus:
- * 
+ *
  * <p>
  * <table border=0 cellpadding=0 cellspacing=0>
  * <tr>
@@ -182,13 +180,13 @@ import java.net.*;
  * <td><tt>&nbsp;</tt></td>
  * </tr>
  * </table>
- * 
- * 
+ *
+ *
  * <p>
  * When you create a ParameterDatabase using new ParameterDatabase( <i>file,argv
  * </i>), the preferred way, it is created thus:
- * 
- * 
+ *
+ *
  * <p>
  * <table border=0 cellpadding=0 cellspacing=0>
  * <tr>
@@ -318,8 +316,8 @@ import java.net.*;
  * <td><tt>&nbsp;</tt></td>
  * </tr>
  * </table>
- * 
- * 
+ *
+ *
  * <p>
  * ...that is, the actual top database is empty, and stores parameters added
  * programmatically; its parent is a database formed from arguments passed in on
@@ -327,7 +325,7 @@ import java.net.*;
  * loads from foo. This allows you to programmatically add parameters which
  * override those in foo, then delete them, thus bringing foo's parameters back
  * in view.
- * 
+ *
  * <p>
  * Once a parameter database is loaded, you query it with the <tt>get</tt>
  * methods. The database, then its parents, are searched until a match is found
@@ -337,23 +335,25 @@ import java.net.*;
  * until all searches are exhausted or something was found. (3) No database is
  * searched twice.
  *
- * <p>The various <tt>get</tt> methods all take two parameters.  The first
- * parameter is fetched and retrieved first.  If that fails, the second one
- * (known as the <i>default parameter</i>) is fetched and retrieved.  You
- * can pass in <tt>null</tt> for the default parameter if you don't have one.
+ * <p>
+ * The various <tt>get</tt> methods all take two parameters. The first parameter
+ * is fetched and retrieved first. If that fails, the second one (known as the
+ * <i>default parameter</i>) is fetched and retrieved. You can pass in
+ * <tt>null</tt> for the default parameter if you don't have one.
  *
- * <p>You can test a parameter for existence with the <tt>exists</tt> methods.
- * 
+ * <p>
+ * You can test a parameter for existence with the <tt>exists</tt> methods.
+ *
  * <p>
  * You can set a parameter (in the topmost database <i>only </i> with the
- * <tt>set</tt> command. The <tt>remove</tt> command removes a parameter
- * from the topmost database only. The <tt>removeDeeply</tt> command removes
- * that parameter from every database.
- * 
+ * <tt>set</tt> command. The <tt>remove</tt> command removes a parameter from
+ * the topmost database only. The <tt>removeDeeply</tt> command removes that
+ * parameter from every database.
+ *
  * <p>
  * The values stored in a parameter database must not contain "#", "=",
  * non-ascii values, or whitespace.
- * 
+ *
  * <p>
  * <b>Note for JDK 1.1 </b>. Finally recovering from stupendous idiocy, JDK 1.2
  * included parseDouble() and parseFloat() commands; now you can READ A FLOAT
@@ -361,14 +361,13 @@ import java.net.*;
  * need to modify the getFloat() method below if you're running on JDK 1.1, but
  * understand that large numbers of calls to the method may be inefficient.
  * Sample JDK 1.1 code is given with those methods, but is commented out.
- * 
- * 
+ *
+ *
  * @author Sean Luke
  * @version 1.0
  */
+public class ParameterDatabase extends Properties implements Serializable {
 
-public class ParameterDatabase extends Properties implements Serializable 
-    {
     public static final String C_HERE = "$";
     public static final String C_CLASS = "@";
     public static final String UNKNOWN_VALUE = "";
@@ -382,18 +381,18 @@ public class ParameterDatabase extends Properties implements Serializable
     String label;
 
     // the parents of this database
-    Vector parents;
-    
+    ArrayList parents;
+
     // If the database was loaded via a file, this holds the directory of the database
     File directory;
-    
+
     // a checkbox (unchecked by uncheck()) for not hitting the same database twice in a graph search
     boolean checked;
 
     // List of parameters which were requested and ones which furthermore were fulfilled
     Hashtable gotten;
     Hashtable accessed;
-    
+
     // If the database was loaded via getResource(), this holds the class and relative path
     // used in that load
     Class relativeClass;
@@ -408,84 +407,77 @@ public class ParameterDatabase extends Properties implements Serializable
      * not found, the defaultParameter is used. The parameter chosen is marked
      * "used".
      */
-    public Object getInstanceForParameter(Parameter parameter, Parameter defaultParameter, Class mustCastTosuperclass) throws ParamClassLoadException 
-        {
+    public Object getInstanceForParameter(Parameter parameter, Parameter defaultParameter, Class mustCastTosuperclass) throws ParamClassLoadException {
         printGotten(parameter, defaultParameter, false);
         Parameter p;
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             p = parameter;
-        else if (_exists(defaultParameter))
+        } else if (_exists(defaultParameter)) {
             p = defaultParameter;
-        else
+        } else {
             throw new ParamClassLoadException(
-                "No class name provided.\nPARAMETER: "
-                + parameter
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter));
-        try 
-            {
-            Class c = Class.forName(get(p));
-            if (!mustCastTosuperclass.isAssignableFrom(c))
-                throw new ParamClassLoadException("The class "
-                    + c.getName()
-                    + "\ndoes not cast into the superclass "
-                    + mustCastTosuperclass.getName()
-                    + "\nPARAMETER: "
+                    "No class name provided.\nPARAMETER: "
                     + parameter
                     + (defaultParameter == null ? "" : "\n     ALSO: "
-                        + defaultParameter));
-            if (mustCastTosuperclass == c)
-                throw new ParamClassLoadException("The class "
-                    + c.getName()
-                    + "\nmust not be the same as the required superclass "
-                    + mustCastTosuperclass.getName()
-                    + "\nPARAMETER: "
-                    + parameter
-                    + (defaultParameter == null ? "" : "\n     ALSO: "
-                        + defaultParameter));
-            return c.newInstance();
-            } 
-        catch (ClassNotFoundException e) 
-            {
-            throw new ParamClassLoadException("Class not found: "
-                + get(p)
-                + "\nPARAMETER: "
-                + parameter
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter) + "\nEXCEPTION: \n\n" + e);
-            } 
-        catch (IllegalArgumentException e) 
-            {
-            throw new ParamClassLoadException("Could not load class: "
-                + get(p)
-                + "\nPARAMETER: "
-                + parameter
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter) + "\nEXCEPTION: \n\n" + e);
-            } 
-        catch (InstantiationException e) 
-            {
-            throw new ParamClassLoadException(
-                "The requested class is an interface or an abstract class: "
-                + get(p)
-                + "\nPARAMETER: "
-                + parameter
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter) + "\nEXCEPTION: \n\n"
-                + e);
-            } 
-        catch (IllegalAccessException e) 
-            {
-            throw new ParamClassLoadException(
-                "The requested class cannot be initialized with the default initializer: "
-                + get(p)
-                + "\nPARAMETER: "
-                + parameter
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter) + "\nEXCEPTION: \n\n"
-                + e);
-            }
+                            + defaultParameter));
         }
+        try {
+            Class c = Class.forName(get(p));
+            if (!mustCastTosuperclass.isAssignableFrom(c)) {
+                throw new ParamClassLoadException("The class "
+                        + c.getName()
+                        + "\ndoes not cast into the superclass "
+                        + mustCastTosuperclass.getName()
+                        + "\nPARAMETER: "
+                        + parameter
+                        + (defaultParameter == null ? "" : "\n     ALSO: "
+                                + defaultParameter));
+            }
+            if (mustCastTosuperclass == c) {
+                throw new ParamClassLoadException("The class "
+                        + c.getName()
+                        + "\nmust not be the same as the required superclass "
+                        + mustCastTosuperclass.getName()
+                        + "\nPARAMETER: "
+                        + parameter
+                        + (defaultParameter == null ? "" : "\n     ALSO: "
+                                + defaultParameter));
+            }
+            return c.newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new ParamClassLoadException("Class not found: "
+                    + get(p)
+                    + "\nPARAMETER: "
+                    + parameter
+                    + (defaultParameter == null ? "" : "\n     ALSO: "
+                            + defaultParameter) + "\nEXCEPTION: \n\n" + e);
+        } catch (IllegalArgumentException e) {
+            throw new ParamClassLoadException("Could not load class: "
+                    + get(p)
+                    + "\nPARAMETER: "
+                    + parameter
+                    + (defaultParameter == null ? "" : "\n     ALSO: "
+                            + defaultParameter) + "\nEXCEPTION: \n\n" + e);
+        } catch (InstantiationException e) {
+            throw new ParamClassLoadException(
+                    "The requested class is an interface or an abstract class: "
+                    + get(p)
+                    + "\nPARAMETER: "
+                    + parameter
+                    + (defaultParameter == null ? "" : "\n     ALSO: "
+                            + defaultParameter) + "\nEXCEPTION: \n\n"
+                    + e);
+        } catch (IllegalAccessException e) {
+            throw new ParamClassLoadException(
+                    "The requested class cannot be initialized with the default initializer: "
+                    + get(p)
+                    + "\nPARAMETER: "
+                    + parameter
+                    + (defaultParameter == null ? "" : "\n     ALSO: "
+                            + defaultParameter) + "\nEXCEPTION: \n\n"
+                    + e);
+        }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -496,82 +488,74 @@ public class ParameterDatabase extends Properties implements Serializable
      * is marked "used".
      */
     public Object getInstanceForParameterEq(Parameter parameter,
-        Parameter defaultParameter, Class mustCastTosuperclass)
-        throws ParamClassLoadException 
-        {
+            Parameter defaultParameter, Class mustCastTosuperclass)
+            throws ParamClassLoadException {
         printGotten(parameter, defaultParameter, false);
         Parameter p;
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             p = parameter;
-        else if (_exists(defaultParameter))
+        } else if (_exists(defaultParameter)) {
             p = defaultParameter;
-        else
+        } else {
             throw new ParamClassLoadException(
-                "No class name provided.\nPARAMETER: "
-                + parameter
-                + "\n     ALSO: "
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter));
-        try
-            {
+                    "No class name provided.\nPARAMETER: "
+                    + parameter
+                    + "\n     ALSO: "
+                    + (defaultParameter == null ? "" : "\n     ALSO: "
+                            + defaultParameter));
+        }
+        try {
             Class c = Class.forName(get(p));
-            if (!mustCastTosuperclass.isAssignableFrom(c))
+            if (!mustCastTosuperclass.isAssignableFrom(c)) {
                 throw new ParamClassLoadException("The class "
-                    + c.getName()
-                    + "\ndoes not cast into the superclass "
-                    + mustCastTosuperclass.getName()
+                        + c.getName()
+                        + "\ndoes not cast into the superclass "
+                        + mustCastTosuperclass.getName()
+                        + "\nPARAMETER: "
+                        + parameter
+                        + "\n     ALSO: "
+                        + (defaultParameter == null ? "" : "\n     ALSO: "
+                                + defaultParameter));
+            }
+            return c.newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new ParamClassLoadException("Class not found: "
+                    + get(p)
                     + "\nPARAMETER: "
                     + parameter
                     + "\n     ALSO: "
                     + (defaultParameter == null ? "" : "\n     ALSO: "
-                        + defaultParameter));
-            return c.newInstance();
-            } 
-        catch (ClassNotFoundException e) 
-            {
-            throw new ParamClassLoadException("Class not found: "
-                + get(p)
-                + "\nPARAMETER: "
-                + parameter
-                + "\n     ALSO: "
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter) + "\nEXCEPTION: \n\n" + e);
-            } 
-        catch (IllegalArgumentException e) 
-            {
+                            + defaultParameter) + "\nEXCEPTION: \n\n" + e);
+        } catch (IllegalArgumentException e) {
             throw new ParamClassLoadException("Could not load class: "
-                + get(p)
-                + "\nPARAMETER: "
-                + parameter
-                + "\n     ALSO: "
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter) + "\nEXCEPTION: \n\n" + e);
-            } 
-        catch (InstantiationException e) 
-            {
+                    + get(p)
+                    + "\nPARAMETER: "
+                    + parameter
+                    + "\n     ALSO: "
+                    + (defaultParameter == null ? "" : "\n     ALSO: "
+                            + defaultParameter) + "\nEXCEPTION: \n\n" + e);
+        } catch (InstantiationException e) {
             throw new ParamClassLoadException(
-                "The requested class is an interface or an abstract class: "
-                + get(p)
-                + "\nPARAMETER: "
-                + parameter
-                + "\n     ALSO: "
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter) + "\nEXCEPTION: \n\n"
-                + e);
-            } 
-        catch (IllegalAccessException e) 
-            {
+                    "The requested class is an interface or an abstract class: "
+                    + get(p)
+                    + "\nPARAMETER: "
+                    + parameter
+                    + "\n     ALSO: "
+                    + (defaultParameter == null ? "" : "\n     ALSO: "
+                            + defaultParameter) + "\nEXCEPTION: \n\n"
+                    + e);
+        } catch (IllegalAccessException e) {
             throw new ParamClassLoadException(
-                "The requested class cannot be initialized with the default initializer: "
-                + get(p)
-                + "\nPARAMETER: "
-                + parameter
-                + "\n     ALSO: "
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter) + "\nEXCEPTION: \n\n"
-                + e);
-            }
+                    "The requested class cannot be initialized with the default initializer: "
+                    + get(p)
+                    + "\nPARAMETER: "
+                    + parameter
+                    + "\n     ALSO: "
+                    + (defaultParameter == null ? "" : "\n     ALSO: "
+                            + defaultParameter) + "\nEXCEPTION: \n\n"
+                    + e);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter. The value
@@ -583,58 +567,54 @@ public class ParameterDatabase extends Properties implements Serializable
      * "used".
      */
     public Object getClassForParameter(Parameter parameter,
-        Parameter defaultParameter, Class mustCastTosuperclass)
-        throws ParamClassLoadException 
-        {
+            Parameter defaultParameter, Class mustCastTosuperclass)
+            throws ParamClassLoadException {
         printGotten(parameter, defaultParameter, false);
         Parameter p;
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             p = parameter;
-        else if (_exists(defaultParameter))
+        } else if (_exists(defaultParameter)) {
             p = defaultParameter;
-        else
+        } else {
             throw new ParamClassLoadException(
-                "No class name provided.\nPARAMETER: "
-                + parameter
-                + "\n     ALSO: "
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter));
-        try
-            {
+                    "No class name provided.\nPARAMETER: "
+                    + parameter
+                    + "\n     ALSO: "
+                    + (defaultParameter == null ? "" : "\n     ALSO: "
+                            + defaultParameter));
+        }
+        try {
             Class c = Class.forName(get(p));
-            if (!mustCastTosuperclass.isAssignableFrom(c))
+            if (!mustCastTosuperclass.isAssignableFrom(c)) {
                 throw new ParamClassLoadException("The class "
-                    + c.getName()
-                    + "\ndoes not cast into the superclass "
-                    + mustCastTosuperclass.getName()
+                        + c.getName()
+                        + "\ndoes not cast into the superclass "
+                        + mustCastTosuperclass.getName()
+                        + "\nPARAMETER: "
+                        + parameter
+                        + "\n     ALSO: "
+                        + (defaultParameter == null ? "" : "\n     ALSO: "
+                                + defaultParameter));
+            }
+            return c;
+        } catch (ClassNotFoundException e) {
+            throw new ParamClassLoadException("Class not found: "
+                    + get(p)
                     + "\nPARAMETER: "
                     + parameter
                     + "\n     ALSO: "
                     + (defaultParameter == null ? "" : "\n     ALSO: "
-                        + defaultParameter));
-            return c;
-            } 
-        catch (ClassNotFoundException e) 
-            {
-            throw new ParamClassLoadException("Class not found: "
-                + get(p)
-                + "\nPARAMETER: "
-                + parameter
-                + "\n     ALSO: "
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter) + "\nEXCEPTION: \n\n" + e);
-            } 
-        catch (IllegalArgumentException e) 
-            {
+                            + defaultParameter) + "\nEXCEPTION: \n\n" + e);
+        } catch (IllegalArgumentException e) {
             throw new ParamClassLoadException("Could not load class: "
-                + get(p)
-                + "\nPARAMETER: "
-                + parameter
-                + "\n     ALSO: "
-                + (defaultParameter == null ? "" : "\n     ALSO: "
-                    + defaultParameter) + "\nEXCEPTION: \n\n" + e);
-            }
+                    + get(p)
+                    + "\nPARAMETER: "
+                    + parameter
+                    + "\n     ALSO: "
+                    + (defaultParameter == null ? "" : "\n     ALSO: "
+                            + defaultParameter) + "\nEXCEPTION: \n\n" + e);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter; If the
@@ -644,14 +624,14 @@ public class ParameterDatabase extends Properties implements Serializable
      * exists.
      */
     public boolean getBoolean(Parameter parameter,
-        Parameter defaultParameter, boolean defaultValue) 
-        {
+            Parameter defaultParameter, boolean defaultValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getBoolean(parameter, defaultValue);
-        else
+        } else {
             return getBoolean(defaultParameter, defaultValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter; If the
@@ -660,12 +640,12 @@ public class ParameterDatabase extends Properties implements Serializable
      * Else true is returned. The parameter chosen is marked "used" if it
      * exists.
      */
-    boolean getBoolean(Parameter parameter, boolean defaultValue) 
-        {
-        if (!_exists(parameter))
+    boolean getBoolean(Parameter parameter, boolean defaultValue) {
+        if (!_exists(parameter)) {
             return defaultValue;
-        return (!get(parameter).equalsIgnoreCase("false"));
         }
+        return (!get(parameter).equalsIgnoreCase("false"));
+    }
 
     /**
      * Parses an integer from a string, either in decimal or (if starting with
@@ -673,38 +653,31 @@ public class ParameterDatabase extends Properties implements Serializable
      */
     // we assume that the string has been trimmed already
     /*protected*/ int parseInt(String string)
-        throws NumberFormatException 
-        {
+            throws NumberFormatException {
         char c;
         if (string != null && string.length() > 0
-            && ((string.charAt(0) == (c = 'x')) || c == 'X')) 
-            {
+                && ((string.charAt(0) == (c = 'x')) || c == 'X')) {
             // it's a hex int, load it as hex
             return Integer.parseInt(string.substring(1), 16);
-            } 
-        else
-            {
-            try
-                {
+        } else {
+            try {
                 // it's decimal
                 return Integer.parseInt(string);
-                }
-            catch (NumberFormatException e)
-                {
+            } catch (NumberFormatException e) {
                 // maybe it's a double ending in .0, which should be okay
-                try 
-                    {
+                try {
                     double d = Double.parseDouble(string);
-                    if (d == (int) d) return (int) d;  // looking fine
-                    else throw e;
+                    if (d == (int) d) {
+                        return (int) d;  // looking fine
+                    } else {
+                        throw e;
                     }
-                catch (NumberFormatException e2)
-                    {
+                } catch (NumberFormatException e2) {
                     throw e;
-                    }
                 }
             }
         }
+    }
 
     /**
      * Parses a long from a string, either in decimal or (if starting with an x)
@@ -712,38 +685,31 @@ public class ParameterDatabase extends Properties implements Serializable
      */
     // we assume that the string has been trimmed already
     /*protected*/ long parseLong(String string)
-        throws NumberFormatException 
-        {
+            throws NumberFormatException {
         char c;
         if (string != null && string.length() > 0
-            && ((string.charAt(0) == (c = 'x')) || c == 'X')) 
-            {
+                && ((string.charAt(0) == (c = 'x')) || c == 'X')) {
             // it's a hex int, load it as hex
             return Long.parseLong(string.substring(1), 16);
-            } 
-        else
-            { 
-            try
-                {
+        } else {
+            try {
                 // it's decimal
                 return Long.parseLong(string);
-                }
-            catch (NumberFormatException e)
-                {
+            } catch (NumberFormatException e) {
                 // maybe it's a double ending in .0, which should be okay
-                try 
-                    {
+                try {
                     double d = Double.parseDouble(string);
-                    if (d == (long) d) return (long) d;  // looking fine
-                    else throw e;
+                    if (d == (long) d) {
+                        return (long) d;  // looking fine
+                    } else {
+                        throw e;
                     }
-                catch (NumberFormatException e2)
-                    {
+                } catch (NumberFormatException e2) {
                     throw e;
-                    }
                 }
             }
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -753,24 +719,19 @@ public class ParameterDatabase extends Properties implements Serializable
      * may be in decimal or (if preceded with an X or x) in hexadecimal.
      */
     /*protected*/ int getInt(Parameter parameter)
-        throws NumberFormatException 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
+            throws NumberFormatException {
+        if (_exists(parameter)) {
+            try {
                 return parseInt(get(parameter));
-                } 
-            catch (NumberFormatException e) 
-                {
+            } catch (NumberFormatException e) {
                 throw new NumberFormatException("Bad integer ("
-                    + get(parameter) + " ) for parameter " + parameter);
-                }
-            } 
-        else
+                        + get(parameter) + " ) for parameter " + parameter);
+            }
+        } else {
             throw new NumberFormatException(
-                "Integer does not exist for parameter " + parameter);
+                    "Integer does not exist for parameter " + parameter);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -780,18 +741,18 @@ public class ParameterDatabase extends Properties implements Serializable
      * may be in decimal or (if preceded with an X or x) in hexadecimal.
      */
     public int getInt(Parameter parameter, Parameter defaultParameter)
-        throws NumberFormatException 
-        {
+            throws NumberFormatException {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getInt(parameter);
-        else if (_exists(defaultParameter))
+        } else if (_exists(defaultParameter)) {
             return getInt(defaultParameter);
-        else
+        } else {
             throw new NumberFormatException(
-                "Integer does not exist for either parameter " + parameter
-                + "\nor\n" + defaultParameter);
+                    "Integer does not exist for either parameter " + parameter
+                    + "\nor\n" + defaultParameter);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -801,14 +762,14 @@ public class ParameterDatabase extends Properties implements Serializable
      * may be in decimal or (if preceded with an X or x) in hexadecimal.
      */
     public int getInt(Parameter parameter, Parameter defaultParameter,
-        int minValue) 
-        {
+            int minValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getInt(parameter, minValue);
-        else
+        } else {
             return getInt(defaultParameter, minValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -817,25 +778,21 @@ public class ParameterDatabase extends Properties implements Serializable
      * parameter. The parameter chosen is marked "used" if it exists. Integers
      * may be in decimal or (if preceded with an X or x) in hexadecimal.
      */
-    /*protected*/ int getInt(Parameter parameter, int minValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
+    /*protected*/ int getInt(Parameter parameter, int minValue) {
+        if (_exists(parameter)) {
+            try {
                 int i = parseInt(get(parameter));
-                if (i < minValue)
+                if (i < minValue) {
                     return minValue - 1;
-                return i;
-                } 
-            catch (NumberFormatException e) 
-                {
-                return minValue - 1;
                 }
-            } 
-        else
+                return i;
+            } catch (NumberFormatException e) {
+                return minValue - 1;
+            }
+        } else {
             return minValue - 1;
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, which must be
@@ -844,14 +801,14 @@ public class ParameterDatabase extends Properties implements Serializable
      * may be in decimal or (if preceded with an X or x) in hexadecimal.
      */
     public int getIntWithDefault(Parameter parameter,
-        Parameter defaultParameter, int defaultValue) 
-        {
+            Parameter defaultParameter, int defaultValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getIntWithDefault(parameter, defaultValue);
-        else
+        } else {
             return getIntWithDefault(defaultParameter, defaultValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, which must be
@@ -859,22 +816,17 @@ public class ParameterDatabase extends Properties implements Serializable
      * is returned. The parameter chosen is marked "used" if it exists. Integers
      * may be in decimal or (if preceded with an X or x) in hexadecimal.
      */
-    int getIntWithDefault(Parameter parameter, int defaultValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
+    int getIntWithDefault(Parameter parameter, int defaultValue) {
+        if (_exists(parameter)) {
+            try {
                 return parseInt(get(parameter));
-                } 
-            catch (NumberFormatException e) 
-                {
+            } catch (NumberFormatException e) {
                 return defaultValue;
-                }
-            } 
-        else
+            }
+        } else {
             return defaultValue;
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -885,14 +837,14 @@ public class ParameterDatabase extends Properties implements Serializable
      * hexadecimal.
      */
     public int getIntWithMax(Parameter parameter,
-        Parameter defaultParameter, int minValue, int maxValue) 
-        {
+            Parameter defaultParameter, int minValue, int maxValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getIntWithMax(parameter, minValue, maxValue);
-        else
+        } else {
             return getIntWithMax(defaultParameter, minValue, maxValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -902,50 +854,38 @@ public class ParameterDatabase extends Properties implements Serializable
      * exists. Integers may be in decimal or (if preceded with an X or x) in
      * hexadecimal.
      */
-    int getIntWithMax(Parameter parameter, int minValue, int maxValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
+    int getIntWithMax(Parameter parameter, int minValue, int maxValue) {
+        if (_exists(parameter)) {
+            try {
                 int i = parseInt(get(parameter));
-                if (i < minValue)
+                if (i < minValue) {
                     return minValue - 1;
-                if (i > maxValue)
-                    return minValue - 1;
-                return i;
-                } 
-            catch (NumberFormatException e) 
-                {
-                return minValue - 1;
                 }
-            } 
-        else
+                if (i > maxValue) {
+                    return minValue - 1;
+                }
+                return i;
+            } catch (NumberFormatException e) {
+                return minValue - 1;
+            }
+        } else {
             return minValue - 1;
         }
+    }
 
-
-    float getFloat(Parameter parameter) throws NumberFormatException
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
-                // For JDK 1.2 and later, this is more efficient...
-                // float i = Float.parseFloat(get(parameter));
-                // ...but we can't use it and still be compatible with JDK 1.1
-                return Float.valueOf(get(parameter)).floatValue(); // what stupidity...
-                } 
-            catch (NumberFormatException e) 
-                {
+    float getFloat(Parameter parameter) throws NumberFormatException {
+        if (_exists(parameter)) {
+            try {
+                return Float.parseFloat(get(parameter)); 
+            } catch (NumberFormatException e) {
                 throw new NumberFormatException("Bad float ("
-                    + get(parameter) + " ) for parameter " + parameter);
-                }
-            } 
-        else
+                        + get(parameter) + " ) for parameter " + parameter);
+            }
+        } else {
             throw new NumberFormatException(
-                "Float does not exist for parameter " + parameter);
+                    "Float does not exist for parameter " + parameter);
         }
+    }
 
     /*
      * Searches down through databases to find a given parameter, whose value
@@ -954,19 +894,18 @@ public class ParameterDatabase extends Properties implements Serializable
      * parameter. The parameter chosen is marked "used" if it exists.
      */
     public float getFloat(Parameter parameter, Parameter defaultParameter)
-        throws NumberFormatException 
-        {
+            throws NumberFormatException {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getFloat(parameter);
-        else if (_exists(defaultParameter))
+        } else if (_exists(defaultParameter)) {
             return getFloat(defaultParameter);
-        else
+        } else {
             throw new NumberFormatException(
-                "Float does not exist for either parameter " + parameter
-                + "\nor\n" + defaultParameter);
+                    "Float does not exist for either parameter " + parameter
+                    + "\nor\n" + defaultParameter);
         }
-        
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -974,16 +913,15 @@ public class ParameterDatabase extends Properties implements Serializable
      * it returns the parameter value. The parameter chosen is marked "used" if
      * it exists.
      */
-
     public float getFloat(Parameter parameter,
-        Parameter defaultParameter, double minValue) 
-        {
+            Parameter defaultParameter, double minValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getFloat(parameter, minValue);
-        else
+        } else {
             return getFloat(defaultParameter, minValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -991,31 +929,21 @@ public class ParameterDatabase extends Properties implements Serializable
      * it returns the parameter value. The parameter chosen is marked "used" if
      * it exists.
      */
-
-    float getFloat(Parameter parameter, double minValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
-                float i = Float.valueOf(get(parameter)).floatValue(); // what stupidity...
-
-                // For JDK 1.2 and later, this is more efficient...
-                // float i = Float.parseFloat(get(parameter));
-                // ...but we can't use it and still be compatible with JDK 1.1
-
-                if (i < minValue)
+    float getFloat(Parameter parameter, double minValue) {
+        if (_exists(parameter)) {
+            try {
+                float i = Float.parseFloat(get(parameter)); 
+                if (i < minValue) {
                     return (float) (minValue - 1);
-                return i;
-                } 
-            catch (NumberFormatException e) 
-                {
-                return (float) (minValue - 1);
                 }
-            } 
-        else
+                return i;
+            } catch (NumberFormatException e) {
+                return (float) (minValue - 1);
+            }
+        } else {
             return (float) (minValue - 1);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, which must be
@@ -1023,39 +951,31 @@ public class ParameterDatabase extends Properties implements Serializable
      * returned. The parameter chosen is marked "used" if it exists.
      */
     public float getFloatWithDefault(Parameter parameter,
-        Parameter defaultParameter, double defaultValue) 
-        {
+            Parameter defaultParameter, double defaultValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getFloatWithDefault(parameter, defaultValue);
-        else
+        } else {
             return getFloatWithDefault(defaultParameter, defaultValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, which must be
      * a float. If there is an error in parsing the parameter, then default is
      * returned. The parameter chosen is marked "used" if it exists.
      */
-    float getFloatWithDefault(Parameter parameter, double defaultValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
-                // For JDK 1.2 and later, this is more efficient...
-                // return Float.parseFloat(get(parameter));
-                // ...but we can't use it and still be compatible with JDK 1.1
-                return Float.valueOf(get(parameter)).floatValue(); // what stupidity...
-                } 
-            catch (NumberFormatException e) 
-                {
+    float getFloatWithDefault(Parameter parameter, double defaultValue) {
+        if (_exists(parameter)) {
+            try {
+                return Float.parseFloat(get(parameter)); 
+            } catch (NumberFormatException e) {
                 return (float) (defaultValue);
-                }
-            } 
-        else
+            }
+        } else {
             return (float) (defaultValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1063,16 +983,15 @@ public class ParameterDatabase extends Properties implements Serializable
      * minvalue-1, else it returns the parameter value. The parameter chosen is
      * marked "used" if it exists.
      */
-
     public float getFloatWithMax(Parameter parameter,
-        Parameter defaultParameter, double minValue, double maxValue) 
-        {
+            Parameter defaultParameter, double minValue, double maxValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getFloat(parameter, minValue, maxValue);
-        else
+        } else {
             return getFloat(defaultParameter, minValue, maxValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1082,12 +1001,10 @@ public class ParameterDatabase extends Properties implements Serializable
      *
      * @deprecated Use getFloatWithMax instead
      */
-
     public float getFloat(Parameter parameter,
-        Parameter defaultParameter, double minValue, double maxValue) 
-        {
+            Parameter defaultParameter, double minValue, double maxValue) {
         return getFloatWithMax(parameter, defaultParameter, minValue, maxValue);
-        }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1095,55 +1012,38 @@ public class ParameterDatabase extends Properties implements Serializable
      * minvalue-1, else it returns the parameter value. The parameter chosen is
      * marked "used" if it exists.
      */
-
-    float getFloat(Parameter parameter, double minValue, double maxValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
-                float i = Float.valueOf(get(parameter)).floatValue(); // what stupidity...
-
-                // For JDK 1.2 and later, this is more efficient...
-                // float i = Float.parseFloat(get(parameter));
-                // ...but we can't use it and still be compatible with JDK 1.1
-
-                if (i < minValue)
+    float getFloat(Parameter parameter, double minValue, double maxValue) {
+        if (_exists(parameter)) {
+            try {
+                float i = Float.parseFloat(get(parameter));
+                if (i < minValue) {
                     return (float) (minValue - 1);
-                if (i > maxValue)
-                    return (float) (minValue - 1);
-                return i;
-                } 
-            catch (NumberFormatException e) 
-                {
-                return (float) (minValue - 1);
                 }
-            } 
-        else
+                if (i > maxValue) {
+                    return (float) (minValue - 1);
+                }
+                return i;
+            } catch (NumberFormatException e) {
+                return (float) (minValue - 1);
+            }
+        } else {
             return (float) (minValue - 1);
         }
+    }
 
-    double getDouble(Parameter parameter) throws NumberFormatException
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
-                // For JDK 1.2 and later, this is more efficient...
-                // double i = Double.parseDouble(get(parameter));
-                // ...but we can't use it and still be compatible with JDK 1.1
-                return Double.valueOf(get(parameter)).doubleValue(); // what stupidity...
-                } 
-            catch (NumberFormatException e) 
-                {
+    double getDouble(Parameter parameter) throws NumberFormatException {
+        if (_exists(parameter)) {
+            try {        
+                return Double.parseDouble(get(parameter));
+            } catch (NumberFormatException e) {
                 throw new NumberFormatException("Bad double ("
-                    + get(parameter) + " ) for parameter " + parameter);
-                }
-            } 
-        else
+                        + get(parameter) + " ) for parameter " + parameter);
+            }
+        } else {
             throw new NumberFormatException(
-                "Double does not exist for parameter " + parameter);
+                    "Double does not exist for parameter " + parameter);
         }
+    }
 
     /*
      * Searches down through databases to find a given parameter, whose value
@@ -1152,19 +1052,18 @@ public class ParameterDatabase extends Properties implements Serializable
      * parameter. The parameter chosen is marked "used" if it exists. 
      */
     public double getDouble(Parameter parameter, Parameter defaultParameter)
-        throws NumberFormatException 
-        {
+            throws NumberFormatException {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getDouble(parameter);
-        else if (_exists(defaultParameter))
+        } else if (_exists(defaultParameter)) {
             return getDouble(defaultParameter);
-        else
+        } else {
             throw new NumberFormatException(
-                "Double does not exist for either parameter " + parameter
-                + "\nor\n" + defaultParameter);
+                    "Double does not exist for either parameter " + parameter
+                    + "\nor\n" + defaultParameter);
         }
-        
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1172,16 +1071,15 @@ public class ParameterDatabase extends Properties implements Serializable
      * else it returns the parameter value. The parameter chosen is marked
      * "used" if it exists.
      */
-
     public double getDouble(Parameter parameter,
-        Parameter defaultParameter, double minValue) 
-        {
+            Parameter defaultParameter, double minValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getDouble(parameter, minValue);
-        else
+        } else {
             return getDouble(defaultParameter, minValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1189,31 +1087,21 @@ public class ParameterDatabase extends Properties implements Serializable
      * else it returns the parameter value. The parameter chosen is marked
      * "used" if it exists.
      */
-
-    double getDouble(Parameter parameter, double minValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
-                double i = Double.valueOf(get(parameter)).doubleValue(); // what stupidity...
-
-                // For JDK 1.2 and later, this is more efficient...
-                // double i = Double.parseDouble(get(parameter));
-                // ...but we can't use it and still be compatible with JDK 1.1
-
-                if (i < minValue)
+    double getDouble(Parameter parameter, double minValue) {
+        if (_exists(parameter)) {
+            try {
+                double i = Double.parseDouble(get(parameter));
+                if (i < minValue) {
                     return (double) (minValue - 1);
-                return i;
-                } 
-            catch (NumberFormatException e) 
-                {
-                return (double) (minValue - 1);
                 }
-            } 
-        else
+                return i;
+            } catch (NumberFormatException e) {
+                return (double) (minValue - 1);
+            }
+        } else {
             return (double) (minValue - 1);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1221,16 +1109,15 @@ public class ParameterDatabase extends Properties implements Serializable
      * minvalue-1, else it returns the parameter value. The parameter chosen is
      * marked "used" if it exists.
      */
-
     public double getDoubleWithMax(Parameter parameter,
-        Parameter defaultParameter, double minValue, double maxValue) 
-        {
+            Parameter defaultParameter, double minValue, double maxValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getDouble(parameter, minValue, maxValue);
-        else
+        } else {
             return getDouble(defaultParameter, minValue, maxValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1240,12 +1127,10 @@ public class ParameterDatabase extends Properties implements Serializable
      *
      * @deprecated use getDoubleWithMax instead
      */
-
     public double getDouble(Parameter parameter,
-        Parameter defaultParameter, double minValue, double maxValue) 
-        {
+            Parameter defaultParameter, double minValue, double maxValue) {
         return getDoubleWithMax(parameter, defaultParameter, minValue, maxValue);
-        }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1253,33 +1138,24 @@ public class ParameterDatabase extends Properties implements Serializable
      * minvalue-1, else it returns the parameter value. The parameter chosen is
      * marked "used" if it exists.
      */
-
-    double getDouble(Parameter parameter, double minValue, double maxValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
-                double i = Double.valueOf(get(parameter)).doubleValue(); // what stupidity...
-
-                // For JDK 1.2 and later, this is more efficient...
-                // double i = Double.parseDouble(get(parameter));
-                // ...but we can't use it and still be compatible with JDK 1.1
-
-                if (i < minValue)
+    double getDouble(Parameter parameter, double minValue, double maxValue) {
+        if (_exists(parameter)) {
+            try {
+                double i = Double.parseDouble(get(parameter)); 
+                if (i < minValue) {
                     return (double) (minValue - 1);
-                if (i > maxValue)
-                    return (double) (minValue - 1);
-                return i;
-                } 
-            catch (NumberFormatException e) 
-                {
-                return (double) (minValue - 1);
                 }
-            } 
-        else
+                if (i > maxValue) {
+                    return (double) (minValue - 1);
+                }
+                return i;
+            } catch (NumberFormatException e) {
+                return (double) (minValue - 1);
+            }
+        } else {
             return (double) (minValue - 1);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, which must be
@@ -1287,39 +1163,31 @@ public class ParameterDatabase extends Properties implements Serializable
      * returned. The parameter chosen is marked "used" if it exists.
      */
     public double getDoubleWithDefault(Parameter parameter,
-        Parameter defaultParameter, double defaultValue) 
-        {
+            Parameter defaultParameter, double defaultValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getDoubleWithDefault(parameter, defaultValue);
-        else
+        } else {
             return getDoubleWithDefault(defaultParameter, defaultValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, which must be
      * a float. If there is an error in parsing the parameter, then default is
      * returned. The parameter chosen is marked "used" if it exists.
      */
-    double getDoubleWithDefault(Parameter parameter, double defaultValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
-                // For JDK 1.2 and later, this is more efficient...
-                // return Double.parseDouble(get(parameter));
-                // ...but we can't use it and still be compatible with JDK 1.1
-                return Double.valueOf(get(parameter)).doubleValue(); // what stupidity...
-                } 
-            catch (NumberFormatException e) 
-                {
+    double getDoubleWithDefault(Parameter parameter, double defaultValue) {
+        if (_exists(parameter)) {
+            try {
+                return Double.valueOf(get(parameter));
+            } catch (NumberFormatException e) {
                 return defaultValue;
-                }
-            } 
-        else
+            }
+        } else {
             return defaultValue;
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1329,24 +1197,19 @@ public class ParameterDatabase extends Properties implements Serializable
      * preceded with an X or x) in hexadecimal.
      */
     /*protected*/ long getLong(Parameter parameter)
-        throws NumberFormatException 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
+            throws NumberFormatException {
+        if (_exists(parameter)) {
+            try {
                 return parseLong(get(parameter));
-                } 
-            catch (NumberFormatException e) 
-                {
+            } catch (NumberFormatException e) {
                 throw new NumberFormatException("Bad long (" + get(parameter)
-                    + " ) for parameter " + parameter);
-                }
-            } 
-        else
+                        + " ) for parameter " + parameter);
+            }
+        } else {
             throw new NumberFormatException(
-                "Long does not exist for parameter " + parameter);
+                    "Long does not exist for parameter " + parameter);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1356,18 +1219,18 @@ public class ParameterDatabase extends Properties implements Serializable
      * preceded with an X or x) in hexadecimal.
      */
     public long getLong(Parameter parameter, Parameter defaultParameter)
-        throws NumberFormatException 
-        {
+            throws NumberFormatException {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getLong(parameter);
-        else if (_exists(defaultParameter))
+        } else if (_exists(defaultParameter)) {
             return getLong(defaultParameter);
-        else
+        } else {
             throw new NumberFormatException(
-                "Long does not exist for either parameter " + parameter
-                + "\nor\n" + defaultParameter);
+                    "Long does not exist for either parameter " + parameter
+                    + "\nor\n" + defaultParameter);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1376,16 +1239,15 @@ public class ParameterDatabase extends Properties implements Serializable
      * exists. Longs may be in decimal or (if preceded with an X or x) in
      * hexadecimal.
      */
-
     public long getLong(Parameter parameter, Parameter defaultParameter,
-        long minValue) 
-        {
+            long minValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getLong(parameter, minValue);
-        else
+        } else {
             return getLong(defaultParameter, minValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1394,25 +1256,21 @@ public class ParameterDatabase extends Properties implements Serializable
      * exists. Longs may be in decimal or (if preceded with an X or x) in
      * hexadecimal.
      */
-    long getLong(Parameter parameter, long minValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
+    long getLong(Parameter parameter, long minValue) {
+        if (_exists(parameter)) {
+            try {
                 long i = parseLong(get(parameter));
-                if (i < minValue)
+                if (i < minValue) {
                     return minValue - 1;
-                return i;
-                } 
-            catch (NumberFormatException e) 
-                {
-                return minValue - 1;
                 }
-            } 
-        else
+                return i;
+            } catch (NumberFormatException e) {
+                return minValue - 1;
+            }
+        } else {
             return (minValue - 1);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, which must be
@@ -1421,14 +1279,14 @@ public class ParameterDatabase extends Properties implements Serializable
      * be in decimal or (if preceded with an X or x) in hexadecimal.
      */
     public long getLongWithDefault(Parameter parameter,
-        Parameter defaultParameter, long defaultValue) 
-        {
+            Parameter defaultParameter, long defaultValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getLongWithDefault(parameter, defaultValue);
-        else
+        } else {
             return getLongWithDefault(defaultParameter, defaultValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, which must be
@@ -1436,22 +1294,17 @@ public class ParameterDatabase extends Properties implements Serializable
      * returned. The parameter chosen is marked "used" if it exists. Longs may
      * be in decimal or (if preceded with an X or x) in hexadecimal.
      */
-    long getLongWithDefault(Parameter parameter, long defaultValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
+    long getLongWithDefault(Parameter parameter, long defaultValue) {
+        if (_exists(parameter)) {
+            try {
                 return parseLong(get(parameter));
-                } 
-            catch (NumberFormatException e) 
-                {
+            } catch (NumberFormatException e) {
                 return defaultValue;
-                }
-            } 
-        else
+            }
+        } else {
             return defaultValue;
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter, whose value
@@ -1461,14 +1314,14 @@ public class ParameterDatabase extends Properties implements Serializable
      * an X or x) in hexadecimal.
      */
     public long getLongWithMax(Parameter parameter,
-        Parameter defaultParameter, long minValue, long maxValue) 
-        {
+            Parameter defaultParameter, long minValue, long maxValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getLong(parameter, minValue, maxValue);
-        else
+        } else {
             return getLong(defaultParameter, minValue, maxValue);
         }
+    }
 
     /**
      * Use getLongWithMax(...) instead. Searches down through databases to find
@@ -1477,27 +1330,24 @@ public class ParameterDatabase extends Properties implements Serializable
      * parameter value. The parameter chosen is marked "used" if it exists.
      * Longs may be in decimal or (if preceded with an X or x) in hexadecimal.
      */
-    long getLongWithMax(Parameter parameter, long minValue, long maxValue) 
-        {
-        if (_exists(parameter)) 
-            {
-            try
-                {
+    long getLongWithMax(Parameter parameter, long minValue, long maxValue) {
+        if (_exists(parameter)) {
+            try {
                 long i = parseLong(get(parameter));
-                if (i < minValue)
+                if (i < minValue) {
                     return minValue - 1;
-                if (i > maxValue)
-                    return minValue - 1;
-                return i;
-                } 
-            catch (NumberFormatException e) 
-                {
-                return minValue - 1;
                 }
-            } 
-        else
+                if (i > maxValue) {
+                    return minValue - 1;
+                }
+                return i;
+            } catch (NumberFormatException e) {
+                return minValue - 1;
+            }
+        } else {
             return (minValue - 1);
         }
+    }
 
     /**
      * Use getLongWithMax(...) instead. Searches down through databases to find
@@ -1505,28 +1355,26 @@ public class ParameterDatabase extends Properties implements Serializable
      * maxValue. If not, this method returns errValue, else it returns the
      * parameter value. The parameter chosen is marked "used" if it exists.
      * Longs may be in decimal or (if preceded with an X or x) in hexadecimal.
-     * 
+     *
      * @deprecated
      */
     public long getLong(Parameter parameter, Parameter defaultParameter,
-        long minValue, long maxValue) 
-        {
+            long minValue, long maxValue) {
         printGotten(parameter, defaultParameter, false);
         return getLongWithMax(parameter, defaultParameter, minValue, maxValue);
-        }
+    }
 
     /**
      * Use getLongWithMax(...) instead. Searches down through databases to find
      * a given parameter, whose value must be a long >= minValue and = <
      * maxValue. If not, this method returns errValue, else it returns the
      * parameter value. The parameter chosen is marked "used" if it exists.
-     * 
+     *
      * @deprecated
      */
-    long getLong(Parameter parameter, long minValue, long maxValue) 
-        {
+    long getLong(Parameter parameter, long minValue, long maxValue) {
         return getLongWithMax(parameter, minValue, maxValue);
-        }
+    }
 
     /**
      * Searches down through the databases to find a given parameter, whose
@@ -1538,15 +1386,14 @@ public class ParameterDatabase extends Properties implements Serializable
      * not checked for validity. The parameter chosen is marked "used" if it
      * exists.
      */
-
-    public File getFile(Parameter parameter, Parameter defaultParameter) 
-        {
+    public File getFile(Parameter parameter, Parameter defaultParameter) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getFile(parameter);
-        else
+        } else {
             return getFile(defaultParameter);
         }
+    }
 
     /**
      * Searches down through the databases to find a given parameter, whose
@@ -1559,133 +1406,128 @@ public class ParameterDatabase extends Properties implements Serializable
      * not found, this returns null. The File is not checked for validity. The
      * parameter chosen is marked "used" if it exists.
      */
-
-    File getFile(Parameter parameter) 
-        {
-        if (_exists(parameter)) 
-            {
+    File getFile(Parameter parameter) {
+        if (_exists(parameter)) {
             String p = get(parameter);
-            if (p == null)
+            if (p == null) {
                 return null;
-            if (p.startsWith(C_HERE))
+            }
+            if (p.startsWith(C_HERE)) {
                 return new File(p.substring(C_HERE.length()));
-            else if (p.startsWith(C_CLASS))
+            } else if (p.startsWith(C_CLASS)) {
                 return null;  // can't start with that.
-            else {
+            } else {
                 File f = new File(p);
-                if (f.isAbsolute())
+                if (f.isAbsolute()) {
                     return f;
-                else
+                } else {
                     return new File(directoryFor(parameter), p);
                 }
-            } 
-        else
+            }
+        } else {
             return null;
         }
+    }
 
     /**
      * Searches down through the databases to find a given parameter, whose
      * value must be an absolute or relative path name. If it is absolute, a
-     * file is made based on the path name, and an InputStream is opened on 
-     * the file and returned.  If the path name begins with "$", then an
-     * InputStream is opened on a file relative to the directory where the
-     * system was started.  Otherwise if the path name is relative, an InputStream is made by
-     * resolving the path name with respect to the directory in which the file
-     * was which defined this ParameterDatabase in the ParameterDatabase
-     * hierarchy, be it in the file system or in a jar file.  If the parameter is not found, 
-     * this returns null.  If no such file exists, null is also returned.
-     * The parameter chosen is marked "used" if it exists.
+     * file is made based on the path name, and an InputStream is opened on the
+     * file and returned. If the path name begins with "$", then an InputStream
+     * is opened on a file relative to the directory where the system was
+     * started. Otherwise if the path name is relative, an InputStream is made
+     * by resolving the path name with respect to the directory in which the
+     * file was which defined this ParameterDatabase in the ParameterDatabase
+     * hierarchy, be it in the file system or in a jar file. If the parameter is
+     * not found, this returns null. If no such file exists, null is also
+     * returned. The parameter chosen is marked "used" if it exists.
      */
-
-    public InputStream getResource(Parameter parameter, Parameter defaultParameter)
-        {
+    public InputStream getResource(Parameter parameter, Parameter defaultParameter) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getResource(parameter);
-        else
+        } else {
             return getResource(defaultParameter);
         }
+    }
 
-    int indexOfFirstWhitespace(String s)
-        {
+    final int indexOfFirstWhitespace(String s) {
         int len = s.length();
-        for(int i =0; i < len; i++)
-            if (Character.isWhitespace(s.charAt(i)))
+        for (int i = 0; i < len; i++) {
+            if (Character.isWhitespace(s.charAt(i))) {
                 return i;
-        return -1;
+            }
         }
+        return -1;
+    }
 
-    InputStream getResource(Parameter parameter) 
-        {
-        try
-            {
-            if (_exists(parameter)) 
-                {
+    InputStream getResource(Parameter parameter) {
+        try {
+            if (_exists(parameter)) {
                 String p = get(parameter);
-                if (p == null)
+                if (p == null) {
                     return null;
-                if (p.startsWith(C_HERE))
+                }
+                if (p.startsWith(C_HERE)) {
                     return new FileInputStream(getFile(parameter));
-                else if (p.startsWith(C_CLASS))
-                    {
+                } else if (p.startsWith(C_CLASS)) {
                     int i = indexOfFirstWhitespace(p);
-                    if (i == -1)
+                    if (i == -1) {
                         return null;
-                    String classname = p.substring(0,i);
+                    }
+                    String classname = p.substring(0, i);
                     String filename = p.substring(i).trim();
                     return Class.forName(classname).getResourceAsStream(filename);
-                    }
-                else 
-                    {
+                } else {
                     File f = new File(p);
-                    if (f.isAbsolute())
+                    if (f.isAbsolute()) {
                         return new FileInputStream(f);
+                    }
                     Class c = getLocation(parameter.param).relativeClass;
                     String rp = getLocation(parameter.param).relativePath;
-                    if (c != null)
-                        {
+                    if (c != null) {
                         return c.getResourceAsStream(new File(new File(rp).getParent(), p).getPath());
-                        }
-                    else
+                    } else {
                         return new FileInputStream(new File(directoryFor(parameter), p));
                     }
-                } 
-            else
+                }
+            } else {
                 return null;
             }
-        catch (FileNotFoundException ex1) { return null; }
-        catch (ClassNotFoundException ex2) { return null; } 
-        }
-
-    /**
-     * Searches down through databases to find a given parameter. Returns the
-     * parameter's value (trimmed) or null if not found or if the trimmed result
-     * is empty. The parameter chosen is marked "used" if it exists.
-     */
-
-    public synchronized String getString(Parameter parameter,
-        Parameter defaultParameter) 
-        {
-        printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
-            return getString(parameter);
-        else
-            return getString(defaultParameter);
-        }
-
-    /**
-     * Searches down through databases to find a given parameter. Returns the
-     * parameter's value (trimmed) or null if not found or if the trimmed result
-     * is empty. The parameter chosen is marked "used" if it exists.
-     */
-
-    /*protected*/ synchronized String getString(Parameter parameter) 
-        {
-        if (_exists(parameter))
-            return get(parameter);
-        else
+        } catch (FileNotFoundException | ClassNotFoundException ex1) {
+            System.out.println(ex1.toString());
             return null;
         }
+    }
+
+    /**
+     * Searches down through databases to find a given parameter. Returns the
+     * parameter's value (trimmed) or null if not found or if the trimmed result
+     * is empty. The parameter chosen is marked "used" if it exists.
+     */
+    public synchronized String getString(Parameter parameter,
+            Parameter defaultParameter) {
+        printGotten(parameter, defaultParameter, false);
+        if (_exists(parameter)) {
+            return getString(parameter);
+        } else {
+            return getString(defaultParameter);
+        }
+    }
+
+    /**
+     * Searches down through databases to find a given parameter. Returns the
+     * parameter's value (trimmed) or null if not found or if the trimmed result
+     * is empty. The parameter chosen is marked "used" if it exists.
+     */
+
+    /*protected*/ synchronized String getString(Parameter parameter) {
+        if (_exists(parameter)) {
+            return get(parameter);
+        } else {
+            return null;
+        }
+    }
 
     /**
      * Searches down through databases to find a given parameter. Returns the
@@ -1693,14 +1535,14 @@ public class ParameterDatabase extends Properties implements Serializable
      * result is not found or the trimmed result is empty.
      */
     public String getStringWithDefault(Parameter parameter,
-        Parameter defaultParameter, String defaultValue) 
-        {
+            Parameter defaultParameter, String defaultValue) {
         printGotten(parameter, defaultParameter, false);
-        if (_exists(parameter))
+        if (_exists(parameter)) {
             return getStringWithDefault(parameter, defaultValue);
-        else
+        } else {
             return getStringWithDefault(defaultParameter, defaultValue);
         }
+    }
 
     /**
      * Searches down through databases to find a given parameter. Returns the
@@ -1708,500 +1550,481 @@ public class ParameterDatabase extends Properties implements Serializable
      * result is not found or the trimmed result is empty.
      */
     /*protected*/ String getStringWithDefault(Parameter parameter,
-        String defaultValue) 
-        {
-        if (_exists(parameter)) 
-            {
+            String defaultValue) {
+        if (_exists(parameter)) {
             String result = get(parameter);
-            if (result == null) 
-                {
-                if (defaultValue == null)
+            if (result == null) {
+                if (defaultValue == null) {
                     return null;
-                else
+                } else {
                     result = defaultValue.trim();
-                } 
-            else {
+                }
+            } else {
                 result = result.trim();
-                if (result.length() == 0) 
-                    {
-                    if (defaultValue == null)
+                if (result.length() == 0) {
+                    if (defaultValue == null) {
                         return null;
-                    else
+                    } else {
                         result = defaultValue.trim();
                     }
                 }
+            }
             return result;
-            } 
-        else {
-            if (defaultValue == null)
+        } else {
+            if (defaultValue == null) {
                 return null;
-            else
+            } else {
                 return defaultValue.trim();
             }
         }
+    }
 
-    /** Clears the checked flag */
-    /*protected*/ synchronized void uncheck() 
-        {
-        if (!checked)
+    /**
+     * Clears the checked flag
+     */
+    /*protected*/ synchronized void uncheck() {
+        if (!checked) {
             return; // we already unchecked this path -- this is dangerous if
-                    // parents are used without children
+        }                    // parents are used without children
         checked = false;
         int size = parents.size();
-        for (int x = 0; x < size; x++)
-            ((ParameterDatabase) (parents.elementAt(x))).uncheck();
+        for (int x = 0; x < size; x++) {
+            ((ParameterDatabase) (parents.get(x))).uncheck();
         }
-    
+    }
+
     /**
      * Sets a parameter in the topmost database to a given value, trimmed of
      * whitespace.
      */
-    public synchronized void set(Parameter parameter, String value) 
-        {
+    public final synchronized void set(Parameter parameter, String value) {
         String tmp = value.trim();
         put(parameter.param, tmp);
         // fireParameterSet(parameter, tmp);
-        }
+    }
 
     /**
      * Prints out all the parameters marked as used, plus their values. If a
      * parameter was listed as "used" but not's actually in the database, the
      * value printed is UNKNOWN_VALUE (set to "?????")
      */
-
-    public synchronized void listGotten(PrintWriter p) 
-        {
-        Vector vec = new Vector();
-        Enumeration e = gotten.keys();
-        while (e.hasMoreElements())
-            vec.addElement(e.nextElement());
+    public synchronized void listGotten(PrintWriter p) {
+        ArrayList<String> vec = new ArrayList<>();
+        Enumeration<String> e = gotten.keys();
+        while (e.hasMoreElements()) {
+            vec.add(e.nextElement());
+        }
 
         // sort the keys
         Object[] array = new Object[vec.size()];
-        vec.copyInto(array);
+        vec.toArray(array);
 
         java.util.Collections.sort(vec);
 
         // Uncheck and print each item
-        for (int x = 0; x < array.length; x++) 
-            {
+        for (int x = 0; x < array.length; x++) {
             String s = (String) (array[x]);
             String v = null;
-            if (s != null) 
-                {
+            if (s != null) {
                 v = (String) (_get(s));
                 uncheck();
-                }
-            if (v == null)
-                v = UNKNOWN_VALUE;
-            p.println(s + " = " + v);
             }
-        p.flush();
+            if (v == null) {
+                v = UNKNOWN_VALUE;
+            }
+            p.println(s + " = " + v);
         }
+        p.flush();
+    }
 
-    /** Prints out all the parameters NOT marked as used, plus their values. */
-
-    public synchronized void listNotGotten(PrintWriter p) 
-        {
-        Vector vec = new Vector();
+    /**
+     * Prints out all the parameters NOT marked as used, plus their values.
+     */
+    public synchronized void listNotGotten(PrintWriter p) {
+        ArrayList vec = new ArrayList();
 
         Hashtable all = new Hashtable();
         _list(null, false, null, all); // grab all the nonshadowed keys
         Enumeration e = gotten.keys();
-        while (e.hasMoreElements())
+        while (e.hasMoreElements()) {
             all.remove(e.nextElement());
+        }
         e = all.keys();
-        while (e.hasMoreElements())
-            vec.addElement(e.nextElement());
+        while (e.hasMoreElements()) {
+            vec.add(e.nextElement());
+        }
 
         // sort the keys
         Object[] array = new Object[vec.size()];
-        vec.copyInto(array);
+        vec.toArray(array);
 
         java.util.Collections.sort(vec);
 
-        // Uncheck and print each item
-        for (int x = 0; x < array.length; x++) 
-            {
-            String s = (String) (array[x]);
+        for (Object array1 : array) {
+            String s = (String) (array1);
             String v = null;
-            if (s != null) 
-                {
+            if (s != null) {
                 v = (String) (_get(s));
                 uncheck();
-                }
-            if (v == null)
-                v = UNKNOWN_VALUE;
-            p.println(s + " = " + v);
             }
-        p.flush();
+            if (v == null) {
+                v = UNKNOWN_VALUE;
+            }
+            p.println(s + " = " + v);
         }
+        p.flush();
+    }
 
-    /** Prints out all the parameters NOT marked as used, plus their values. */
-
-    public synchronized void listNotAccessed(PrintWriter p) 
-        {
-        Vector vec = new Vector();
+    /**
+     * Prints out all the parameters NOT marked as used, plus their values.
+     */
+    public synchronized void listNotAccessed(PrintWriter p) {
+        ArrayList vec = new ArrayList();
 
         Hashtable all = new Hashtable();
         _list(null, false, null, all); // grab all the nonshadowed keys
         Enumeration e = accessed.keys();
-        while (e.hasMoreElements())
+        while (e.hasMoreElements()) {
             all.remove(e.nextElement());
+        }
         e = all.keys();
-        while (e.hasMoreElements())
-            vec.addElement(e.nextElement());
+        while (e.hasMoreElements()) {
+            vec.add(e.nextElement());
+        }
 
         // sort the keys
         Object[] array = new Object[vec.size()];
-        vec.copyInto(array);
+        vec.toArray(array);
 
         java.util.Collections.sort(vec);
 
-        // Uncheck and print each item
-        for (int x = 0; x < array.length; x++) 
-            {
-            String s = (String) (array[x]);
+        for (Object array1 : array) {
+            String s = (String) (array1);
             String v = null;
-            if (s != null) 
-                {
+            if (s != null) {
                 v = (String) (_get(s));
                 uncheck();
-                }
-            if (v == null)
-                v = UNKNOWN_VALUE;
-            p.println(s + " = " + v);
             }
-        p.flush();
+            if (v == null) {
+                v = UNKNOWN_VALUE;
+            }
+            p.println(s + " = " + v);
         }
+        p.flush();
+    }
 
     /**
      * Prints out all the parameters marked as accessed ("gotten" by some
      * getFoo(...) method), plus their values. If this method ever prints
      * UNKNOWN_VALUE ("?????"), that's a bug.
      */
-
-    public synchronized void listAccessed(PrintWriter p) 
-        {
-        Vector vec = new Vector();
+    public synchronized void listAccessed(PrintWriter p) {
+        ArrayList vec = new ArrayList();
         Enumeration e = accessed.keys();
-        while (e.hasMoreElements())
-            vec.addElement(e.nextElement());
+        while (e.hasMoreElements()) {
+            vec.add(e.nextElement());
+        }
 
         // sort the keys
         Object[] array = new Object[vec.size()];
-        vec.copyInto(array);
+        vec.toArray(array);
 
         java.util.Collections.sort(vec);
 
-        // Uncheck and print each item
-        for (int x = 0; x < array.length; x++) 
-            {
-            String s = (String) (array[x]);
+        for (Object array1 : array) {
+            String s = (String) (array1);
             String v = null;
-            if (s != null) 
-                {
+            if (s != null) {
                 v = (String) (_get(s));
                 uncheck();
-                }
-            if (v == null)
-                v = UNKNOWN_VALUE;
-            p.println(s + " = " + v);
             }
-        p.flush();
+            if (v == null) {
+                v = UNKNOWN_VALUE;
+            }
+            p.println(s + " = " + v);
         }
+        p.flush();
+    }
 
-    /** Returns true if parameter exist in the database
-        @deprecated use exists(Parameter, null) 
-    */
-    public synchronized boolean exists(Parameter parameter) 
-        {
+    /**
+     * Returns true if parameter exist in the database
+     *
+     * @deprecated use exists(Parameter, null)
+     */
+    public synchronized boolean exists(Parameter parameter) {
         printGotten(parameter, null, true);
         return _exists(parameter);
+    }
+
+
+    /*protected*/ synchronized boolean _exists(Parameter parameter) {
+        if (parameter == null) {
+            return false;
         }
-
-
-    /*protected*/ synchronized boolean _exists(Parameter parameter) 
-        {
-        if (parameter == null) return false;
         String result = _get(parameter.param);
         uncheck();
-        
+
         accessed.put(parameter.param, Boolean.TRUE);
         return (result != null);
-        }
+    }
 
     /**
      * Returns true if either parameter or defaultParameter exists in the
      * database
      */
     public synchronized boolean exists(Parameter parameter,
-        Parameter defaultParameter) 
-        {
+            Parameter defaultParameter) {
         printGotten(parameter, defaultParameter, true);
-        if (exists(parameter))
+        if (exists(parameter)) {
             return true;
-        if (exists(defaultParameter))
-            return true;
-        return false;
         }
+        if (exists(defaultParameter)) {
+            return true;
+        }
+        return false;
+    }
 
 
-/*
-  P: Successfully retrieved parameter
-  !P: Unsuccessfully retrieved parameter
-  <P: Would have retrieved parameter
+    /*
+     P: Successfully retrieved parameter
+     !P: Unsuccessfully retrieved parameter
+     <P: Would have retrieved parameter
 
-  E: Successfully tested for existence of parameter
-  !E: Unsuccessfully tested for existence of parameter
-  <E: Would have tested for exidstence of parameter
-*/
+     E: Successfully tested for existence of parameter
+     !E: Unsuccessfully tested for existence of parameter
+     <E: Would have tested for exidstence of parameter
+     */
 
-    /*protected*/ void printGotten(Parameter parameter, Parameter defaultParameter, boolean exists)
-        {
-        if (printState == PS_UNKNOWN)
-            {
+    /*protected*/ void printGotten(Parameter parameter, Parameter defaultParameter, boolean exists) {
+        if (printState == PS_UNKNOWN) {
             Parameter p = new Parameter(PRINT_PARAMS);
             String jp = get(p);
             // System.err.println(jp);
-            if (jp == null || jp.equalsIgnoreCase("false"))
+            if (jp == null || jp.equalsIgnoreCase("false")) {
                 printState = PS_NONE;
-            else
+            } else {
                 printState = PS_PRINT_PARAMS;
+            }
             // System.err.println(printState);
             uncheck();
-            printGotten(p,null,false);
+            printGotten(p, null, false);
+        }
+
+        if (printState == PS_PRINT_PARAMS) {
+            String p = "P: ";
+            if (exists) {
+                p = "E: ";
             }
 
-        if (printState == PS_PRINT_PARAMS)
-            {
-            String p = "P: ";
-            if (exists) p = "E: ";
-            
-            if (parameter==null && defaultParameter == null) 
+            if (parameter == null && defaultParameter == null) {
                 return;
-                
-            else if (parameter == null)
-                {
+            } else if (parameter == null) {
                 String result = _get(defaultParameter.param);
                 uncheck();
-                if (result == null)
-                    // null parameter, didn't find defaultParameter
-                    System.err.println("\t!" + p +defaultParameter.param);
-                else 
-                    // null parameter, found defaultParameter
-                    System.err.println("\t " + p +defaultParameter.param + " = " + result);
-                }
-            
-            else if (defaultParameter == null)
+                if (result == null) // null parameter, didn't find defaultParameter
                 {
+                    System.err.println("\t!" + p + defaultParameter.param);
+                } else // null parameter, found defaultParameter
+                {
+                    System.err.println("\t " + p + defaultParameter.param + " = " + result);
+                }
+            } else if (defaultParameter == null) {
                 String result = _get(parameter.param);
                 uncheck();
-                if (result == null)
-                    // null defaultParameter, didn't find parameter
-                    System.err.println("\t!" + p +parameter.param);
-                else 
-                    // null defaultParameter, found parameter
-                    System.err.println("\t " + p +parameter.param+ " = " + result);
-                }
-            
-            else
+                if (result == null) // null defaultParameter, didn't find parameter
                 {
+                    System.err.println("\t!" + p + parameter.param);
+                } else // null defaultParameter, found parameter
+                {
+                    System.err.println("\t " + p + parameter.param + " = " + result);
+                }
+            } else {
                 String result = _get(parameter.param);
                 uncheck();
-                if (result == null)
-                    {
+                if (result == null) {
                     // didn't find parameter
-                    System.err.println("\t!" + p +parameter.param);
+                    System.err.println("\t!" + p + parameter.param);
                     result = _get(defaultParameter.param);
                     uncheck();
-                    if (result == null)
-                        // didn't find defaultParameter
-                        System.err.println("\t!" + p +defaultParameter.param);
-                    else 
-                        // found defaultParameter
-                        System.err.println("\t " + p +defaultParameter.param+ " = " + result);
-                    }
-                else 
+                    if (result == null) // didn't find defaultParameter
                     {
-                    // found parameter
-                    System.err.println("\t " + p +parameter.param+ " = " + result);
-                    System.err.println("\t<" + p +defaultParameter.param);
+                        System.err.println("\t!" + p + defaultParameter.param);
+                    } else // found defaultParameter
+                    {
+                        System.err.println("\t " + p + defaultParameter.param + " = " + result);
                     }
+                } else {
+                    // found parameter
+                    System.err.println("\t " + p + parameter.param + " = " + result);
+                    System.err.println("\t<" + p + defaultParameter.param);
                 }
             }
         }
+    }
 
-    /*protected*/ synchronized String get(Parameter parameter) 
-        {
+    /*protected*/ synchronized String get(Parameter parameter) {
         String result = _get(parameter.param);
         uncheck();
 
         // set hashtable appropriately
-        if (parameter != null)
+        if (parameter != null) {
             accessed.put(parameter.param, Boolean.TRUE);
-        if (parameter != null)
-            gotten.put(parameter.param, Boolean.TRUE);
-        return result;
         }
+        if (parameter != null) {
+            gotten.put(parameter.param, Boolean.TRUE);
+        }
+        return result;
+    }
 
-    /** Private helper function */
-    synchronized String _get(String parameter) 
-        {
-        if (parameter == null)
-            {
+    /**
+     * Private helper function
+     */
+    synchronized String _get(String parameter) {
+        if (parameter == null) {
             return null;
-            }
-        if (checked)
+        }
+        if (checked) {
             return null; // we already searched this path
+        }
         checked = true;
         String result = getProperty(parameter);
-        if (result == null) 
-            {
+        if (result == null) {
             int size = parents.size();
-            for (int x = 0; x < size; x++) 
-                {
-                result = ((ParameterDatabase) (parents.elementAt(x)))._get(parameter);
-                if (result != null)
-                    {
+            for (int x = 0; x < size; x++) {
+                result = ((ParameterDatabase) (parents.get(x)))._get(parameter);
+                if (result != null) {
                     return result;
-                    }
                 }
-            } 
-        else  // preprocess
-            {
+            }
+        } else // preprocess
+        {
             result = result.trim();
-            if (result.length() == 0)
+            if (result.length() == 0) {
                 result = null;
             }
+        }
         return result;
-        }
+    }
 
-    public ParameterDatabase getLocation(Parameter parameter)
-        {
+    public ParameterDatabase getLocation(Parameter parameter) {
         return getLocation(parameter.param);
-        }
-        
-    public synchronized ParameterDatabase getLocation(String parameter) 
-        {
+    }
+
+    public synchronized ParameterDatabase getLocation(String parameter) {
         ParameterDatabase loc = _getLocation(parameter);
         uncheck();
         return loc;
-        }
+    }
 
-    /** Private helper function */
-    synchronized ParameterDatabase _getLocation(String parameter) 
-        {
-        if (parameter == null)
+    /**
+     * Private helper function
+     */
+    synchronized ParameterDatabase _getLocation(String parameter) {
+        if (parameter == null) {
             return null;
-        if (checked)
+        }
+        if (checked) {
             return null; // we already searched this path
+        }
         checked = true;
         String result = getProperty(parameter);
-        if (result == null) 
-            {
+        if (result == null) {
             int size = parents.size();
             ParameterDatabase loc = null;
-            for (int x = 0; x < size; x++) 
-                {
-                loc = ((ParameterDatabase) (parents.elementAt(x)))._getLocation(parameter);
-                if (loc != null)
-                    {
+            for (int x = 0; x < size; x++) {
+                loc = ((ParameterDatabase) (parents.get(x)))._getLocation(parameter);
+                if (loc != null) {
                     return loc;
-                    }
                 }
+            }
             return null;
-            } 
-        else return this;
+        } else {
+            return this;
+        }
+    }
+
+
+    /*protected*/ Set _getShadowedValues(Parameter parameter, Set vals) {
+        if (parameter == null) {
+            return vals;
         }
 
+        if (checked) {
+            return vals;
+        }
 
-    /*protected*/ Set _getShadowedValues(Parameter parameter, Set vals) 
-        {
-        if (parameter == null) 
-            {
-            return vals;
-            }
-        
-        if (checked) 
-            {
-            return vals;
-            }
-        
         checked = true;
         String result = getProperty(parameter.param);
-        if (result != null) 
-            {
+        if (result != null) {
             result = result.trim();
-            if (result.length() != 0)
+            if (result.length() != 0) {
                 vals.add(result);
             }
-        
-        int size = parents.size();
-        for (int i = 0; i < size; ++i) 
-            {
-            ((ParameterDatabase)parents.elementAt(i))._getShadowedValues(parameter,vals);
-            }
-
-        return vals;
         }
 
-    public Set getShadowedValues(Parameter parameter) 
-        {
+        int size = parents.size();
+        for (int i = 0; i < size; ++i) {
+            ((ParameterDatabase) parents.get(i))._getShadowedValues(parameter, vals);
+        }
+
+        return vals;
+    }
+
+    public Set getShadowedValues(Parameter parameter) {
         Set vals = new HashSet();
         vals = _getShadowedValues(parameter, vals);
         uncheck();
         return vals;
-        }
-    
+    }
+
     /**
      * Searches down through databases to find the directory for the database
      * which holds a given parameter. Returns the directory name or null if not
      * found.
      */
-
-    File directoryFor(Parameter parameter) 
-        {
+    File directoryFor(Parameter parameter) {
         File result = _directoryFor(parameter);
         uncheck();
         return result;
-        }
-    
-    /** Private helper function */
-    synchronized File _directoryFor(Parameter parameter) 
-        {
-        if (checked)
+    }
+
+    /**
+     * Private helper function
+     */
+    synchronized File _directoryFor(Parameter parameter) {
+        if (checked) {
             return null; // we already searched this path
+        }
         checked = true;
         File result = null;
         String p = getProperty(parameter.param);
-        if (p == null) 
-            {
+        if (p == null) {
             int size = parents.size();
-            for (int x = 0; x < size; x++) 
-                {
-                result = ((ParameterDatabase) (parents.elementAt(x)))._directoryFor(parameter);
-                if (result != null)
+            for (int x = 0; x < size; x++) {
+                result = ((ParameterDatabase) (parents.get(x)))._directoryFor(parameter);
+                if (result != null) {
                     return result;
                 }
+            }
             return result;
-            } 
-        else
+        } else {
             return directory;
         }
-    
-    /** Returns a String describing the location of the ParameterDatabase holding
-        this parameter, or "" if there is none. */
-    public String getLabel()
-        {
-        return label; 
-/*        File file = fileFor(parameter);
-          if (file == null) return "";
-          try { return file.getCanonicalPath(); }
-          catch (IOException e) { return ""; }
-*/
-        }
-        
+    }
+
+    /**
+     * Returns a String describing the location of the ParameterDatabase holding
+     * this parameter, or "" if there is none.
+     */
+    public String getLabel() {
+        return label;
+        /*        File file = fileFor(parameter);
+         if (file == null) return "";
+         try { return file.getCanonicalPath(); }
+         catch (IOException e) { return ""; }
+         */
+    }
+
     /*
      * Searches down through databases to find the parameter file 
      * which holds a given parameter. Returns the filename or null if not
@@ -2209,119 +2032,126 @@ public class ParameterDatabase extends Properties implements Serializable
      *
      * @deprecated You probably want to use getLocation
      */
-/*
-  public File fileFor(Parameter parameter) 
-  {
-  File result = _fileFor(parameter);
-  uncheck();
-  return result;
-  }
+    /*
+     public File fileFor(Parameter parameter) 
+     {
+     File result = _fileFor(parameter);
+     uncheck();
+     return result;
+     }
 
-  synchronized File _fileFor(Parameter parameter) 
-  {
-  if (checked)
-  return null;
+     synchronized File _fileFor(Parameter parameter) 
+     {
+     if (checked)
+     return null;
         
-  checked = true;
-  File result = null;
-  String p = getProperty(parameter.param);
-  if (p==null) 
-  {
-  int size = parents.size();
-  for(int i = 0; i < size; ++i) 
-  {
-  result = ((ParameterDatabase)parents.elementAt(i))._fileFor(parameter);
-  if (result != null)
-  return result;
-  }
-  return result;
-  }
-  else
-  return new File(directory,filename);
-  }
-*/
-
-    /** Removes a parameter from the topmost database. */
-    public synchronized void remove(Parameter parameter) 
-        {
-        if (parameter.param.equals(PRINT_PARAMS)) printState = PS_UNKNOWN;
-        remove(parameter.param);
+     checked = true;
+     File result = null;
+     String p = getProperty(parameter.param);
+     if (p==null) 
+     {
+     int size = parents.size();
+     for(int i = 0; i < size; ++i) 
+     {
+     result = ((ParameterDatabase)parents.elementAt(i))._fileFor(parameter);
+     if (result != null)
+     return result;
+     }
+     return result;
+     }
+     else
+     return new File(directory,filename);
+     }
+     */
+    /**
+     * Removes a parameter from the topmost database.
+     */
+    public synchronized void remove(Parameter parameter) {
+        if (parameter.param.equals(PRINT_PARAMS)) {
+            printState = PS_UNKNOWN;
         }
+        remove(parameter.param);
+    }
 
-    /** 
-        Removes a parameter from the database and all its parent databases. 
-        @deprecated  You shouldn't modify parent databases
-    */
-    public synchronized void removeDeeply(Parameter parameter) 
-        {
+    /**
+     * Removes a parameter from the database and all its parent databases.
+     *
+     * @deprecated You shouldn't modify parent databases
+     */
+    public synchronized void removeDeeply(Parameter parameter) {
         _removeDeeply(parameter);
         uncheck();
-        }
+    }
 
-    /** Private helper function */
-    synchronized void _removeDeeply(Parameter parameter) 
-        {
-        if (checked)
+    /**
+     * Private helper function
+     */
+    synchronized void _removeDeeply(Parameter parameter) {
+        if (checked) {
             return; // already removed from this path
+        }
         checked = true;
         remove(parameter);
         int size = parents.size();
-        for (int x = 0; x < size; x++)
-            ((ParameterDatabase) (parents.elementAt(x)))
-                .removeDeeply(parameter);
+        for (int x = 0; x < size; x++) {
+            ((ParameterDatabase) (parents.get(x)))
+                    .removeDeeply(parameter);
         }
+    }
 
-    public void addParent(ParameterDatabase database)
-        {
-        parents.addElement(database);
-        }
+    public void addParent(ParameterDatabase database) {
+        parents.add(database);
+    }
 
-    /** Creates an empty parameter database. */
-    public ParameterDatabase() 
-        {
+    /**
+     * Creates an empty parameter database.
+     */
+    public ParameterDatabase() {
         super();
         accessed = new Hashtable();
         gotten = new Hashtable();
         directory = new File(new File("").getAbsolutePath()); // uses the user
-                                                              // path
+        // path
         //filename = "";
         label = "Basic Database";
-        parents = new Vector();
+        parents = new ArrayList();
         checked = false; // unnecessary
         //listeners = new Vector();
-        }
-    
-    /** Creates a new parameter database from the given Dictionary.  
-        Both the keys and values will be run through toString() before adding to the dataase.   
-        Keys are parameters.  Values are the values of the parameters.  
-        Beware that a ParameterDatabase is itself a Dictionary; but if you pass one in here you 
-        will only get the lowest-level elements.  If parent.n are defined, parents will 
-        be attempted to be loaded -- that's the reason for the FileNotFoundException and IOException.  */
-    public ParameterDatabase(java.util.Dictionary map) throws FileNotFoundException, IOException 
-        {
+    }
+
+    /**
+     * Creates a new parameter database from the given Dictionary. Both the keys
+     * and values will be run through toString() before adding to the dataase.
+     * Keys are parameters. Values are the values of the parameters. Beware that
+     * a ParameterDatabase is itself a Dictionary; but if you pass one in here
+     * you will only get the lowest-level elements. If parent.n are defined,
+     * parents will be attempted to be loaded -- that's the reason for the
+     * FileNotFoundException and IOException.
+     */
+    public ParameterDatabase(java.util.Dictionary map) throws FileNotFoundException, IOException {
         this();
         label = "Dictionary: " + System.identityHashCode(map);
         java.util.Enumeration keys = map.keys();
-        while(keys.hasMoreElements())
-            {
+        while (keys.hasMoreElements()) {
             Object obj = keys.nextElement();
-            set(new Parameter(""+obj),""+map.get(obj));
-            }
-
-        // load parents
-        for (int x = 0;; x++) 
-            {
-            String s = getProperty("parent." + x);
-            if (s == null)
-                return; // we're done
-
-            if (new File(s).isAbsolute()) // it's an absolute file definition
-                parents.addElement(new ParameterDatabase(new File(s)));
-            else throw new FileNotFoundException("Attempt to load a relative file, but there's no parent file: " + s);
-            }
+            set(new Parameter("" + obj), "" + map.get(obj));
         }
 
-    
+        // load parents
+        for (int x = 0;; x++) {
+            String s = getProperty("parent." + x);
+            if (s == null) {
+                return; // we're done
+            }
+            if (new File(s).isAbsolute()) // it's an absolute file definition
+            {
+                parents.add(new ParameterDatabase(new File(s)));
+            } else {
+                throw new FileNotFoundException("Attempt to load a relative file, but there's no parent file: " + s);
+            }
+        }
+    }
+
     //// The following four functions are used to modify the paths inside URLs representing
     //// the internals of Jar files.  This is because getResource and getResourceAsStream are
     //// broken with regard to resources in Jar files where the internal path has 
@@ -2335,17 +2165,20 @@ public class ParameterDatabase extends Properties implements Serializable
     //// revised using the relative path, and finally (4) takes a default Jar file
     //// URL, plus a relative path, and builds a new URL using the revised internal path.
     /// Hence the four functions.
-    
     // Builds a default resource URL for a given class.  For this URL we use the class file
     // itself.  For example, if the class Foo were stored as /ec/util/Foo.class inside the
     // Jar file ecj.jar, we might build a URL of the form
     // jar:file:ecj.jar!/ec/util/Foo.class
     // This might break for unusual class file names (like Foo$12.class)
-    static URL defaultResourceURL(Class cls) { return cls.getResource(cls.getSimpleName() + ".class"); }
-    
+    static URL defaultResourceURL(Class cls) {
+        return cls.getResource(cls.getSimpleName() + ".class");
+    }
+
     // Returns whether or not a URL refers to something inside a Jar file.  We do this by
     // just checking if the protocol is 'jar'.
-    static boolean isJarFile(URL url) { return url.getProtocol().equalsIgnoreCase("jar"); }
+    static boolean isJarFile(URL url) {
+        return url.getProtocol().equalsIgnoreCase("jar");
+    }
 
     // Given a URL referring to something in a Jar file, removes the final filename from
     // the end of the existing internal path inside the Jar file, then revises the
@@ -2353,60 +2186,61 @@ public class ParameterDatabase extends Properties implements Serializable
     // path.  For example, if the URL was jar:file:/private/tmp/ecj.jar!/ec/app/ant/Ant.class
     // and the relative path was ../../gp/koza.params then the function would return
     // /ec/gp/koza.params
-    static String concatenatedJarPath(URL original, String path)
-        {
+    static String concatenatedJarPath(URL original, String path) {
         // A Jar URL looks like this:  jar:URLtoJarFile!/path/to/resource/in/jar
         // For example: jar:file:/private/tmp/ecj.jar!/ec/app/ant/Ant.class
 
         // Given another path to tack on, say ../../gp/koza.params
         // The goal is to return the string  "/ec/gp/koza.params"
-
         // 1. Identify the path start and extract the path
         // /ec/app/ant/Ant.class
         String url = original.toString();
         int i;
-        for(i = url.length() - 2; i >= 0; i--)
-            if (url.charAt(i) == '!' &&
-                url.charAt(i+1) == '/')  // PROBABLY it
-                {
+        for (i = url.length() - 2; i >= 0; i--) {
+            if (url.charAt(i) == '!'
+                    && url.charAt(i + 1) == '/') // PROBABLY it
+            {
                 break;
-                }
+            }
+        }
 
         if (i < 0) // uh oh
+        {
             return null;
+        }
 
-        String originalPath = url.substring(i+1);  // don't include the !
+        String originalPath = url.substring(i + 1);  // don't include the !
 
-        if (path.startsWith("/"))  // it's absolute
-            {
+        if (path.startsWith("/")) // it's absolute
+        {
             // 2. If the replacement path is absolute, just use that.
             originalPath = path;  // just replace it
-            }
-        else
-            {
+        } else {
             // 3. Else remove the file
             // /ec/app/ant/
             int j;
-            for(j = originalPath.length() - 1; j >= 0; j--)
-                if (originalPath.charAt(j) == '/')  // PROBABLY is it
-                    {
+            for (j = originalPath.length() - 1; j >= 0; j--) {
+                if (originalPath.charAt(j) == '/') // PROBABLY is it
+                {
                     break;
-                    }
+                }
+            }
             if (j < 0) // uh oh
+            {
                 return null;
+            }
 
-            originalPath = originalPath.substring(0, j+1);  // include the slash
+            originalPath = originalPath.substring(0, j + 1);  // include the slash
 
             // 4. Tack on the replacement path
             // /ec/app/ant/../../gp/koza.params
             originalPath += path;
-            }
+        }
 
         // 5. Simplify
         // /ec/gp/koza.params
         return simplifyPath(originalPath);
-        }
-
+    }
 
     // Given a URL referring to something in a Jar file, removes the final filename from
     // the end of the existing internal path inside the Jar file, then revises the
@@ -2414,83 +2248,78 @@ public class ParameterDatabase extends Properties implements Serializable
     // URL.  For example, if the URL was jar:file:/private/tmp/ecj.jar!/ec/app/ant/Ant.class
     // and the relative path was ../../gp/koza.params then the function would return
     // the URL jar:file:/private/tmp/ecj.jar!/ec/gp/koza.params
-
-    static URL concatenatedJarResource(URL original, String path)
-        {
+    static URL concatenatedJarResource(URL original, String path) {
         // A Jar URL looks like this:  jar:URLtoJarFile!/path/to/resource/in/jar
         // For example: jar:file:/private/tmp/ecj.jar!/ec/app/ant/Ant.class
 
         // Given another path to tack on, say ../../gp/koza.params
         // We need to edit this as follows:
-
         // 0. Identify the path start and extract the path
         // /ec/app/ant/Ant.class
         String url = original.toString();
         int i;
-        for(i = url.length() - 2; i >= 0; i--)
-            if (url.charAt(i) == '!' &&
-                url.charAt(i+1) == '/')  // PROBABLY it
-                {
+        for (i = url.length() - 2; i >= 0; i--) {
+            if (url.charAt(i) == '!'
+                    && url.charAt(i + 1) == '/') // PROBABLY it
+            {
                 break;
-                }
+            }
+        }
 
         if (i < 0) // uh oh
+        {
             return null;
+        }
 
         // see concatenatedJarPath for further procedures...
         String revisedPath = concatenatedJarPath(original, path);
 
         // 6. Put back in URL
         // jar:file:/private/tmp/ecj.jar!/ec/gp/koza.params
-        try
-            {
+        try {
             return new URL(url.substring(0, i + 1) + revisedPath);
-            }
-        catch (MalformedURLException e)
-            {
+        } catch (MalformedURLException e) {
             return null;
-            }
         }
-        
-
+    }
 
     // Eliminates .. and . from a relative path without converting it
     // according to the file system. For example,
     // "hello/there/../how/./are/you/yo/../../hey" becomes
     // "hello/how/are/hey".  This is useful for cleaning up path names for
     // URLs.
-    static String simplifyPath(String pathname)
-        {
+    static String simplifyPath(String pathname) {
         File path = new File(pathname);
-        ArrayList a = new ArrayList();
-        while(path != null && path.getName() != null)
-            {
+        ArrayList<String> a = new ArrayList<>();
+        while (path != null && path.getName() != null) {
             String n = path.getName();
             a.add(n);
             path = path.getParentFile();
-            }
-        
-        ArrayList b = new ArrayList();
-        for(int i = a.size() - 1; i >= 0; i--)
-            {
-            String n = (String)(a.get(i));
-            if (n.equals(".")) { } // do nothing
-            else if (n.equals("..") &&
-                b.size() != 0 && !b.get(0).equals(".."))
-                b.remove(b.size() - 1);  
-            else b.add(n);
-            }
-        
-        if (b.size() == 0) return "";
-        
-        path = new File((String)(b.get(0)));
-        for(int i = 1; i < b.size(); i++)
-            {
-            path = new File(path, (String)(b.get(i)));
-            }
-        return path.getPath();
         }
 
+        ArrayList<String> b = new ArrayList<>();
+        for (int i = a.size() - 1; i >= 0; i--) {
+            String n = (String) (a.get(i));
+            if (n.equals(".")) {
+            } // do nothing
+            else if (n.equals("..")
+                    && !b.isEmpty() && !b.get(0).equals("..")) {
+                b.remove(b.size() - 1);
+            } else {
+                b.add(n);
+            }
+        }
+
+        if (b.isEmpty()) {
+            return "";
+        }
+
+        path = new File((String) (b.get(0)));
+        for (int i = 1; i < b.size(); i++) {
+            path = new File(path, (String) (b.get(i)));
+        }
+        return path.getPath();
+    }
 
     /**
      * Creates a new parameter database from a given database file and argv
@@ -2499,9 +2328,7 @@ public class ParameterDatabase extends Properties implements Serializable
      * points to a tree of databases constructed using
      * ParameterDatabase(filename).
      */
-
-    public ParameterDatabase(String pathNameRelativeToClassFile, Class cls, String[] args) throws FileNotFoundException, IOException 
-        {
+    public ParameterDatabase(String pathNameRelativeToClassFile, Class cls, String[] args) throws FileNotFoundException, IOException {
         this();
         label = "" + cls + " : " + pathNameRelativeToClassFile;
 
@@ -2512,156 +2339,137 @@ public class ParameterDatabase extends Properties implements Serializable
         a.relativeClass = cls;
         a.relativePath = files.relativePath;
 
-        a.parents.addElement(files);
+        a.parents.add(files);
         boolean hasArgs = false;
-        for (int x = 0; x < args.length - 1; x++) 
-            {
-            if (args[x].equals("-p"))
-                {
-                String s = args[x+1].trim();
-                if (s.length() == 0) continue;  // failure
+        for (int x = 0; x < args.length - 1; x++) {
+            if (args[x].equals("-p")) {
+                String s = args[x + 1].trim();
+                if (s.length() == 0) {
+                    continue;  // failure
+                }
                 int eq = s.indexOf('=');  // look for the '='
-                if (eq <= 0) continue; // '=' isn't there, or it's the first char: failure                      
-                put(s.substring(0,eq), s.substring(eq+1));  // add the parameter
-                if (!hasArgs)
-                    {
+                if (eq <= 0) {
+                    continue; // '=' isn't there, or it's the first char: failure                      
+                }
+                put(s.substring(0, eq), s.substring(eq + 1));  // add the parameter
+                if (!hasArgs) {
                     label = label + "    Args:  ";
                     hasArgs = true;
-                    }
-                label = label + s + "  ";
                 }
+                label = label + s + "  ";
             }
+        }
 
         // Set me up
         relativeClass = cls;
         relativePath = files.relativePath;
 
-        parents.addElement(a);
+        parents.add(a);
         //listeners = new Vector();
-        }
+    }
 
-
-    /** Creates a new parameter database loaded from a parameter file located relative to a class file,
-        wherever the class file may be (such as in a jar).
-        This approach uses resourceLocation.getResourceAsStream() to load the parameter file.
-        If parent.n are defined, parents will be attempted to be loaded -- that's 
-        the reason for the FileNotFoundException and IOException. */
-
-    public ParameterDatabase(String pathNameRelativeToClassFile, Class cls) throws FileNotFoundException, IOException 
-        {
+    /**
+     * Creates a new parameter database loaded from a parameter file located
+     * relative to a class file, wherever the class file may be (such as in a
+     * jar). This approach uses resourceLocation.getResourceAsStream() to load
+     * the parameter file. If parent.n are defined, parents will be attempted to
+     * be loaded -- that's the reason for the FileNotFoundException and
+     * IOException.
+     */
+    public ParameterDatabase(String pathNameRelativeToClassFile, Class cls) throws FileNotFoundException, IOException {
         this();
         label = "" + cls + " : " + pathNameRelativeToClassFile;
-        
+
         URL def = defaultResourceURL(cls);
         relativeClass = cls;
-        try
-            {
-            if (isJarFile(def))
-                {
+        try {
+            if (isJarFile(def)) {
                 // loading from jar file, handle it specially.  This is because
                 // file URLs can handle ../ etc but jar urls CANNOT, stupid Java
                 relativePath = concatenatedJarPath(def, pathNameRelativeToClassFile);
                 load(concatenatedJarResource(def, pathNameRelativeToClassFile).openStream());
-                }
-            else
-                {
+            } else {
                 relativePath = simplifyPath(pathNameRelativeToClassFile);
                 load(cls.getResourceAsStream(relativePath));
-                }
             }
-        catch (NullPointerException e)
-            {
-            throw new IOException("Could not load database from resource file " + relativePath +
-                " relative to the class " + cls, e);
-            }
-        catch (IOException e)
-            {
-            throw new IOException("Could not load database from resource file " + relativePath +
-                " relative to the class " + cls, e);
-            }
-
-        //listeners = new Vector();
-
-        // load parents
-        for (int x = 0 ; ; x++) 
-            {
-            String s = getProperty("parent." + x);
-            if (s == null)
-                return; // we're done
-
-            if (new File(s).isAbsolute()) // it's an absolute file definition
-                parents.addElement(new ParameterDatabase(new File(s)));
-            else if (s.startsWith(C_CLASS))
-                {
-                int i = indexOfFirstWhitespace(s);
-                if (i == -1) throw new FileNotFoundException("Could not parse file into filename and classname:\n\tparent." + x + " = " + s);
-                String classname = s.substring(0,i);
-                String filename = s.substring(i).trim();
-                try
-                    {
-                    parents.addElement(new ParameterDatabase(filename, Class.forName(classname.substring(1).trim())));
-                    }
-                catch (ClassNotFoundException ex)
-                    {
-                    throw new FileNotFoundException("Could not parse file into filename and classname:\n\tparent." + x + " = " + s);
-                    }
-                }
-            else
-                {
-                String path = new File(new File(pathNameRelativeToClassFile).getParent(), s).toString();
-                parents.addElement(new ParameterDatabase(path, cls));
-                }
-            }
+        } catch (NullPointerException | IOException e) {
+            throw new IOException("Could not load database from resource file " + relativePath
+                    + " relative to the class " + cls, e);
         }
 
+        //listeners = new Vector();
+        // load parents
+        for (int x = 0;; x++) {
+            String s = getProperty("parent." + x);
+            if (s == null) {
+                return; // we're done
+            }
+            if (new File(s).isAbsolute()) // it's an absolute file definition
+            {
+                parents.add(new ParameterDatabase(new File(s)));
+            } else if (s.startsWith(C_CLASS)) {
+                int i = indexOfFirstWhitespace(s);
+                if (i == -1) {
+                    throw new FileNotFoundException("Could not parse file into filename and classname:\n\tparent." + x + " = " + s);
+                }
+                String classname = s.substring(0, i);
+                String filename = s.substring(i).trim();
+                try {
+                    parents.add(new ParameterDatabase(filename, Class.forName(classname.substring(1).trim())));
+                } catch (ClassNotFoundException ex) {
+                    throw new FileNotFoundException("Could not parse file into filename and classname:\n\tparent." + x + " = " + s);
+                }
+            } else {
+                String path = new File(new File(pathNameRelativeToClassFile).getParent(), s).toString();
+                parents.add(new ParameterDatabase(path, cls));
+            }
+        }
+    }
 
-    /** Creates a new parameter database loaded from the given stream.  Non-relative parents are not permitted.
-        If parent.n are defined, parents will be attempted to be loaded -- that's 
-        the reason for the FileNotFoundException and IOException. */
-
-    public ParameterDatabase(java.io.InputStream stream) throws FileNotFoundException, IOException 
-        {
+    /**
+     * Creates a new parameter database loaded from the given stream.
+     * Non-relative parents are not permitted. If parent.n are defined, parents
+     * will be attempted to be loaded -- that's the reason for the
+     * FileNotFoundException and IOException.
+     */
+    public ParameterDatabase(java.io.InputStream stream) throws FileNotFoundException, IOException {
         this();
         label = "Stream: " + System.identityHashCode(stream);
         load(stream);
 
         //listeners = new Vector();
-
         // load parents
-        for (int x = 0;; x++) 
-            {
+        for (int x = 0;; x++) {
             String s = getProperty("parent." + x);
-            if (s == null)
+            if (s == null) {
                 return; // we're done
-
+            }
             if (new File(s).isAbsolute()) // it's an absolute file definition
-                parents.addElement(new ParameterDatabase(new File(s)));
-            else if (s.startsWith(C_CLASS))
-                {
+            {
+                parents.add(new ParameterDatabase(new File(s)));
+            } else if (s.startsWith(C_CLASS)) {
                 int i = indexOfFirstWhitespace(s);
-                if (i == -1) throw new FileNotFoundException("Could not parse file into filename and classname:\n\tparent." + x + " = " + s);
-                String classname = s.substring(0,i);
-                String filename = s.substring(i).trim();
-                try
-                    {
-                    parents.addElement(new ParameterDatabase(filename, Class.forName(classname)));
-                    }
-                catch (ClassNotFoundException ex)
-                    {
+                if (i == -1) {
                     throw new FileNotFoundException("Could not parse file into filename and classname:\n\tparent." + x + " = " + s);
-                    }
                 }
-            else throw new FileNotFoundException("Attempt to load a relative file, but there's no parent file: " + s);
+                String classname = s.substring(0, i);
+                String filename = s.substring(i).trim();
+                try {
+                    parents.add(new ParameterDatabase(filename, Class.forName(classname)));
+                } catch (ClassNotFoundException ex) {
+                    throw new FileNotFoundException("Could not parse file into filename and classname:\n\tparent." + x + " = " + s);
+                }
+            } else {
+                throw new FileNotFoundException("Attempt to load a relative file, but there's no parent file: " + s);
             }
         }
-
+    }
 
     /**
      * Creates a new parameter database tree from a given database file and its
      * parent files.
      */
-    public ParameterDatabase(File file) throws FileNotFoundException, IOException 
-        {
+    public ParameterDatabase(File file) throws FileNotFoundException, IOException {
         this();
         label = "File: " + file.getPath();
         //this.file = file.getName();
@@ -2670,47 +2478,41 @@ public class ParameterDatabase extends Properties implements Serializable
         load(new FileInputStream(file));
 
         //listeners = new Vector();
-
         // load parents
-        for (int x = 0;; x++) 
-            {
+        for (int x = 0;; x++) {
             String s = getProperty("parent." + x);
-            if (s == null)
+            if (s == null) {
                 return; // we're done
-
+            }
             if (new File(s).isAbsolute()) // it's an absolute file definition
-                parents.addElement(new ParameterDatabase(new File(s)));
-            else if (s.startsWith(C_CLASS))
-                {
+            {
+                parents.add(new ParameterDatabase(new File(s)));
+            } else if (s.startsWith(C_CLASS)) {
                 int i = indexOfFirstWhitespace(s);
-                if (i == -1) throw new FileNotFoundException("Could not parse file into filename and classname:\n\tparent." + x + " = " + s);
-                String classname = s.substring(0,i);
-                String fname = s.substring(i).trim();
-                try
-                    {
-                    parents.addElement(new ParameterDatabase(fname, Class.forName(classname.substring(1).trim())));
-                    }
-                catch (ClassNotFoundException ex)
-                    {
+                if (i == -1) {
                     throw new FileNotFoundException("Could not parse file into filename and classname:\n\tparent." + x + " = " + s);
-                    }
                 }
-            else
-                // it's relative to my path
-                parents.addElement(new ParameterDatabase(new File(file.getParent(), s)));
+                String classname = s.substring(0, i);
+                String fname = s.substring(i).trim();
+                try {
+                    parents.add(new ParameterDatabase(fname, Class.forName(classname.substring(1).trim())));
+                } catch (ClassNotFoundException ex) {
+                    throw new FileNotFoundException("Could not parse file into filename and classname:\n\tparent." + x + " = " + s);
+                }
+            } else // it's relative to my path
+            {
+                parents.add(new ParameterDatabase(new File(file.getParent(), s)));
             }
         }
+    }
 
     /**
      * Creates a new parameter database from a given database file and argv
      * list. The top-level database is completely empty, pointing to a second
      * database which contains the parameter entries stored in args, which
-     * points to a tree of databases constructed using
-     * ParameterDatabase(file).
+     * points to a tree of databases constructed using ParameterDatabase(file).
      */
-
-    public ParameterDatabase(File file, String[] args) throws FileNotFoundException, IOException 
-        {
+    public ParameterDatabase(File file, String[] args) throws FileNotFoundException, IOException {
         this();
         label = "File: " + file.getPath();
         //this.file = file.getName();
@@ -2722,30 +2524,31 @@ public class ParameterDatabase extends Properties implements Serializable
 
         // Create the Parameter Database for the arguments
         ParameterDatabase a = new ParameterDatabase();
-        a.parents.addElement(files);
+        a.parents.add(files);
         boolean hasArgs = false;
-        for (int x = 0; x < args.length - 1; x++) 
-            {
-            if (args[x].equals("-p"))
-                {
-                String s = args[x+1].trim();
-                if (s.length() == 0) continue;  // failure
+        for (int x = 0; x < args.length - 1; x++) {
+            if (args[x].equals("-p")) {
+                String s = args[x + 1].trim();
+                if (s.length() == 0) {
+                    continue;  // failure
+                }
                 int eq = s.indexOf('=');  // look for the '='
-                if (eq <= 0) continue; // '=' isn't there, or it's the first char: failure                      
-                put(s.substring(0,eq), s.substring(eq+1));  // add the parameter
-                if (!hasArgs)
-                    {
+                if (eq <= 0) {
+                    continue; // '=' isn't there, or it's the first char: failure                      
+                }
+                put(s.substring(0, eq), s.substring(eq + 1));  // add the parameter
+                if (!hasArgs) {
                     label = label + "    Args:  ";
                     hasArgs = true;
-                    }
-                label = label + s + "  ";
                 }
+                label = label + s + "  ";
             }
+        }
 
         // Set me up
-        parents.addElement(a);
+        parents.add(a);
         //listeners = new Vector();
-        }
+    }
 
     /**
      * Prints out all the parameters in the database. Useful for debugging. If
@@ -2757,7 +2560,6 @@ public class ParameterDatabase extends Properties implements Serializable
     //    {
     //     list(new PrintWriter(p), listShadowed);
     //    }
-
     /**
      * Prints out all the parameters in the database, but not shadowed
      * parameters.
@@ -2766,15 +2568,13 @@ public class ParameterDatabase extends Properties implements Serializable
     //     {
     //     list(new PrintWriter(p), false);
     //     }
-
     /**
      * Prints out all the parameters in the database, but not shadowed
      * parameters.
      */
-    public void list(PrintWriter p) 
-        {
+    public void list(PrintWriter p) {
         list(p, false);
-        }
+    }
 
     /**
      * Prints out all the parameters in the database. Useful for debugging. If
@@ -2782,18 +2582,18 @@ public class ParameterDatabase extends Properties implements Serializable
      * database it's located in. If listShadowed is false, only active
      * parameters are listed, and they're all given in one big chunk.
      */
-    public void list(PrintWriter p, boolean listShadowed) 
-        {
-        if (listShadowed)
+    public void list(PrintWriter p, boolean listShadowed) {
+        if (listShadowed) {
             _list(p, listShadowed, "root", null);
-        else {
+        } else {
             Hashtable gather = new Hashtable();
             _list(null, listShadowed, "root", gather);
 
-            Vector vec = new Vector();
+            ArrayList vec = new ArrayList();
             Enumeration e = gather.keys();
-            while (e.hasMoreElements())
-                vec.addElement(e.nextElement());
+            while (e.hasMoreElements()) {
+                vec.add(e.nextElement());
+            }
 
             // sort the keys
 //            Object[] array = new Object[vec.size()];
@@ -2802,90 +2602,94 @@ public class ParameterDatabase extends Properties implements Serializable
             java.util.Collections.sort(vec);
 
             // Uncheck and print each item
-            for (int x = 0; x < /* array.length;*/ vec.size(); x++) 
-                {
+            for (int x = 0; x < /* array.length;*/ vec.size(); x++) {
                 String s = (String) /* (array[x]); */ vec.get(x);
                 String v = null;
-                if (s != null)
+                if (s != null) {
                     v = (String) gather.get(s);
-                if (v == null)
+                }
+                if (v == null) {
                     v = UNKNOWN_VALUE;
-                if (p!=null) p.println(s + " = " + v);
+                }
+                if (p != null) {
+                    p.println(s + " = " + v);
                 }
             }
-        if (p!=null) p.flush();
         }
-
-    /** Private helper function. */
-    void _list(PrintWriter p, boolean listShadowed,
-        String prefix, Hashtable gather) 
-        {
-        if (listShadowed) 
-            {
-            // Print out my header
-            if (p!=null) p.println("\n########" + prefix);
-            super.list(p);
-            int size = parents.size();
-            for (int x = 0; x < size; x++)
-                ((ParameterDatabase) (parents.elementAt(x)))._list(p,
-                    listShadowed, prefix + "." + x, gather);
-            } 
-        else {
-            // load in reverse order so things get properly overwritten
-            int size = parents.size();
-            for (int x = size - 1; x >= 0; x--)
-                ((ParameterDatabase) (parents.elementAt(x)))._list(p,
-                    listShadowed, prefix, gather);
-            Enumeration e = keys();
-            while (e.hasMoreElements()) 
-                {
-                String key = (String) (e.nextElement());
-                gather.put(key, get(key));
-                }
-            }
-        if (p!=null) p.flush();
+        if (p != null) {
+            p.flush();
         }
-
-    public String toString() 
-        {
-        String s = super.toString();
-        if (parents.size() > 0) 
-            {
-            s += " : (";
-            for (int x = 0; x < parents.size(); x++) 
-                {
-                if (x > 0)
-                    s += ", ";
-                s += parents.elementAt(x);
-                }
-            s += ")";
-            }
-        return s;
-        }
+    }
 
     /**
-     * Builds a TreeModel from the available property keys.   
+     * Private helper function.
      */
-    public TreeModel buildTreeModel() 
-        {
+    void _list(PrintWriter p, boolean listShadowed,
+            String prefix, Hashtable gather) {
+        if (listShadowed) {
+            // Print out my header
+            if (p != null) {
+                p.println("\n########" + prefix);
+            }
+            super.list(p);
+            int size = parents.size();
+            for (int x = 0; x < size; x++) {
+                ((ParameterDatabase) (parents.get(x)))._list(p,
+                        listShadowed, prefix + "." + x, gather);
+            }
+        } else {
+            // load in reverse order so things get properly overwritten
+            int size = parents.size();
+            for (int x = size - 1; x >= 0; x--) {
+                ((ParameterDatabase) (parents.get(x)))._list(p,
+                        listShadowed, prefix, gather);
+            }
+            Enumeration e = keys();
+            while (e.hasMoreElements()) {
+                String key = (String) (e.nextElement());
+                gather.put(key, get(key));
+            }
+        }
+        if (p != null) {
+            p.flush();
+        }
+    }
+
+    public String toString() {
+        String s = super.toString();
+        if (parents.size() > 0) {
+            s += " : (";
+            for (int x = 0; x < parents.size(); x++) {
+                if (x > 0) {
+                    s += ", ";
+                }
+                s += parents.get(x);
+            }
+            s += ")";
+        }
+        return s;
+    }
+
+    /**
+     * Builds a TreeModel from the available property keys.
+     */
+    public TreeModel buildTreeModel() {
         String sep = System.getProperty("file.separator");
         ParameterDatabaseTreeNode root = new ParameterDatabaseTreeNode(
-            //this.directory.getAbsolutePath() + sep + this.filename);
-            label);
+                //this.directory.getAbsolutePath() + sep + this.filename);
+                label);
         ParameterDatabaseTreeModel model = new ParameterDatabaseTreeModel(root);
 
         _buildTreeModel(model, root);
 
-        model.sort(root, new Comparator() 
-            {
-            public int compare(Object o1, Object o2) 
-                {
-                ParameterDatabaseTreeNode t1 = (ParameterDatabaseTreeNode)o1;
-                ParameterDatabaseTreeNode t2 = (ParameterDatabaseTreeNode)o2;
-                
-                return ((Comparable)t1.getUserObject()).compareTo(t2.getUserObject());
-                }
-            });
+        model.sort(root, new Comparator() {
+            public int compare(Object o1, Object o2) {
+                ParameterDatabaseTreeNode t1 = (ParameterDatabaseTreeNode) o1;
+                ParameterDatabaseTreeNode t2 = (ParameterDatabaseTreeNode) o2;
+
+                return ((Comparable) t1.getUserObject()).compareTo(t2.getUserObject());
+            }
+        });
 
         // In order to add elements to the tree model, the leaves need to be
         // visible. This is because some properties have values *and* sub-
@@ -2893,7 +2697,7 @@ public class ParameterDatabase extends Properties implements Serializable
         // not yet have children, then they would be invisible and the tree model
         // would be unable to add child nodes to them.
         model.setVisibleLeaves(false);
-        
+
 //        addListener(new ParameterDatabaseAdapter() {
 //           public void parameterSet(ParameterDatabaseEvent evt) {
 //               model.setVisibleLeaves(true);
@@ -2901,102 +2705,90 @@ public class ParameterDatabase extends Properties implements Serializable
 //               model.setVisibleLeaves(false);
 //           }
 //        });
-
         return model;
-        }
+    }
 
     void _buildTreeModel(DefaultTreeModel model,
-        DefaultMutableTreeNode root) 
-        {
+            DefaultMutableTreeNode root) {
         Enumeration e = keys();
-        while (e.hasMoreElements()) 
-            {
-            _addNodeForParameter(model, root, (String)e.nextElement());
-            }
+        while (e.hasMoreElements()) {
+            _addNodeForParameter(model, root, (String) e.nextElement());
+        }
 
         int size = parents.size();
-        for (int i = 0; i < size; ++i) 
-            {
+        for (int i = 0; i < size; ++i) {
             ParameterDatabase parentDB = (ParameterDatabase) parents
-                .elementAt(i);
+                    .get(i);
             parentDB._buildTreeModel(model, root);
-            }
         }
+    }
 
     /**
      * @param model
      * @param root
      * @param e
      */
-    void _addNodeForParameter(DefaultTreeModel model, DefaultMutableTreeNode root, String key) 
-        {
-        if (key.indexOf("parent.") == -1) 
-            {
+    void _addNodeForParameter(DefaultTreeModel model, DefaultMutableTreeNode root, String key) {
+        if (!key.contains("parent.")) {
             /* 
              * TODO split is new to 1.4.  To maintain 1.2 compatability we need
              * to use a different approach.  Just use a string tokenizer.
-             */ 
-            StringTokenizer tok = new StringTokenizer(key,".");
+             */
+            StringTokenizer tok = new StringTokenizer(key, ".");
             String[] path = new String[tok.countTokens()];
             int t = 0;
-            while(tok.hasMoreTokens()) 
-                {
+            while (tok.hasMoreTokens()) {
                 path[t++] = tok.nextToken();
-                }
+            }
             DefaultMutableTreeNode parent = root;
 
-            for (int i = 0; i < path.length; ++i) 
-                {
+            for (int i = 0; i < path.length; ++i) {
                 int children = model.getChildCount(parent);
-                if (children > 0) 
-                    {
+                if (children > 0) {
                     int c = 0;
-                    for (; c < children; ++c) 
-                        {
-                        DefaultMutableTreeNode child = 
-                            (DefaultMutableTreeNode) parent.getChildAt(c);
-                        if (child.getUserObject().equals(path[i])) 
-                            {
+                    for (; c < children; ++c) {
+                        DefaultMutableTreeNode child
+                                = (DefaultMutableTreeNode) parent.getChildAt(c);
+                        if (child.getUserObject().equals(path[i])) {
                             parent = child;
                             break;
-                            }
-                        }
-
-                    if (c == children) 
-                        {
-                        DefaultMutableTreeNode child = 
-                            new ParameterDatabaseTreeNode(path[i]);
-                        model.insertNodeInto(child, parent, 
-                            parent.getChildCount());
-                        parent = child;
                         }
                     }
-                // If the parent has no children, just add the node.
+
+                    if (c == children) {
+                        DefaultMutableTreeNode child
+                                = new ParameterDatabaseTreeNode(path[i]);
+                        model.insertNodeInto(child, parent,
+                                parent.getChildCount());
+                        parent = child;
+                    }
+                } // If the parent has no children, just add the node.
                 else {
-                    DefaultMutableTreeNode child = 
-                        new ParameterDatabaseTreeNode(path[i]);
+                    DefaultMutableTreeNode child
+                            = new ParameterDatabaseTreeNode(path[i]);
                     model.insertNodeInto(child, parent, 0);
                     parent = child;
-                    }
                 }
             }
         }
-    
-    /** Test the ParameterDatabase */
+    }
+
+    /**
+     * Test the ParameterDatabase
+     * @throws java.io.FileNotFoundException
+     */
     public static void main(String[] args)
-        throws FileNotFoundException, IOException 
-        {
+            throws FileNotFoundException, IOException {
         ParameterDatabase pd = new ParameterDatabase(new File(args[0]), args);
         pd.set(new Parameter("Hi there"), "Whatever");
-        pd.set(new Parameter(new String[] { "1", "2", "3" }), " Whatever ");
-        pd.set(new Parameter(new String[] { "a", "b", "c" }).pop().push("d"),
-            "Whatever");
+        pd.set(new Parameter(new String[]{"1", "2", "3"}), " Whatever ");
+        pd.set(new Parameter(new String[]{"a", "b", "c"}).pop().push("d"),
+                "Whatever");
 
         System.err.println("\n\n PRINTING ALL PARAMETERS \n\n");
         pd.list(new PrintWriter(System.err, true), true);
         System.err.println("\n\n PRINTING ONLY VALID PARAMETERS \n\n");
         pd.list(new PrintWriter(System.err, true), false);
-        }
-
     }
 
+}

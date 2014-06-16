@@ -5,21 +5,19 @@
  */
 
 package es.gpc.server;
+ 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 
+import javax.json.Json;
+import javax.json.stream.JsonParser;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
- 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import javax.json.Json;
-import javax.json.stream.JsonParser;
-import javax.servlet.ServletInputStream;
 
-import es.gpc.generic.AMBApp;
-
- 
+import es.gpc.generic.GPCApp;
 
 /**
  *
@@ -28,7 +26,6 @@ import es.gpc.generic.AMBApp;
 public class DefaultServlet extends HttpServlet
 {
     private String greeting="This is AMB-ML framework's default page.";
-    private final AMBApp app = null;
     public DefaultServlet(){}
     public DefaultServlet(String greeting)
     {
@@ -97,9 +94,7 @@ public class DefaultServlet extends HttpServlet
                     }
                     event = jr.next();
                 }
-            }
-
-            
+            } 
 
             // set the response code and write the response data
             resp.setStatus(HttpServletResponse.SC_OK);
@@ -113,6 +108,7 @@ public class DefaultServlet extends HttpServlet
                 resp.getWriter().print(e.getMessage());
                 resp.getWriter().close();
             } catch (IOException ioe) {
+                System.out.println(ioe.toString());
             }
         }
 

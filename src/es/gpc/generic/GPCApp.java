@@ -13,7 +13,7 @@ package es.gpc.generic;
 
 import es.gpc.utils.Message;
 
-public interface AMBApp {
+public interface GPCApp {
        
 public Message messageHandler(Message m);
     

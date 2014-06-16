@@ -37,9 +37,7 @@ public class GenericControlClient {
         connection = url.openConnection();
         connection.setRequestProperty("Accept-Charset", "UTF-8");
         connection.setDoOutput(true);
-    
-        
-        
+
         Map<String, Object> properties = new HashMap<>(1);
         properties.put(JsonGenerator.PRETTY_PRINTING, true);
         //Create the Factory
@@ -47,16 +45,16 @@ public class GenericControlClient {
         // Get the outputstream from the HTTP connection
         out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
         try (JsonGenerator jg = jgf.createGenerator(out)) {
-            jg.writeStartObject();                     
-            jg.write("type", "sensors");                
-            jg.writeStartArray("values");     
+            jg.writeStartObject();
+            jg.write("type", "sensors");
+            jg.writeStartArray("values");
             for (int i = 0; i < sens.length; i++) {
                 jg.writeStartObject();//     
                 jg.write("value", sens[i]);
-                jg.writeEnd();    
-            }                                         
-            jg.writeEnd();                          
-            jg.writeEnd();                             
+                jg.writeEnd();
+            }
+            jg.writeEnd();
+            jg.writeEnd();
         }
 
         // Now we will read the answer
@@ -134,10 +132,8 @@ public class GenericControlClient {
         connection = url.openConnection();
         connection.setRequestProperty("Accept-Charset", "UTF-8");
         connection.setDoOutput(true);
-        
-        
         out = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
-        
+
         Map<String, Object> properties = new HashMap<>(1);
         properties.put(JsonGenerator.PRETTY_PRINTING, true);
         JsonGeneratorFactory jgf = Json.createGeneratorFactory(properties);
@@ -211,7 +207,7 @@ public class GenericControlClient {
             }
             event = jr.next();
         }
-        
+
         // Cast the ArrayList to an array of Double
         Double[] d = new Double[arr.size()];
         arr.toArray(d);
@@ -219,7 +215,7 @@ public class GenericControlClient {
         mes.value = ArrayUtils.toPrimitive(d);
 
         if (mes.type.equalsIgnoreCase("fitness")) {
-            System.out.println("Fitness: "+mes.value[0]);
+            System.out.println("Fitness: " + mes.value[0]);
             if (mes.value[0] == 1d) {
                 stop = true;
             }
@@ -228,6 +224,6 @@ public class GenericControlClient {
     }
 
     public void setURL(String u) throws MalformedURLException, IOException {
-       url = new URL(u);
+        url = new URL(u);
     }
 }

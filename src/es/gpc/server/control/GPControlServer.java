@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  *
  * @author marc
  */
-public class GPControlServer implements es.gpc.generic.AMBApp {
+public class GPControlServer implements es.gpc.generic.GPCApp {
 
     protected Memory m = new Memory();
     protected Evolve e = new Evolve();

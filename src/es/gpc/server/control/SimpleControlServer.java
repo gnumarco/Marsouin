@@ -11,7 +11,7 @@ import es.gpc.utils.Message;
  *
  * @author marc
  */
-public class SimpleControlServer implements es.gpc.generic.AMBApp {
+public class SimpleControlServer implements es.gpc.generic.GPCApp {
 
     @Override
     public Message messageHandler(Message m) {

@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import es.gpc.gp.ec.simple.SimpleInitializer;
 import es.gpc.gp.ec.util.Parameter;
 import es.gpc.gp.ec.EvolutionState;
+import java.util.HashMap;
 
 /* 
  * GPInitializer.java
@@ -73,7 +74,7 @@ public class GPInitializer extends SimpleInitializer
     public GPNodeConstraints[] nodeConstraints;
     public byte numNodeConstraints;
     
-    public Hashtable functionSetRepository;
+    public HashMap functionSetRepository;
 
     public Hashtable treeConstraintRepository;
     public GPTreeConstraints[] treeConstraints;
@@ -242,7 +243,7 @@ public class GPInitializer extends SimpleInitializer
         {
         state.output.message("Processing GP Function Sets");
         
-        functionSetRepository = new Hashtable();
+        functionSetRepository = new HashMap();
         // How many GPFunctionSets do we have?
         int x = state.parameters.getInt(base.push(P_SIZE),null,1);
         if (x<=0) 

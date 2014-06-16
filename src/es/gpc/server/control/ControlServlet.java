@@ -31,7 +31,7 @@ import java.io.InputStream;
 public class ControlServlet extends HttpServlet {
 
     private String greeting = "Hello World";
-    private final es.gpc.generic.AMBApp app;
+    private final es.gpc.generic.GPCApp app;
 
     public ControlServlet() {
         //app = new SimpleControlServer();
