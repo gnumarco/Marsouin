@@ -1,5 +1,42 @@
-indivldslkdsds
-dkjhdkjhs
-nbsljkd
 
-lalalalala
+Generation: 0
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.5 Adjusted=0.6666667 Hits=0
+Tree 0:
+ (+ (+ (cos 0.057) (* -0.084 S1)) (- (exp
+     -0.017) (+ S1 S0)))
+
+Generation: 1
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.5 Adjusted=0.6666667 Hits=0
+Tree 0:
+ (- (* (ln S0) (ln (ln S0))) S1)
+
+Generation: 2
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.5 Adjusted=0.6666667 Hits=0
+Tree 0:
+ (- (* (* (ln S0) (ln (ln S0))) (ln (ln S0)))
+     S1)
+
+Generation: 3
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.5 Adjusted=0.6666667 Hits=0
+Tree 0:
+ (- (* (- (ln S0) S1) (ln (ln S0))) S1)
+
+Best Individual of Run:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.5 Adjusted=0.6666667 Hits=0
+Tree 0:
+ (+ (+ (cos 0.057) (* -0.084 S1)) (- (exp
+     -0.017) (+ S1 S0)))

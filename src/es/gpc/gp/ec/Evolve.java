@@ -444,7 +444,6 @@ public class Evolve extends Thread
         int[] seeds;
         int breedthreads = 1;
         int evalthreads = 1;
-        boolean store;
         int x;
 
         // output was already created for us.  
@@ -808,6 +807,6 @@ public void config(Memory mem,String[] ar){
             */
             }
 
-        System.exit(0);
+        //System.exit(0);
         }
     }

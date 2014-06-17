@@ -270,7 +270,7 @@ public class AMBStatistics extends es.gpc.gp.ec.simple.SimpleStatistics {
                 }
                 message += "Avg_Depth: " + ((double) totDepthPerGen)
                         / (state.population.subpops[x].individuals.length * numDepth.length) + ",";
-                state.output.print("Depth/tree:[", statisticslog);
+                state.output.print("Depth_tree:[", statisticslog);
                 state.output.flush();
                 for (int tr = 0; tr < numDepth.length; tr++) {
                     if (tr > 0) {

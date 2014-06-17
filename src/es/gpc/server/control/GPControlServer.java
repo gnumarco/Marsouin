@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class GPControlServer implements es.gpc.generic.GPCApp {
 
     protected Memory m = new Memory();
-    protected Evolve e = new Evolve();
+    public Evolve e = new Evolve();
 
     GPControlServer() {
         e.config(m, new String[]{"-file", "control.params"});
@@ -53,16 +53,20 @@ public class GPControlServer implements es.gpc.generic.GPCApp {
 
     public Message configGP(HashMap<String, String> map) {
 
-        
+        if (e.getState().equals(Thread.State.TERMINATED)) {
+            System.out.println("Creating new instance of the GP kernel");
+            e = new Evolve();
+            e.config(m, new String[]{"-file", "control.params"});
+        }
         ParameterDatabase p = Evolve.loadParameterDatabase(new String[]{"-file", "control.params"});
         e.parameters = p;
-        
-        Iterator<Entry<String,String>> it = map.entrySet().iterator();
-        for(Map.Entry<String, String> pairs : map.entrySet()){
-        //while (it.hasNext()) {
+
+        Iterator<Entry<String, String>> it = map.entrySet().iterator();
+        for (Map.Entry<String, String> pairs : map.entrySet()) {
+            //while (it.hasNext()) {
             //Map.Entry<String, String> pairs = it.next();
             e.parameters.set(new Parameter(pairs.getKey()), pairs.getValue());
-            System.out.println("Set "+pairs.getKey() + " to " + pairs.getValue());
+            System.out.println("Set " + pairs.getKey() + " to " + pairs.getValue());
         }
 
         Message mes = new Message();
@@ -73,6 +77,11 @@ public class GPControlServer implements es.gpc.generic.GPCApp {
     }
 
     public Message initGP() {
+        if (e.getState().equals(Thread.State.TERMINATED)) {
+            System.out.println("Creating new instance of the GP kernel");
+            e = new Evolve();
+            e.config(m, new String[]{"-file", "control.params"});
+        }
         e.start();
         Message mes = new Message();
         mes.type = "info";
@@ -86,7 +95,7 @@ public class GPControlServer implements es.gpc.generic.GPCApp {
         m.fit = fit[0];
         Message mes = new Message();
         mes.type = "fitness";
-        mes.value = new double[]{0};
+        mes.value = new double[]{m.fit};
         return mes;
 
     }

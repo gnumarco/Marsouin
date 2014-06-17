@@ -96,6 +96,7 @@ public class KozaNodeSelector implements GPNodeSelector
         an instance of KozaNodeSelector is used by only one thread. */
     protected GPNodeGatherer gatherer;
 
+    @Override
     public Parameter defaultBase()
         {
         return GPKozaDefaults.base().push(P_NODESELECTOR);
@@ -107,6 +108,7 @@ public class KozaNodeSelector implements GPNodeSelector
         reset();
         }
 
+    @Override
     public Object clone()
         {
         try
@@ -159,11 +161,13 @@ public class KozaNodeSelector implements GPNodeSelector
         }
 
 
-    public void reset()
+    @Override
+    public final void reset()
         {
         nonterminals = terminals = nodes = -1;
         }
 
+    @Override
     public GPNode pickNode(final EvolutionState s,
         final int subpopulation,
         final int thread,

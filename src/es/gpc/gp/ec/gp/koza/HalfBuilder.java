@@ -129,11 +129,13 @@ public class HalfBuilder extends KozaBuilder
     /** The likelihood of using GROW over FULL. */
     public float pickGrowProbability;
     
+    @Override
     public Parameter defaultBase()
         {
         return GPKozaDefaults.base().push(P_HALFBUILDER); 
         }
 
+    @Override
     public void setup(final EvolutionState state, final Parameter base)
         {
         super.setup(state,base);
@@ -147,6 +149,7 @@ public class HalfBuilder extends KozaBuilder
             state.output.fatal("The Pick-Grow Probability for HalfBuilder must be a floating-point value between 0.0 and 1.0 inclusive.", base.push(P_MAXDEPTH),def.push(P_MAXDEPTH));
         }
     
+    @Override
     public GPNode newRootedTree(final EvolutionState state,
         final GPType type,
         final int thread,

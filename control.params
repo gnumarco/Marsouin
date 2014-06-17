@@ -378,8 +378,8 @@ init = 	es.gpc.gp.ec.gp.GPInitializer
 exch = 	es.gpc.gp.ec.simple.SimpleExchanger
 breed =	es.gpc.gp.ec.simple.SimpleBreeder
 eval =	es.gpc.gp.ec.simple.SimpleEvaluator
-#stat = es.gpc.gp.ec.app.control.ControlStatistics
-stat =	es.gpc.gp.ec.app.control.AMBStatistics
+stat = es.gpc.gp.ec.app.control.ControlStatistics
+#stat =	es.gpc.gp.ec.app.control.AMBStatistics
 finish = es.gpc.gp.ec.app.control.ControlFinisher
 state = es.gpc.gp.ec.app.control.ControlEvolutionState
 
@@ -396,8 +396,8 @@ eval.problem.lowBound = -0.1
 # Precicion (digits)
 eval.problem.precision = 3
 
-generations =				2
-quit-on-run-complete =			true
+generations =				4
+quit-on-run-complete =			false
 # subpop size is 100 individuals
 pop.subpop.0.size =			2
 

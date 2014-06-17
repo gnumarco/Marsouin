@@ -23,6 +23,8 @@ import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonGeneratorFactory;
 
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -55,7 +57,9 @@ public class ControlServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) {
         int len = req.getContentLength();
+
         Message mes = new Message();
+
         try {
             InputStream is = req.getInputStream();
 
@@ -68,14 +72,14 @@ public class ControlServlet extends HttpServlet {
             JsonArray values = obj.getJsonArray("values");
             JsonObject result;
             if (t.equalsIgnoreCase("start")) {
-                
+
             } else if (t.equalsIgnoreCase("config")) {
                 mes.config = new HashMap<>();
                 for (int i = 0; i < values.size(); i++) {
                     result = values.getJsonObject(i);
                     System.out.println("value : " + result.getJsonString("param").getString());
                     System.out.println("value : " + result.getJsonString("value").getString());
-                    mes.config.put(result.getJsonString("param").getString(), result.getJsonString("value").getString());  
+                    mes.config.put(result.getJsonString("param").getString(), result.getJsonString("value").getString());
                 }
             } else {
                 double[] d = new double[values.size()];
@@ -83,34 +87,53 @@ public class ControlServlet extends HttpServlet {
                 for (int i = 0; i < values.size(); i++) {
                     result = values.getJsonObject(i);
                     System.out.println("value : " + result.getJsonString("value"));
-                    d[i] = result.getJsonNumber("value").doubleValue();
+                    d[i] = Double.valueOf(result.getJsonString("value").getString());
                 }
                 mes.value = d;
             }
             resp.setStatus(HttpServletResponse.SC_OK);
             // Send the message to the handler of the app and get the response message
             // This has to be blocking = no thread or use join()
-            Message response = app.messageHandler(mes);
-            // set the response code and write the response data
-            try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream())) {
-                Map<String, Object> properties = new HashMap<>(1);
-                properties.put(JsonGenerator.PRETTY_PRINTING, true);
-                JsonGeneratorFactory jgf = Json.createGeneratorFactory(properties);
-                try (JsonGenerator jg = jgf.createGenerator(writer)) {
-                    jg.writeStartObject();
-                    jg.write("type", response.type);
-                    if (!response.type.equalsIgnoreCase("info")) {
-                        jg.writeStartArray("values");
-                        for (int i = 0; i < response.value.length; i++) {
-                            jg.writeStartObject();
-                            jg.write("value", response.value[i]);
+            Message response;
+            if (((GPControlServer) app).e.isAlive()) {
+                response = app.messageHandler(mes);
+                try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream())) {
+                    Map<String, Object> properties = new HashMap<>(1);
+                    properties.put(JsonGenerator.PRETTY_PRINTING, true);
+                    JsonGeneratorFactory jgf = Json.createGeneratorFactory(properties);
+                    try (JsonGenerator jg = jgf.createGenerator(writer)) {
+                        jg.writeStartObject();
+                        jg.write("type", response.type);
+                        if (!response.type.equalsIgnoreCase("info")) {
+                            jg.writeStartArray("values");
+                            for (int i = 0; i < response.value.length; i++) {
+                                jg.writeStartObject();
+                                jg.write("value", response.value[i]);
+                                jg.writeEnd();
+                            }
                             jg.writeEnd();
                         }
                         jg.writeEnd();
                     }
-                    jg.writeEnd();
+                }
+            } else {
+                if (mes.type.equalsIgnoreCase("config") || mes.type.equalsIgnoreCase("start")) {
+                    response = app.messageHandler(mes);
+                    resp.setStatus(HttpServletResponse.SC_OK);
+                    resp.getWriter().println(response.type);
+                    resp.getWriter().close();
+                } else {
+                    try {
+                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                        resp.getWriter().println("No Living instance of the GP-Control kernel");
+                        resp.getWriter().close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ControlServlet.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
+            // set the response code and write the response data
+
         } catch (IOException e) {
             try {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
