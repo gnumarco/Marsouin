@@ -11,6 +11,7 @@ import es.gpc.gp.ec.Clique;
 import es.gpc.gp.ec.EvolutionState;
 import java.io.*;
 import java.util.*;
+import java.util.Map.Entry;
 
 /* 
  * GPFunctionSet.java
@@ -264,11 +265,12 @@ public class GPFunctionSet implements Clique
 
         // Now set 'em up according to the types in GPType
 
-        Enumeration e = ((GPInitializer)state.initializer).typeRepository.elements();
+        Set<Entry<String,GPType>> e = ((GPInitializer)state.initializer).typeRepository.entrySet();
         GPInitializer initializer = ((GPInitializer)state.initializer);
-        while(e.hasMoreElements())
+        for(Entry<String,GPType> typ:e)
+        //while(e.hasMoreElements())
             {
-            GPType typ = (GPType)(e.nextElement());
+            //GPType typ = (GPType)(e.nextElement());
             
             // make vectors for the type.
             ArrayList<GPNode> nodes_v = new ArrayList<>();
@@ -281,7 +283,7 @@ public class GPFunctionSet implements Clique
             //while (v.hasMoreElements())
                 {
                 //GPNode i = (GPNode)(v.nextElement());
-                if (typ.compatibleWith(initializer,i.constraints(initializer).returntype))
+                if (typ.getValue().compatibleWith(initializer,i.constraints(initializer).returntype))
                     {
                     nodes_v.add(i);
                     if (i.children.length == 0)
@@ -293,17 +295,17 @@ public class GPFunctionSet implements Clique
             // turn nodes_h' vectors into arrays
             GPNode[] ii = new GPNode[nodes_v.size()];
             nodes_v.toArray(ii);
-            nodes_h.put(typ,ii);
+            nodes_h.put(typ.getValue(),ii);
 
             // turn terminals_h' vectors into arrays
             ii = new GPNode[terminals_v.size()];
             terminals_v.toArray(ii);
-            terminals_h.put(typ,ii);
+            terminals_h.put(typ.getValue(),ii);
 
             // turn nonterminals_h' vectors into arrays
             ii = new GPNode[nonterminals_v.size()];
             nonterminals_v.toArray(ii);
-            nonterminals_h.put(typ,ii);
+            nonterminals_h.put(typ.getValue(),ii);
             }
 
         // I don't check to see if the generation mechanism will be valid here

@@ -82,7 +82,7 @@ public class ControlServlet extends HttpServlet {
                 System.out.println("type : " + t);
                 for (int i = 0; i < values.size(); i++) {
                     result = values.getJsonObject(i);
-                    System.out.println("value : " + result.getJsonNumber("value"));
+                    System.out.println("value : " + result.getJsonString("value"));
                     d[i] = result.getJsonNumber("value").doubleValue();
                 }
                 mes.value = d;

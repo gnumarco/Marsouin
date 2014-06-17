@@ -246,7 +246,6 @@ public class Evolve extends Thread
                     }
                 catch(IOException e)
                     {
-                    e.printStackTrace();
                     Output.initialError("An exception was generated upon reading the parameter file \"" + args[x+1] + "\".\nHere it is:\n" + e); 
                     }
                     
@@ -264,7 +263,6 @@ public class Evolve extends Thread
                     }
                 catch (ClassNotFoundException e)
                     {
-                    e.printStackTrace();
                     Output.initialError(
                         "An exception was generated upon extracting the class to load the parameter file relative to: " + args[x+1] + 
                         "\nFor help, try:  java ec.Evolve -help\n\n" + e);
@@ -288,7 +286,6 @@ public class Evolve extends Thread
                     }
                 catch (IOException e)
                     {
-                    e.printStackTrace();
                     Output.initialError(
                         "The parameter file is missing at the resource location: " + args[x+1] + " relative to the class: " + cls + "\n\nFor help, try:  java ec.Evolve -help");
                     }
@@ -316,7 +313,7 @@ public class Evolve extends Thread
             {
             Runtime runtime = Runtime.getRuntime();
             try { return ((Integer)runtime.getClass().getMethod("availableProcessors", (Class[])null).
-                    invoke(runtime,(Object[])null)).intValue(); }
+                    invoke(runtime,(Object[])null)); }
             catch (IllegalAccessException | IllegalArgumentException | NoSuchMethodException | SecurityException | InvocationTargetException e)
                 { 
                 output.fatal("Whoa! This Java version is too old to have the Runtime.availableProcessors() method available.\n" + 
@@ -700,6 +697,7 @@ public void config(Memory mem,String[] ar){
     /** Top-level evolutionary loop.
      * @param args */
 
+    @Override
     public void run()
         {
         
@@ -724,7 +722,7 @@ public void config(Memory mem,String[] ar){
                 if (state.runtimeArguments == null)
                     Output.initialError("Checkpoint completed from job started by foreign program (probably GUI).  Exiting...");
                 args = state.runtimeArguments;                          // restore runtime arguments from checkpoint
-                currentJob = ((Integer)(state.job[0])).intValue() + 1;  // extract next job number
+                currentJob = ((Integer)(state.job[0])) + 1;  // extract next job number
                 }
             catch (Exception e)
                 {
@@ -777,7 +775,7 @@ public void config(Memory mem,String[] ar){
                 state = initialize(parameters, job);                // pass in job# as the seed increment
                 state.output.systemMessage("Job: " + job);
                 state.job = new Object[1];                                  // make the job argument storage
-                state.job[0] = new Integer(job);                    // stick the current job in our job storage
+                state.job[0] = job;                    // stick the current job in our job storage
                 state.runtimeArguments = args;
                 state.memory = m;// stick the runtime arguments in our storage
                 if (numJobs > 1)                                                    // only if iterating (so we can be backwards-compatible),

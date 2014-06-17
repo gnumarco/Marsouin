@@ -13,6 +13,8 @@ import es.gpc.gp.ec.simple.SimpleInitializer;
 import es.gpc.gp.ec.util.Parameter;
 import es.gpc.gp.ec.EvolutionState;
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /* 
  * GPInitializer.java
@@ -65,18 +67,18 @@ public class GPInitializer extends SimpleInitializer
      * TODO Comment these members.
      * TODO Make clients of these members more efficient by reducing unnecessary casting.
      */
-    public Hashtable typeRepository;
+    public HashMap<String,GPType> typeRepository;
     public GPType[] types;
     public int numAtomicTypes;
     public int numSetTypes;
     
-    public Hashtable nodeConstraintRepository;
+    public HashMap<String,GPNodeConstraints> nodeConstraintRepository;
     public GPNodeConstraints[] nodeConstraints;
     public byte numNodeConstraints;
     
-    public HashMap functionSetRepository;
+    public HashMap<String,GPFunctionSet> functionSetRepository;
 
-    public Hashtable treeConstraintRepository;
+    public HashMap<String,GPTreeConstraints> treeConstraintRepository;
     public GPTreeConstraints[] treeConstraints;
     public byte numTreeConstraints;
     
@@ -111,7 +113,7 @@ public class GPInitializer extends SimpleInitializer
         {
         state.output.message("Processing GP Types");
         
-        typeRepository = new Hashtable();
+        typeRepository = new HashMap<>();
         numAtomicTypes = numSetTypes = 0;
         
         // How many atomic types do we have?
@@ -152,12 +154,13 @@ public class GPInitializer extends SimpleInitializer
         {
         // assign positive integers and 0 to atomic types
         int x = 0;
-        Enumeration e = typeRepository.elements();
-        while(e.hasMoreElements())
+        Set<Entry<String,GPType>> e = typeRepository.entrySet();
+        for(Entry<String,GPType> t: e)
+        //while(e.hasMoreElements())
             {
-            GPType t = (GPType)(e.nextElement());
-            if (t instanceof GPAtomicType)
-                { t.type = x; x++; }
+            //GPType t = (GPType)(e.nextElement());
+            if (t.getValue() instanceof GPAtomicType)
+                { t.getValue().type = x; x++; }
             }
         
         // at this point, x holds the number of atomic types.
@@ -165,14 +168,15 @@ public class GPInitializer extends SimpleInitializer
         
         // assign additional positive integers to set types
         // and set up arrays for the set types
-        e = typeRepository.elements();
-        while(e.hasMoreElements())
+        e = typeRepository.entrySet();
+        for(Entry<String,GPType> t: e)
+        //while(e.hasMoreElements())
             {
-            GPType t = (GPType)(e.nextElement());
-            if (t instanceof GPSetType)
+            //GPType t = (GPType)(e.nextElement());
+            if (t.getValue() instanceof GPSetType)
                 {
-                ((GPSetType)t).postProcessSetType(numAtomicTypes);
-                t.type = x; x++;
+                ((GPSetType)t.getValue()).postProcessSetType(numAtomicTypes);
+                t.getValue().type = x; x++;
                 }
             }
         
@@ -181,11 +185,12 @@ public class GPInitializer extends SimpleInitializer
         
         // make an array for convenience.  Presently rarely used.
         types = new GPType[numSetTypes + numAtomicTypes];
-        e = typeRepository.elements();
-        while(e.hasMoreElements())
+        e = typeRepository.entrySet();
+        for(Entry<String,GPType> t: e)
+        //while(e.hasMoreElements())
             {
-            GPType t = (GPType)(e.nextElement());
-            types[t.type] = t;
+            //GPType t = (GPType)(e.nextElement());
+            types[t.getValue().type] = t.getValue();
             }
         }
     
@@ -200,7 +205,7 @@ public class GPInitializer extends SimpleInitializer
         {
         state.output.message("Processing GP Node Constraints");
         
-        nodeConstraintRepository = new Hashtable();
+        nodeConstraintRepository = new HashMap<>();
         nodeConstraints = new GPNodeConstraints[SIZE_OF_BYTE];
         numNodeConstraints = 0;
         
@@ -227,12 +232,13 @@ public class GPInitializer extends SimpleInitializer
             }
         
         // set our constraints array up
-        Enumeration e = nodeConstraintRepository.elements();
-        while(e.hasMoreElements())
+        Set<Entry<String,GPNodeConstraints>> e = nodeConstraintRepository.entrySet();
+        for(Entry<String,GPNodeConstraints> c:e)
+        //while(e.hasMoreElements())
             {
-            GPNodeConstraints c = (GPNodeConstraints)(e.nextElement());
-            c.constraintNumber = numNodeConstraints;
-            nodeConstraints[numNodeConstraints] = c;
+            //GPNodeConstraints c = (GPNodeConstraints)(e.nextElement());
+            c.getValue().constraintNumber = numNodeConstraints;
+            nodeConstraints[numNodeConstraints] = c.getValue();
             numNodeConstraints++;
             }
         }
@@ -243,7 +249,7 @@ public class GPInitializer extends SimpleInitializer
         {
         state.output.message("Processing GP Function Sets");
         
-        functionSetRepository = new HashMap();
+        functionSetRepository = new HashMap<>();
         // How many GPFunctionSets do we have?
         int x = state.parameters.getInt(base.push(P_SIZE),null,1);
         if (x<=0) 
@@ -277,7 +283,7 @@ public class GPInitializer extends SimpleInitializer
         {
         state.output.message("Processing GP Tree Constraints");
             
-        treeConstraintRepository = new Hashtable();
+        treeConstraintRepository = new HashMap<>();
         treeConstraints = new GPTreeConstraints[SIZE_OF_BYTE];
         numTreeConstraints = 0;
         // How many GPTreeConstraints do we have?
@@ -302,12 +308,13 @@ public class GPInitializer extends SimpleInitializer
             }
             
         // set our constraints array up
-        Enumeration e = treeConstraintRepository.elements();
-        while(e.hasMoreElements())
+        Set<Entry<String,GPTreeConstraints>> e = treeConstraintRepository.entrySet();
+        for(Entry<String,GPTreeConstraints> c:e)
+        //while(e.hasMoreElements())
             {
-            GPTreeConstraints c = (GPTreeConstraints)(e.nextElement());
-            c.constraintNumber = numTreeConstraints;
-            treeConstraints[numTreeConstraints] = c;
+            //GPTreeConstraints c = (GPTreeConstraints)(e.nextElement());
+            c.getValue().constraintNumber = numTreeConstraints;
+            treeConstraints[numTreeConstraints] = c.getValue();
             numTreeConstraints++;
             }
         }

@@ -37,18 +37,18 @@ checkpoint-prefix = 			ec
 # ec.Initializer
 # ==============================
 
-pop = 					amb.ml.GP.ec.Population
+pop = 					es.gpc.gp.ec.Population
 
 
-# amb.ml.GP.ec.Population
+# es.gpc.gp.ec.Population
 # ==============================
 
 # No multiple populations
 pop.subpops =				1
-pop.subpop.0 = 				amb.ml.GP.ec.Subpopulation
+pop.subpop.0 = 				es.gpc.gp.ec.Subpopulation
 
 
-# amb.ml.GP.ec.Subpopulation
+# es.gpc.gp.ec.Subpopulation
 # ==============================
 
 
@@ -58,7 +58,7 @@ pop.subpop.0.duplicate-retries =	0
 
 # ==You need to provide the species info for the subpopulation.==
 
-# amb.ml.GP.ec.simple.SimpleBreeder
+# es.gpc.gp.ec.simple.SimpleBreeder
 # ==============================
 
 # By default elitism isn't done.  If you want to do elitism for, say,
@@ -67,7 +67,7 @@ pop.subpop.0.duplicate-retries =	0
 # breed.elite.0 = 			10
 
 
-# amb.ml.GP.ec.SimpleStatistics
+# es.gpc.gp.ec.SimpleStatistics
 # ==============================
 
 # output statistics to the file "out.stat" in the directory
@@ -79,20 +79,20 @@ stat.file				$out.stat
 # Koza-style fitness metrics, just to make everyone happy :-)
 #
 
-pop.subpop.0.species.fitness = amb.ml.GP.ec.gp.koza.KozaFitness
+pop.subpop.0.species.fitness = es.gpc.gp.ec.gp.koza.KozaFitness
 
 #
 # We have a GP-specific initializer.  But we'll keep the
 # statistics as a SimpleStatistics (defined in simple.params)
 
-init = amb.ml.GP.ec.gp.GPInitializer
+init = es.gpc.gp.ec.gp.GPInitializer
 
 
 # We have a single subpopulation containing a GPSpecies,
 # using GPIndividuals as the prototypical individual class.
 
-pop.subpop.0.species = amb.ml.GP.ec.gp.GPSpecies
-pop.subpop.0.species.ind = amb.ml.GP.ec.gp.GPIndividual
+pop.subpop.0.species = es.gpc.gp.ec.gp.GPSpecies
+pop.subpop.0.species.ind = es.gpc.gp.ec.gp.GPIndividual
 
 # We retry 100 times for duplicates (this is the lil-gp default)
 # in our subpopulation 0
@@ -103,21 +103,21 @@ pop.subpop.0.duplicate-retries = 100
 # "tc0" Tree Constraints (which we define below later)
 
 pop.subpop.0.species.ind.numtrees = 1
-pop.subpop.0.species.ind.tree.0 = amb.ml.GP.ec.gp.GPTree
+pop.subpop.0.species.ind.tree.0 = es.gpc.gp.ec.gp.GPTree
 pop.subpop.0.species.ind.tree.0.tc = tc0
 
 
 # The GPSpecies has 2 pipelines, Crossover and Reproduction,
 # chosen with 0.9 and 0.1 likelihood respectively.
 
-pop.subpop.0.species.pipe = amb.ml.GP.ec.breed.MultiBreedingPipeline
+pop.subpop.0.species.pipe = es.gpc.gp.ec.breed.MultiBreedingPipeline
 # Koza's decision here was odd...
 pop.subpop.0.species.pipe.generate-max = false
 # Subsidiary pipelines:
 pop.subpop.0.species.pipe.num-sources = 2
-pop.subpop.0.species.pipe.source.0 = amb.ml.GP.ec.gp.koza.CrossoverPipeline
+pop.subpop.0.species.pipe.source.0 = es.gpc.gp.ec.gp.koza.CrossoverPipeline
 pop.subpop.0.species.pipe.source.0.prob = 0.9
-pop.subpop.0.species.pipe.source.1 = amb.ml.GP.ec.breed.ReproductionPipeline
+pop.subpop.0.species.pipe.source.1 = es.gpc.gp.ec.breed.ReproductionPipeline
 pop.subpop.0.species.pipe.source.1.prob = 0.1
 
 
@@ -131,13 +131,13 @@ pop.subpop.0.species.pipe.source.1.prob = 0.1
 #
 
 # Reproduction will use Tournament Selection 
-breed.reproduce.source.0 = amb.ml.GP.ec.select.TournamentSelection
+breed.reproduce.source.0 = es.gpc.gp.ec.select.TournamentSelection
 
 # Crossover will use Tournament Selection, try only 1
 # time, have a max depth of 17, and use KozaNodeSelector
-gp.koza.xover.source.0 = amb.ml.GP.ec.select.TournamentSelection
+gp.koza.xover.source.0 = es.gpc.gp.ec.select.TournamentSelection
 gp.koza.xover.source.1 = same
-gp.koza.xover.ns.0 = amb.ml.GP.ec.gp.koza.KozaNodeSelector
+gp.koza.xover.ns.0 = es.gpc.gp.ec.gp.koza.KozaNodeSelector
 gp.koza.xover.ns.1 = same
 gp.koza.xover.maxdepth = 17
 # This is the default for Koza and lil-gp, though it's
@@ -153,9 +153,9 @@ gp.koza.xover.tries = 1
 # and GROW for building.  Also, Point Mutation uses a GrowBuilder
 # by default, with a default of min-depth=max-depth=5
 # as shown a ways below
-gp.koza.mutate.source.0 = amb.ml.GP.ec.select.TournamentSelection
-gp.koza.mutate.ns.0 = amb.ml.GP.ec.gp.koza.KozaNodeSelector
-gp.koza.mutate.build.0 = amb.ml.GP.ec.gp.koza.GrowBuilder
+gp.koza.mutate.source.0 = es.gpc.gp.ec.select.TournamentSelection
+gp.koza.mutate.ns.0 = es.gpc.gp.ec.gp.koza.KozaNodeSelector
+gp.koza.mutate.build.0 = es.gpc.gp.ec.gp.koza.GrowBuilder
 gp.koza.mutate.maxdepth = 17
 # This is the default for Koza and lil-gp, though it's
 # a little wimpy; on the other hand, a higher number can
@@ -192,8 +192,8 @@ gp.koza.grow.max-depth = 5
 # of stack they use, and what kind of context
 #
 
-gp.problem.stack = amb.ml.GP.ec.gp.ADFStack
-gp.adf-stack.context = amb.ml.GP.ec.gp.ADFContext
+gp.problem.stack = es.gpc.gp.ec.gp.ADFStack
+gp.adf-stack.context = es.gpc.gp.ec.gp.ADFContext
 
 # 
 # Here we define the default values for KozaNodeSelection;
@@ -216,7 +216,7 @@ gp.koza.ns.root = 0.0
 # but it quiets warnings.
 
 gp.fs.size = 1
-gp.fs.0 = amb.ml.GP.ec.gp.GPFunctionSet
+gp.fs.0 = es.gpc.gp.ec.gp.GPFunctionSet
 gp.fs.0.name = f0
 #fill the rest of this out on a per-problem basis
 
@@ -229,19 +229,19 @@ gp.type.a.0.name = nil
 gp.type.s.size = 0
 
 # Here we define one GPTreeConstraints object, "tc0",
-# which uses amb.ml.GP.ec.gp.koza.HalfBuilder to create nodes,
+# which uses es.gpc.gp.ec.gp.koza.HalfBuilder to create nodes,
 # only allows nodes from the GPFunctionSet "fset",
 # and has the single type "nil" as its tree type.
 # You don't need to include the class declaration here,
 # but it quiets warnings.
 
 gp.tc.size = 1
-gp.tc.0 = amb.ml.GP.ec.gp.GPTreeConstraints
+gp.tc.0 = es.gpc.gp.ec.gp.GPTreeConstraints
 gp.tc.0.name = tc0
 gp.tc.0.fset = f0
 gp.tc.0.returns = nil
 
-# The tree uses an amb.ml.GP.ec.gp.koza.HalfBuilder to create
+# The tree uses an es.gpc.gp.ec.gp.koza.HalfBuilder to create
 # itself initially.
 # HalfBuilder will pick GROW half the time and FULL
 # the other half, with a ramp from 2 to 6 inclusive.
@@ -250,7 +250,7 @@ gp.tc.0.returns = nil
 # (for the FULL approach, it's the tree size of the tree, for
 # GROW, the tree can get no bigger than this)
 
-gp.tc.0.init = amb.ml.GP.ec.gp.koza.HalfBuilder
+gp.tc.0.init = es.gpc.gp.ec.gp.koza.HalfBuilder
 
 # We set the default for HalfBuilder to be a ramp of 2--6,
 # with a grow probability of 0.5
@@ -269,25 +269,25 @@ gp.koza.half.growp = 0.5
 
 gp.nc.size = 6
 
-gp.nc.0 = amb.ml.GP.ec.gp.GPNodeConstraints
+gp.nc.0 = es.gpc.gp.ec.gp.GPNodeConstraints
 gp.nc.0.name = nc0
 gp.nc.0.returns = nil
 gp.nc.0.size = 0
 
-gp.nc.1 = amb.ml.GP.ec.gp.GPNodeConstraints
+gp.nc.1 = es.gpc.gp.ec.gp.GPNodeConstraints
 gp.nc.1.name = nc1
 gp.nc.1.returns = nil
 gp.nc.1.size = 1
 gp.nc.1.child.0 = nil
 
-gp.nc.2 = amb.ml.GP.ec.gp.GPNodeConstraints
+gp.nc.2 = es.gpc.gp.ec.gp.GPNodeConstraints
 gp.nc.2.name = nc2
 gp.nc.2.returns = nil
 gp.nc.2.size = 2
 gp.nc.2.child.0 = nil
 gp.nc.2.child.1 = nil
 
-gp.nc.3 = amb.ml.GP.ec.gp.GPNodeConstraints
+gp.nc.3 = es.gpc.gp.ec.gp.GPNodeConstraints
 gp.nc.3.name = nc3
 gp.nc.3.returns = nil
 gp.nc.3.size = 3
@@ -295,7 +295,7 @@ gp.nc.3.child.0 = nil
 gp.nc.3.child.1 = nil
 gp.nc.3.child.2 = nil
 
-gp.nc.4 = amb.ml.GP.ec.gp.GPNodeConstraints
+gp.nc.4 = es.gpc.gp.ec.gp.GPNodeConstraints
 gp.nc.4.name = nc4
 gp.nc.4.returns = nil
 gp.nc.4.size = 4
@@ -304,7 +304,7 @@ gp.nc.4.child.1 = nil
 gp.nc.4.child.2 = nil
 gp.nc.4.child.3 = nil
 
-gp.nc.5 = amb.ml.GP.ec.gp.GPNodeConstraints
+gp.nc.5 = es.gpc.gp.ec.gp.GPNodeConstraints
 gp.nc.5.name = nc5
 gp.nc.5.returns = nil
 gp.nc.5.size = 5
@@ -314,7 +314,7 @@ gp.nc.5.child.2 = nil
 gp.nc.5.child.3 = nil
 gp.nc.5.child.4 = nil
 
-gp.nc.6 = amb.ml.GP.ec.gp.GPNodeConstraints
+gp.nc.6 = es.gpc.gp.ec.gp.GPNodeConstraints
 gp.nc.6.name = nc6
 gp.nc.6.returns = nil
 gp.nc.6.size = 6
@@ -336,32 +336,32 @@ gp.nc.6.child.5 = nil
 gp.fs.size = 1
 gp.fs.0.name = f0
 gp.fs.0.size = 10
-gp.fs.0.func.0 = amb.ml.GP.ec.app.control.func.Xn
+gp.fs.0.func.0 = es.gpc.gp.ec.app.control.func.Xn
 gp.fs.0.func.0.nc = nc0
-gp.fs.0.func.1 = amb.ml.GP.ec.app.control.func.Add
+gp.fs.0.func.1 = es.gpc.gp.ec.app.control.func.Add
 gp.fs.0.func.1.nc = nc2
-gp.fs.0.func.2 = amb.ml.GP.ec.app.control.func.Mul
+gp.fs.0.func.2 = es.gpc.gp.ec.app.control.func.Mul
 gp.fs.0.func.2.nc = nc2
-gp.fs.0.func.3 = amb.ml.GP.ec.app.control.func.Sub
+gp.fs.0.func.3 = es.gpc.gp.ec.app.control.func.Sub
 gp.fs.0.func.3.nc = nc2
-gp.fs.0.func.4 = amb.ml.GP.ec.app.control.func.Div
+gp.fs.0.func.4 = es.gpc.gp.ec.app.control.func.Div
 gp.fs.0.func.4.nc = nc2
-gp.fs.0.func.5 = amb.ml.GP.ec.app.control.func.Sin
+gp.fs.0.func.5 = es.gpc.gp.ec.app.control.func.Sin
 gp.fs.0.func.5.nc = nc1
-gp.fs.0.func.6 = amb.ml.GP.ec.app.control.func.Cos
+gp.fs.0.func.6 = es.gpc.gp.ec.app.control.func.Cos
 gp.fs.0.func.6.nc = nc1
-gp.fs.0.func.7 = amb.ml.GP.ec.app.control.func.Exp
+gp.fs.0.func.7 = es.gpc.gp.ec.app.control.func.Exp
 gp.fs.0.func.7.nc = nc1
-gp.fs.0.func.8 = amb.ml.GP.ec.app.control.func.Log
+gp.fs.0.func.8 = es.gpc.gp.ec.app.control.func.Log
 gp.fs.0.func.8.nc = nc1
-#gp.fs.0.func.9 = amb.ml.GP.ec.app.control.func.ASin
+#gp.fs.0.func.9 = es.gpc.gp.ec.app.control.func.ASin
 #gp.fs.0.func.9.nc = nc1
-#gp.fs.0.func.10 = amb.ml.GP.ec.app.control.func.ACos
+#gp.fs.0.func.10 = es.gpc.gp.ec.app.control.func.ACos
 #gp.fs.0.func.10.nc = nc1
 # placed here at the bottom so noerc.params can skip it
-gp.fs.0.func.9 = amb.ml.GP.ec.app.control.func.RegERC
+gp.fs.0.func.9 = es.gpc.gp.ec.app.control.func.RegERC
 gp.fs.0.func.9.nc = nc0
-#gp.fs.0.func.12 = amb.ml.GP.ec.app.control.func.Root
+#gp.fs.0.func.12 = es.gpc.gp.ec.app.control.func.Root
 #gp.fs.0.func.12.nc = nc7
 
 
@@ -369,19 +369,19 @@ gp.fs.0.func.9.nc = nc0
 # We specify our problem here
 #
 
-eval.problem = amb.ml.GP.ec.app.control.Control
-eval.problem.data = amb.ml.GP.ec.app.control.ControlData
+eval.problem = es.gpc.gp.ec.app.control.Control
+eval.problem.data = es.gpc.gp.ec.app.control.ControlData
 
 
 
-init = 	amb.ml.GP.ec.gp.GPInitializer
-exch = 	amb.ml.GP.ec.simple.SimpleExchanger
-breed =	amb.ml.GP.ec.simple.SimpleBreeder
-eval =	amb.ml.GP.ec.simple.SimpleEvaluator
-#stat = amb.ml.GP.ec.app.control.ControlStatistics
-stat =	amb.ml.GP.ec.app.control.AMBStatistics
-finish = amb.ml.GP.ec.app.control.ControlFinisher
-state = amb.ml.GP.ec.app.control.ControlEvolutionState
+init = 	es.gpc.gp.ec.gp.GPInitializer
+exch = 	es.gpc.gp.ec.simple.SimpleExchanger
+breed =	es.gpc.gp.ec.simple.SimpleBreeder
+eval =	es.gpc.gp.ec.simple.SimpleEvaluator
+#stat = es.gpc.gp.ec.app.control.ControlStatistics
+stat =	es.gpc.gp.ec.app.control.AMBStatistics
+finish = es.gpc.gp.ec.app.control.ControlFinisher
+state = es.gpc.gp.ec.app.control.ControlEvolutionState
 
 
 eval.problem.groups = 1

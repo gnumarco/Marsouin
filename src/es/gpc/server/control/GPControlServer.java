@@ -35,7 +35,7 @@ public class GPControlServer implements es.gpc.generic.GPCApp {
 
         Message mes = null;
 
-        if (m.type.equalsIgnoreCase("init")) {
+        if (m.type.equalsIgnoreCase("config")) {
             mes = configGP(m.config);
         }
         if (m.type.equalsIgnoreCase("start")) {

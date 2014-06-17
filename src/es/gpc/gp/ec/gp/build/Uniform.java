@@ -20,6 +20,7 @@ import es.gpc.gp.ec.EvolutionState;
 import java.util.*;
 import java.math.*;
 import java.io.*;
+import java.util.Map.Entry;
 
 /* 
  * Uniform.java
@@ -238,19 +239,19 @@ public class Uniform extends GPNodeBuilder
         
         maxtreesize = _maxtreesize;
         
-        HashMap functionSetRepository = ((GPInitializer)state.initializer).functionSetRepository;
+        HashMap<String,GPFunctionSet> functionSetRepository = ((GPInitializer)state.initializer).functionSetRepository;
         
         // Put each function set into the arrays
         functionsets = new GPFunctionSet[functionSetRepository.size()];
         _functionsets = new HashMap<>();
-        Set<GPFunctionSet> e = functionSetRepository.entrySet();
+        Set<Entry<String,GPFunctionSet>> e = functionSetRepository.entrySet();
         int count=0;
-        for(GPFunctionSet set : e)
+        for(Entry<String,GPFunctionSet> set : e)
         //while(e.hasMoreElements())
             {
             //GPFunctionSet set = (GPFunctionSet)(e.nextElement());
-            _functionsets.put(set, count);
-            functionsets[count++] = set;
+            _functionsets.put(set.getValue(), count);
+            functionsets[count++] = set.getValue();
             }
         
         // For each function set, assign each GPNode to a unique integer
