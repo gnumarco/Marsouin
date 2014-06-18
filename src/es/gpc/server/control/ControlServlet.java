@@ -5,6 +5,7 @@
  */
 package es.gpc.server.control;
 
+import es.gpc.utils.GlobalLog;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
@@ -34,16 +35,22 @@ public class ControlServlet extends HttpServlet {
 
     private String greeting = "Hello World";
     private final es.gpc.generic.GPCApp app;
+    GlobalLog glog = null;
 
-    public ControlServlet() {
-        //app = new SimpleControlServer();
-        app = new GPControlServer();
-    }
-
-    public ControlServlet(String greeting) {
-        this.greeting = greeting;
-        //app = new SimpleControlServer();
-        app = new GPControlServer();
+//    public ControlServlet() {
+//        app = new GPControlServer();
+//    }
+//
+//    public ControlServlet(String greeting) {
+//        this.greeting = greeting;
+//        app = new GPControlServer();
+//    }
+    
+    public ControlServlet(GlobalLog glob) {
+        glog = glob;
+        app = new GPControlServer(glog);
+        if(glog == null)
+            System.err.println("PROB!!");
     }
 
     @Override

@@ -12,6 +12,7 @@ package es.gpc.server;
  */
 
 import es.gpc.server.control.ControlServlet;
+import es.gpc.utils.GlobalLog;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
@@ -46,10 +47,10 @@ public class HTTPServer extends AbstractHandler
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         server.setHandler(context);
- 
-        context.addServlet(new ServletHolder(new ControlServlet()),"/control/*");
+        GlobalLog glob = new GlobalLog();
+        context.addServlet(new ServletHolder(new ControlServlet(glob)),"/control/*");
         context.addServlet(new ServletHolder(new PredictServlet()),"/predict/*");
-        context.addServlet(new ServletHolder(new DefaultServlet()),"/*");
+        context.addServlet(new ServletHolder(new DefaultServlet(glob)),"/*");
  
         server.start();
         server.join();

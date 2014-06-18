@@ -10,6 +10,7 @@ import es.gpc.utils.Message;
 import es.gpc.gp.ec.Evolve;
 import es.gpc.gp.ec.util.Parameter;
 import es.gpc.gp.ec.util.ParameterDatabase;
+import es.gpc.utils.GlobalLog;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -24,10 +25,18 @@ import java.util.logging.Logger;
 public class GPControlServer implements es.gpc.generic.GPCApp {
 
     protected Memory m = new Memory();
-    public Evolve e = new Evolve();
+    public Evolve e;
+    GlobalLog glog = null;
 
-    GPControlServer() {
-        e.config(m, new String[]{"-file", "control.params"});
+//    GPControlServer() {
+//        e = new Evolve(glog);
+//        e.config(m, new String[]{"-file", "control.params"});
+//    }
+    
+    GPControlServer(GlobalLog glob) {
+        glog = glob;
+        e = new Evolve(glog);
+        e.config(m, new String[]{"-file", "control.params"});   
     }
 
     @Override
@@ -36,9 +45,11 @@ public class GPControlServer implements es.gpc.generic.GPCApp {
         Message mes = null;
 
         if (m.type.equalsIgnoreCase("config")) {
+            glog.state = "Configuring the kernel";
             mes = configGP(m.config);
         }
         if (m.type.equalsIgnoreCase("start")) {
+            glog.state = "Initializing the kernel";
             mes = initGP();
         }
         if (m.type.equalsIgnoreCase("fitness")) {
@@ -55,7 +66,7 @@ public class GPControlServer implements es.gpc.generic.GPCApp {
 
         if (e.getState().equals(Thread.State.TERMINATED)) {
             System.out.println("Creating new instance of the GP kernel");
-            e = new Evolve();
+            e = new Evolve(glog);
             e.config(m, new String[]{"-file", "control.params"});
         }
         ParameterDatabase p = Evolve.loadParameterDatabase(new String[]{"-file", "control.params"});
@@ -79,7 +90,7 @@ public class GPControlServer implements es.gpc.generic.GPCApp {
     public Message initGP() {
         if (e.getState().equals(Thread.State.TERMINATED)) {
             System.out.println("Creating new instance of the GP kernel");
-            e = new Evolve();
+            e = new Evolve(glog);
             e.config(m, new String[]{"-file", "control.params"});
         }
         e.start();

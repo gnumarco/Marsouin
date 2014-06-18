@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 
 import es.gpc.generic.GPCApp;
+import es.gpc.utils.GlobalLog;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -29,6 +30,7 @@ import java.util.List;
 public class DefaultServlet extends HttpServlet {
 
     private String greeting = "This is AMB-ML framework's default page.";
+    GlobalLog glog = null;
 
     public DefaultServlet() {
     }
@@ -37,14 +39,18 @@ public class DefaultServlet extends HttpServlet {
         this.greeting = greeting;
     }
 
+    public DefaultServlet(GlobalLog glob) {
+        glog = glob;
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println("<head><meta http-equiv=\"refresh\" content=\"30\"></head>");
+        response.getWriter().println("<head><meta http-equiv=\"refresh\" content=\"10\"></head>");
         response.getWriter().println("<body>");
         response.getWriter().println("<h1>" + greeting + "</h1>");
-        response.getWriter().println("<h2>Current status</h2>");
+        response.getWriter().println("<h2>Current status: "+glog.state+"</h2>");
         try {
             List<String> log = Files.readAllLines(new File("out.stat").toPath());
             if (log.isEmpty()) {
@@ -52,7 +58,7 @@ public class DefaultServlet extends HttpServlet {
             } else {
                 response.getWriter().println("<p>");
                 for (String s : log) {
-                    response.getWriter().println(s+"<br>");
+                    response.getWriter().println(s + "<br>");
                 }
                 response.getWriter().println("</p>");
             }

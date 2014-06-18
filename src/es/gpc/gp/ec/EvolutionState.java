@@ -10,6 +10,7 @@ import es.gpc.gp.ec.util.Parameter;
 import es.gpc.gp.ec.util.MersenneTwisterFast;
 import es.gpc.gp.ec.util.ParameterDatabase;
 import es.gpc.gp.ec.util.Output;
+import es.gpc.utils.GlobalLog;
 import java.io.*;
 import es.gpc.utils.Memory;
 
@@ -163,6 +164,7 @@ public class EvolutionState implements Singleton
     private static final long serialVersionUID = 1;
     
     public Memory memory;
+    public GlobalLog glog;
 
     /** The parameter database (threadsafe).  Parameter objects are also threadsafe.
         Nonetheless, you should generally try to treat this database as read-only. */
