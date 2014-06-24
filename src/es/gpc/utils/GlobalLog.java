@@ -18,11 +18,13 @@
  */
 package es.gpc.utils;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Marc Segond
  */
-public class GlobalLog {
+public class GlobalLog implements Serializable {
     public int generation = 0;
     public String state = "";
 }

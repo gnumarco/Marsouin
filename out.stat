@@ -5,7 +5,7 @@ Subpopulation 0:
 Evaluated: false
 Fitness: Standardized=0.5 Adjusted=0.6666667 Hits=0
 Tree 0:
- (exp (- S1 S0))
+ (* (- S1 S1) (exp -0.090))
 
 Generation: 1
 Best Individual:
@@ -13,7 +13,7 @@ Subpopulation 0:
 Evaluated: false
 Fitness: Standardized=0.5 Adjusted=0.6666667 Hits=0
 Tree 0:
- (+ S1 (- S1 S0))
+ -0.015
 
 Generation: 2
 Best Individual:
@@ -21,7 +21,7 @@ Subpopulation 0:
 Evaluated: false
 Fitness: Standardized=0.5 Adjusted=0.6666667 Hits=0
 Tree 0:
- (- S1 S0)
+ -0.015
 
 Generation: 3
 Best Individual:
@@ -29,11 +29,11 @@ Subpopulation 0:
 Evaluated: false
 Fitness: Standardized=0.5 Adjusted=0.6666667 Hits=0
 Tree 0:
- (- (- S1 S0) S0)
+ -0.015
 
 Best Individual of Run:
 Subpopulation 0:
 Evaluated: false
 Fitness: Standardized=0.5 Adjusted=0.6666667 Hits=0
 Tree 0:
- (exp (- S1 S0))
+ (* (- S1 S1) (exp -0.090))

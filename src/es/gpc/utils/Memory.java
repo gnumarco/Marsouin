@@ -19,6 +19,7 @@
 package es.gpc.utils;
 
 import java.io.Serializable;
+import java.util.concurrent.Semaphore;
 
 /**
  *
@@ -26,10 +27,11 @@ import java.io.Serializable;
  */
 public class Memory implements Serializable{
     
+    public final Semaphore sensor = new Semaphore(1);
+    public final Semaphore actu = new Semaphore(1);
+    
     public double[] sens;
-    public boolean newSens=false;
-    public double[] act;
-    public boolean newAct=false;
+    public double[] act;;
     public boolean indivFinished = false;
     public double fit;
 }

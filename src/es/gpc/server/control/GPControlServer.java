@@ -48,6 +48,11 @@ public class GPControlServer implements es.gpc.generic.GPCApp {
     
     GPControlServer(GlobalLog glob) {
         glog = glob;
+        try {
+            m.sensor.acquire();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GPControlServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
         e = new Evolve(glog);
         e.config(m, new String[]{"-file", "control.params"});   
     }
@@ -128,20 +133,20 @@ public class GPControlServer implements es.gpc.generic.GPCApp {
         // write the sensors to memory
         System.out.println("writing sensors to shared memory...");
         m.sens = sens;
-        m.newSens = true;
         System.out.println("done");
-        // here wait to read the actuation from memory
-        while (!m.newAct) {
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(GPControlServer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        System.out.println("server releasing sensor");
+        m.sensor.release();    
+        try {
+            // here wait to read the actuation from memory
+            System.out.println("Server acquiring actu");
+            m.actu.acquire();
+            System.out.println("Actu acquired by server");
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GPControlServer.class.getName()).log(Level.SEVERE, null, ex);
         }
         Message mes = new Message();
         mes.type = "actuation";
         mes.value = m.act;
-        m.newAct = false;
         return mes;
     }
 

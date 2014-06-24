@@ -115,30 +115,21 @@ public class Control extends GPProblem implements SimpleProblemForm {
             double sum = 0.0;
 
             while (!mem.indivFinished) {
-                while (!mem.newSens && !mem.indivFinished) {
-                    try {
-                        Thread.sleep(50);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                try {
+                    System.out.println("Kernel acquiring sensor");
+                    mem.sensor.acquire();
+                    System.out.println("Sensor acquired by Kernel");
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                if (mem.newSens) {
-                    currentValue = mem.sens;
-                    mem.newSens = false;
-                    ((GPIndividual) ind).trees[0].child.eval(
-                            state, threadnum, input, stack, ((GPIndividual) ind), this);
-                    mem.act = new double[]{input.x};
-                    mem.newAct = true;
-                }
+                currentValue = mem.sens;
+                ((GPIndividual) ind).trees[0].child.eval(
+                        state, threadnum, input, stack, ((GPIndividual) ind), this);
+                mem.act = new double[]{input.x};
+                System.out.println("Kernel releasing actu");
+                mem.actu.release();
             }
-            //replace this by the criterion of termination of the experiment
-            // criterion might be existence of the fitness file...
-            state.output.message("Thread " + threadnum + " waiting for fitness file...");
-
-            if (debug) {
-                state.output.message("Thread " + threadnum + " found fitness file, reading...");
-            }
-
+            
             // the fitness better be KozaFitness!
             KozaFitness f = ((KozaFitness) ind.fitness);
             f.setStandardizedFitness(state, (float) mem.fit);

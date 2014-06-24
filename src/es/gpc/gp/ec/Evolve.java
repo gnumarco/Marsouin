@@ -30,6 +30,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import es.gpc.utils.Memory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /* 
  * Evolve.java
@@ -754,6 +756,11 @@ public class Evolve extends Thread {
     public void config(Memory mem, String[] ar) {
         m = mem;
         args = ar;
+        try {
+            m.actu.acquire();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Evolve.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
