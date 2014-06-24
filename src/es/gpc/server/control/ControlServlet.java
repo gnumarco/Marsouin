@@ -116,7 +116,7 @@ public class ControlServlet extends HttpServlet {
                 response = app.messageHandler(mes);
                 try (OutputStreamWriter writer = new OutputStreamWriter(resp.getOutputStream())) {
                     Map<String, Object> properties = new HashMap<>(1);
-                    properties.put(JsonGenerator.PRETTY_PRINTING, true);
+                    //properties.put(JsonGenerator.PRETTY_PRINTING, true);
                     JsonGeneratorFactory jgf = Json.createGeneratorFactory(properties);
                     try (JsonGenerator jg = jgf.createGenerator(writer)) {
                         jg.writeStartObject();

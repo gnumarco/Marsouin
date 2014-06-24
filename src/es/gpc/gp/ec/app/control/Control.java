@@ -109,7 +109,6 @@ public class Control extends GPProblem implements SimpleProblemForm {
         if (!ind.evaluated) // don't bother reevaluating
         {
             ControlData input = (ControlData) (this.input);
-            double desiredOut = 0d;
 
             int hits = 0;
             double sum = 0.0;
