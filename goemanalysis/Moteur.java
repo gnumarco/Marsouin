@@ -12,7 +12,7 @@
  */
 package goemanalysis;
 
-import data.DataCarte;
+import data.DataMap;
 import data.TabloDouble2D;
 import data.VortexGeom;
 
@@ -102,7 +102,7 @@ public class Moteur implements constants.centre, constants.courant {
      * cette fonction ecrit les coordonn�es des centres trouv�s avec les
      * methodes du moteur
      */
-    public void sauveResultats(DataCarte c, String nFRes) {
+    public void sauveResultats(DataMap c, String nFRes) {
         ResultatFile res = new ResultatFile(nFRes);
         res.sauverLesCentres(c);
         res = null;
@@ -112,35 +112,35 @@ public class Moteur implements constants.centre, constants.courant {
      * cette fonction va tager chaque courant suivant le succes des methodes
      * demand�es = old fonction de Memoire
      */
-    public void majBooleens(DataCarte c, boolean[] methode, double[] limite) {
+    public void majBooleens(DataMap c, boolean[] methode, double[] limite) {
         this.dispose();
 
         int i, j;
 
-        for (i = 0; i < c.getTailleX(); i++) {
-            for (j = 0; j < c.getTailleY(); j++) {
+        for (i = 0; i < c.getXSize(); i++) {
+            for (j = 0; j < c.getYSize(); j++) {
                 c.getC(i, j).resetCfgCentre();
             }
         }
 
         if (methode[VECTEURS * NB_TYPES + TYPE_PLUS]) {
             System.out.println(COMMENT[VECTEURS * NB_TYPES + TYPE_PLUS]);
-            j = this.majCVP(c, limite[VECTEURS * NB_TYPES + TYPE_PLUS] * c.getNormeMax());
+            j = this.majCVP(c, limite[VECTEURS * NB_TYPES + TYPE_PLUS] * c.getMaxNorm());
             System.out.println(j + "trouves");
         }
         if (methode[VECTEURS * NB_TYPES + TYPE_X]) {
             System.out.println(COMMENT[VECTEURS * NB_TYPES + TYPE_X]);
-            j = this.majCVX(c, limite[VECTEURS * NB_TYPES + TYPE_X] * c.getNormeMax());
+            j = this.majCVX(c, limite[VECTEURS * NB_TYPES + TYPE_X] * c.getMaxNorm());
             System.out.println(j + " trouves ");
         }
         if (methode[VECTEURS * NB_TYPES + TYPE_O]) {
             System.out.println(COMMENT[VECTEURS * NB_TYPES + TYPE_O]);
-            j = this.majCVO(c, limite[VECTEURS * NB_TYPES + TYPE_O] * c.getNormeMax());
+            j = this.majCVO(c, limite[VECTEURS * NB_TYPES + TYPE_O] * c.getMaxNorm());
             System.out.println(j + " trouves ");
         }
         if (methode[VECTEURS * NB_TYPES + TYPE_CARRE]) {
             System.out.println(COMMENT[VECTEURS * NB_TYPES + TYPE_CARRE]);
-            j = this.majCVC(c, limite[VECTEURS * NB_TYPES + TYPE_CARRE] * c.getNormeMax());
+            j = this.majCVC(c, limite[VECTEURS * NB_TYPES + TYPE_CARRE] * c.getMaxNorm());
             System.out.println(j + " trouves ");
         }
         if (methode[VECTEURS_CU * NB_TYPES + TYPE_PLUS]) {
@@ -205,22 +205,22 @@ public class Moteur implements constants.centre, constants.courant {
         }
         if (methode[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_PLUS]) {
             System.out.println(COMMENT[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_PLUS]);
-            j = this.majCVFP(c, c.getNormeMax() / (limite[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_PLUS]));
+            j = this.majCVFP(c, c.getMaxNorm() / (limite[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_PLUS]));
             System.out.println(j + " trouves ");
         }
         if (methode[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_X]) {
             System.out.println(COMMENT[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_X]);
-            j = this.majCVFX(c, c.getNormeMax() / (limite[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_X]));
+            j = this.majCVFX(c, c.getMaxNorm() / (limite[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_X]));
             System.out.println(j + " trouves ");
         }
         if (methode[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_O]) {
             System.out.println(COMMENT[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_O]);
-            j = this.majCVFO(c, c.getNormeMax() / (limite[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_O]));
+            j = this.majCVFO(c, c.getMaxNorm() / (limite[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_O]));
             System.out.println(j + " trouves ");
         }
         if (methode[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_CARRE]) {
             System.out.println(COMMENT[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_CARRE]);
-            j = this.majCVFC(c, c.getNormeMax() / (limite[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_CARRE]));
+            j = this.majCVFC(c, c.getMaxNorm() / (limite[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_CARRE]));
             System.out.println(j + " trouves ");
         }
         if (methode[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_PLUS]) {
@@ -249,7 +249,7 @@ public class Moteur implements constants.centre, constants.courant {
      * cette fonction va calculer le "fitness" de chaque methode d�sir�e, en
      * chaque point le stock de ces grandeurs est effectu� dans le tabFitness
      */
-    public void calculerFitness(DataCarte c, boolean[] methode) {
+    public void calculerFitness(DataMap c, boolean[] methode) {
         this.dispose();
         tabFitness = new TabloDouble2D[methode.length];
         // balayage des methodes coch�es
@@ -259,44 +259,44 @@ public class Moteur implements constants.centre, constants.courant {
 	//AJOUT LISTE ICI//
 
     /*
-     public  final  int majCVFUC(DataCarte c, double limite)
-     public  final  int majCVFC(DataCarte c, double limite)
-     public  final  int majCVFUO(DataCarte c, double limite)
-     public  final  int majCVFO(DataCarte c, double limite)
-     public  final  int majCVFUX(DataCarte c, double limite)
-     public  final  int majCVFX(DataCarte c, double limite)
-     public  final  int majCVFUP(DataCarte c, double limite)
-     public  final  int majCVFP(DataCarte c, double limite)
-     public  final  int majCVTUC(DataCarte c, double limite)
-     public  final  int majCVTC(DataCarte c, double limite)
-     public  final  int majCVTUO(DataCarte c, double limite)
-     public  final  int majCVTO(DataCarte c, double limite)
-     public  final  int majCVTUX(DataCarte c, double limite)
-     public  final  int majCVTX(DataCarte c, double limite)
-     public  final  int majCVTUP(DataCarte c, double limite)
-     public  final  int majCVTP(DataCarte c, double limite)
-     public  final  int majCVUC(DataCarte c, double limite)
-     public  final  int majCVC(DataCarte c, double limite)
-     public  final  int majCVUO(DataCarte c, double limite)
-     public  final  int majCVO(DataCarte c, double limite)
-     public  final  int majCVUX(DataCarte c, double limite)
-     public  final  int majCVX(DataCarte c, double limite)
-     public  final  int majCVUP(DataCarte c, double limite)
-     public  final  int majCVP(DataCarte c, double limite)
+     public  final  int majCVFUC(DataMap c, double limite)
+     public  final  int majCVFC(DataMap c, double limite)
+     public  final  int majCVFUO(DataMap c, double limite)
+     public  final  int majCVFO(DataMap c, double limite)
+     public  final  int majCVFUX(DataMap c, double limite)
+     public  final  int majCVFX(DataMap c, double limite)
+     public  final  int majCVFUP(DataMap c, double limite)
+     public  final  int majCVFP(DataMap c, double limite)
+     public  final  int majCVTUC(DataMap c, double limite)
+     public  final  int majCVTC(DataMap c, double limite)
+     public  final  int majCVTUO(DataMap c, double limite)
+     public  final  int majCVTO(DataMap c, double limite)
+     public  final  int majCVTUX(DataMap c, double limite)
+     public  final  int majCVTX(DataMap c, double limite)
+     public  final  int majCVTUP(DataMap c, double limite)
+     public  final  int majCVTP(DataMap c, double limite)
+     public  final  int majCVUC(DataMap c, double limite)
+     public  final  int majCVC(DataMap c, double limite)
+     public  final  int majCVUO(DataMap c, double limite)
+     public  final  int majCVO(DataMap c, double limite)
+     public  final  int majCVUX(DataMap c, double limite)
+     public  final  int majCVX(DataMap c, double limite)
+     public  final  int majCVUP(DataMap c, double limite)
+     public  final  int majCVP(DataMap c, double limite)
 
      */
     // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@ SOMME VECTORIELLE SIMPLE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //*************************************************************************************
     //****************************** centre : somme des vecteurs, sur case PLUS
-    public int majCVP(DataCarte c, double limite) {
+    public int majCVP(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVP(c, posX, posY);
                 ret = booleenCVP(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS * NB_TYPES + TYPE_PLUS, ret);
@@ -317,15 +317,15 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVP(DataCarte c) {
+    public void calculerFitnessCVP(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS * NB_TYPES + TYPE_PLUS];
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVP(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -334,7 +334,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVP(DataCarte c, int posX, int posY) {
+    private double fitnessCVP(DataMap c, int posX, int posY) {
         double fit = 1000d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -366,21 +366,21 @@ public class Moteur implements constants.centre, constants.courant {
     // ------------------------------------------------------------------------------------------
     //--------------------------- centre : somme des vecteurs UNITAIRES, sur case PLUS ----------
     // ------------------------------------------------------------------------------------------
-    public int majCVUP(DataCarte c, double limite) {
+    public int majCVUP(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVUP(c, posX, posY);
                 ret = booleenCVUP(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_CU * NB_TYPES + TYPE_PLUS, ret);
@@ -401,21 +401,21 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVUP(DataCarte c) {
+    public void calculerFitnessCVUP(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_CU * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CU * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CU * NB_TYPES + TYPE_PLUS];
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVUP(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -424,7 +424,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVUP(DataCarte c, int posX, int posY) {
+    private double fitnessCVUP(DataMap c, int posX, int posY) {
         double fit = 1000d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -455,15 +455,15 @@ public class Moteur implements constants.centre, constants.courant {
     //*******************************************************************************************
     //***************************************  centre : somme des vecteurs, sur case X **********
     //*******************************************************************************************
-    public int majCVX(DataCarte c, double limite) {
+    public int majCVX(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVX(c, posX, posY);
                 ret = booleenCVX(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS * NB_TYPES + TYPE_X, ret);
@@ -484,15 +484,15 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVX(DataCarte c) {
+    public void calculerFitnessCVX(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS * NB_TYPES + TYPE_X];
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVX(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -501,7 +501,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVX(DataCarte c, int posX, int posY) {
+    private double fitnessCVX(DataMap c, int posX, int posY) {
         double fit = 1000d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -534,21 +534,21 @@ public class Moteur implements constants.centre, constants.courant {
     // ------------------------------------------------------------------------------------------------
     // --------------------------------centre : somme des vecteurs unitaires, sur case X --------------
     // -----------------------------------------------------------------------------------------------
-    public int majCVUX(DataCarte c, double limite) {
+    public int majCVUX(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVUX(c, posX, posY);
                 ret = booleenCVUX(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_CU * NB_TYPES + TYPE_X, ret);
@@ -569,21 +569,21 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVUX(DataCarte c) {
+    public void calculerFitnessCVUX(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_CU * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CU * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CU * NB_TYPES + TYPE_X];
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVUX(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -592,7 +592,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVUX(DataCarte c, int posX, int posY) {
+    private double fitnessCVUX(DataMap c, int posX, int posY) {
         double fit = 1000d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -623,15 +623,15 @@ public class Moteur implements constants.centre, constants.courant {
     //**********************************************************************************************************************************
     //************************  centre : somme des vecteurs, sur case O centre de 8 mesures ********************************************
     //**********************************************************************************************************************************
-    public int majCVO(DataCarte c, double limite) {
+    public int majCVO(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVO(c, posX, posY);
                 ret = booleenCVO(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS * NB_TYPES + TYPE_O, ret);
@@ -652,14 +652,14 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVO(DataCarte c) {
+    public void calculerFitnessCVO(DataMap c) {
         int posX, posY;
         double n;
-        tabFitness[VECTEURS * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS * NB_TYPES + TYPE_O];
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVO(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -668,7 +668,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVO(DataCarte c, int posX, int posY) {
+    private double fitnessCVO(DataMap c, int posX, int posY) {
         double fit = 1000d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -705,21 +705,21 @@ public class Moteur implements constants.centre, constants.courant {
     // ----------------------------------------------------------------------------------------------------
     // ------------------------------centre : somme des vecteurs unitaires, sur case O --------------------
     // ----------------------------------------------------------------------------------------------------
-    public int majCVUO(DataCarte c, double limite) {
+    public int majCVUO(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVUO(c, posX, posY);
                 ret = booleenCVUO(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_CU * NB_TYPES + TYPE_O, ret);
@@ -740,21 +740,21 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVUO(DataCarte c, double limite) {
+    public void calculerFitnessCVUO(DataMap c, double limite) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_CU * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CU * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CU * NB_TYPES + TYPE_O];
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVUO(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -763,7 +763,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVUO(DataCarte c, int posX, int posY) {
+    private double fitnessCVUO(DataMap c, int posX, int posY) {
         double fit = 1000d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -799,15 +799,15 @@ public class Moteur implements constants.centre, constants.courant {
 
     //*****************************************  centre : somme des vecteurs de 4 mesures *********
     //*****************************en CARRE, ref = point (xmin,Ymin)**************************************************************************************************************************************
-    public int majCVC(DataCarte c, double limite) {
+    public int majCVC(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVC(c, posX, posY);
                 ret = booleenCVC(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS * NB_TYPES + TYPE_CARRE, ret);
@@ -828,15 +828,15 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVC(DataCarte c) {
+    public void calculerFitnessCVC(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS * NB_TYPES + TYPE_CARRE];
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVC(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -846,7 +846,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVC(DataCarte c, int posX, int posY) {
+    private double fitnessCVC(DataMap c, int posX, int posY) {
         double fit = 1000d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -873,21 +873,21 @@ public class Moteur implements constants.centre, constants.courant {
     // -------------------------------------------------------------------------------------------------
     // -------------------------centre : somme des vecteurs unitaires sur 4 mesures en CARRE -----------
     // -------------------------------------------------------------------------------------------------
-    public int majCVUC(DataCarte c, double limite) {
+    public int majCVUC(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVUC(c, posX, posY);
                 ret = booleenCVUC(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_CU * NB_TYPES + TYPE_CARRE, ret);
@@ -908,21 +908,21 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVUC(DataCarte c) {
+    public void calculerFitnessCVUC(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_CU * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CU * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CU * NB_TYPES + TYPE_CARRE];
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVUC(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -933,7 +933,7 @@ public class Moteur implements constants.centre, constants.courant {
 
     }
 
-    private double fitnessCVUC(DataCarte c, int posX, int posY) {
+    private double fitnessCVUC(DataMap c, int posX, int posY) {
         double fit = 1000d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -962,15 +962,15 @@ public class Moteur implements constants.centre, constants.courant {
     //*******************************************************************************************************
     //****************************** centre : somme des vecteurs tournant, sur case PLUS ********************
     //*******************************************************************************************************
-    public int majCVTP(DataCarte c, double limite) {
+    public int majCVTP(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTP(c, posX, posY);
                 ret = booleenCVTP(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_TANGENTS * NB_TYPES + TYPE_PLUS, ret);
@@ -991,15 +991,15 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVTP(DataCarte c) {
+    public void calculerFitnessCVTP(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_PLUS];
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTP(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -1007,7 +1007,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVTP(DataCarte c, int posX, int posY) {
+    private double fitnessCVTP(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -1043,21 +1043,21 @@ public class Moteur implements constants.centre, constants.courant {
     // --------------------------------------------------------------------------------------------------
     // -------------------------- centre : somme des vecteurs TANGENTS UNITAIRES, sur case PLUS ---------
     // --------------------------------------------------------------------------------------------------
-    public int majCVTUP(DataCarte c, double limite) {
+    public int majCVTUP(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTUP(c, posX, posY);
                 ret = booleenCVTUP(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_PLUS, ret);
@@ -1078,21 +1078,21 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVTUP(DataCarte c) {
+    public void calculerFitnessCVTUP(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_PLUS];
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTUP(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -1100,7 +1100,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVTUP(DataCarte c, int posX, int posY) {
+    private double fitnessCVTUP(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -1137,21 +1137,21 @@ public class Moteur implements constants.centre, constants.courant {
     //****************************************************************************************************
     //***************************************  centre : somme des vecteurs TANGENTS , sur case X *********
     //****************************************************************************************************
-    public int majCVTX(DataCarte c, double limite) {
+    public int majCVTX(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
         // changement de repere orient� � 45�
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTX(c, posX, posY);
                 ret = booleenCVTX(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_TANGENTS * NB_TYPES + TYPE_X, ret);
@@ -1172,22 +1172,22 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVTX(DataCarte c) {
+    public void calculerFitnessCVTX(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_X];
 
         // changement de repere orient� � 45�
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTX(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -1195,7 +1195,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVTX(DataCarte c, int posX, int posY) {
+    private double fitnessCVTX(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -1231,21 +1231,21 @@ public class Moteur implements constants.centre, constants.courant {
     // --------------------------------------------------------------------------------------------------
     // --------------------- centre : somme des vecteurs TANGENTS unitaires, sur case X -----------------
     // --------------------------------------------------------------------------------------------------
-    public int majCVTUX(DataCarte c, double limite) {
+    public int majCVTUX(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTUX(c, posX, posY);
                 ret = booleenCVTUX(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_X, ret);
@@ -1266,21 +1266,21 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVTUX(DataCarte c) {
+    public void calculerFitnessCVTUX(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_X];
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTUX(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -1288,7 +1288,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVTUX(DataCarte c, int posX, int posY) {
+    private double fitnessCVTUX(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -1326,38 +1326,38 @@ public class Moteur implements constants.centre, constants.courant {
     //**********************************************************************************************************************
     //**************************************  centre : somme des VECTEURS_TANGENTS, sur case O centre de 8 mesures *********
     //**********************************************************************************************************************
-    public int majCVTO(DataCarte c, double limite) {
+    public int majCVTO(DataMap c, double limite) {
         int posX, posY, decX, decY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
         // orientation intelligente :
         for (decX = 0; decX < 2; decX++) {
             for (decY = 0; decY < 2; decY++) {
                 // 4 cas d'initialisation qui permettent de traiter 1/4 de l'oc�an
                 // 3 types de chgt de reperes
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 1);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX() - 1; posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY() - 1; posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize() - 1; posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize() - 1; posY += 2) {
                         n = fitnessCVTO(c, posX, posY);
                         ret = booleenCVTO(n, limite);
                         if (ret) {
@@ -1379,11 +1379,11 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVTO(DataCarte c) {
+    public void calculerFitnessCVTO(DataMap c) {
         int posX, posY, decX, decY;
         double n;
 
-        tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_O];
 
         // orientation intelligente :
@@ -1391,26 +1391,26 @@ public class Moteur implements constants.centre, constants.courant {
             for (decY = 0; decY < 2; decY++) {
                 // 4 cas d'initialisation qui permettent de traiter 1/4 de l'oc�an
                 // 3 types de chgt de reperes
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 1);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX() - 1; posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY() - 1; posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize() - 1; posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize() - 1; posY += 2) {
                         n = fitnessCVTO(c, posX, posY);
                         t.setTablo(posX, posY, n);
                     }
@@ -1420,7 +1420,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVTO(DataCarte c, int posX, int posY) {
+    private double fitnessCVTO(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -1467,38 +1467,38 @@ public class Moteur implements constants.centre, constants.courant {
     // ------------------------------------------------------------------------------------------------
     // ------------------------------centre : somme des vecteurs TANGENTS unitaires, sur case O -------
     // ------------------------------------------------------------------------------------------------
-    public int majCVTUO(DataCarte c, double limite) {
+    public int majCVTUO(DataMap c, double limite) {
         int posX, posY, decX, decY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
         // orientation intelligente :
         for (decX = 0; decX < 2; decX++) {
             for (decY = 0; decY < 2; decY++) {
                 // 4 cas d'initialisation qui permettent de traiter 1/4 de l'oc�an
                 // 3 types de chgt de reperes
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 1);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX() - 1; posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY() - 1; posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize() - 1; posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize() - 1; posY += 2) {
                         n = fitnessCVTUO(c, posX, posY);
                         ret = booleenCVTUO(n, limite);
                         c.getC(posX, posY).setCfgCentre(VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_O, ret);
@@ -1521,11 +1521,11 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVTUO(DataCarte c) {
+    public void calculerFitnessCVTUO(DataMap c) {
         int posX, posY, decX, decY;
         double n;
 
-        tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_O];
 
         // orientation intelligente :
@@ -1533,26 +1533,26 @@ public class Moteur implements constants.centre, constants.courant {
             for (decY = 0; decY < 2; decY++) {
                 // 4 cas d'initialisation qui permettent de traiter 1/4 de l'oc�an
                 // 3 types de chgt de reperes
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 1);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX() - 1; posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY() - 1; posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize() - 1; posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize() - 1; posY += 2) {
                         n = fitnessCVTUO(c, posX, posY);
                         t.setTablo(posX, posY, n);
                     }
@@ -1562,7 +1562,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVTUO(DataCarte c, int posX, int posY) {
+    private double fitnessCVTUO(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -1604,21 +1604,21 @@ public class Moteur implements constants.centre, constants.courant {
     //************************************  centre : somme des vecteurs TANGENTS de 4 mesures **************
     //***************************** en CARRE, ref = point (xmin,Ymin)***************************************
     //******************************************************************************************************
-    public int majCVTC(DataCarte c, double limite) {
+    public int majCVTC(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
         // orientation
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTC(c, posX, posY);
                 ret = booleenCVTC(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_TANGENTS * NB_TYPES + TYPE_CARRE, ret);
@@ -1639,22 +1639,22 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVTC(DataCarte c) {
+    public void calculerFitnessCVTC(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_TANGENTS * NB_TYPES + TYPE_CARRE];
 
         // orientation
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTC(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -1662,7 +1662,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVTC(DataCarte c, int posX, int posY) {
+    private double fitnessCVTC(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -1691,21 +1691,21 @@ public class Moteur implements constants.centre, constants.courant {
     // ---------------------------------------------------------------------------------------------
     // --------------centre : somme des vecteurs TANGENTS unitaires sur 4 mesures en CARRE ---------
     // ---------------------------------------------------------------------------------------------
-    public int majCVTUC(DataCarte c, double limite) {
+    public int majCVTUC(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTUC(c, posX, posY);
                 ret = booleenCVTUC(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_CARRE, ret);
@@ -1726,21 +1726,21 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVTUC(DataCarte c) {
+    public void calculerFitnessCVTUC(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_TANGENTS_CU * NB_TYPES + TYPE_CARRE];
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVTUC(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -1748,7 +1748,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVTUC(DataCarte c, int posX, int posY) {
+    private double fitnessCVTUC(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -1781,15 +1781,15 @@ public class Moteur implements constants.centre, constants.courant {
     //******************************************************************************************************
     //****************************** centre : somme des vecteurs CENTRIFUGES, sur case PLUS ****************
     //******************************************************************************************************
-    public int majCVFP(DataCarte c, double limite) {
+    public int majCVFP(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFP(c, posX, posY);
                 ret = booleenCVFP(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_PLUS, ret);
@@ -1810,15 +1810,15 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVFP(DataCarte c) {
+    public void calculerFitnessCVFP(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_PLUS];
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFP(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -1826,7 +1826,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVFP(DataCarte c, int posX, int posY) {
+    private double fitnessCVFP(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -1863,21 +1863,21 @@ public class Moteur implements constants.centre, constants.courant {
     //--------------------------------------------------------------------------------------------
     //---------------- centre : somme des vecteurs CENTRIFUGES UNITAIRES, sur case PLUS-----------
     //--------------------------------------------------------------------------------------------
-    public int majCVFUP(DataCarte c, double limite) {
+    public int majCVFUP(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFUP(c, posX, posY);
                 ret = booleenCVFUP(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_PLUS, ret);
@@ -1898,21 +1898,21 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVFUP(DataCarte c) {
+    public void calculerFitnessCVFUP(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_PLUS] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_PLUS];
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 0);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFUP(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -1920,7 +1920,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVFUP(DataCarte c, int posX, int posY) {
+    private double fitnessCVFUP(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -1957,21 +1957,21 @@ public class Moteur implements constants.centre, constants.courant {
     //*******************************************************************************************************
     //***************************************  centre : somme des vecteurs CENTRIFUGES , sur case X *********
     //*******************************************************************************************************
-    public int majCVFX(DataCarte c, double limite) {
+    public int majCVFX(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
         // changement de repere orient� � 45�
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFX(c, posX, posY);
                 ret = booleenCVFX(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_X, ret);
@@ -1992,22 +1992,22 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVFX(DataCarte c) {
+    public void calculerFitnessCVFX(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_X];
 
         // changement de repere orient� � 45�
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFX(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -2015,7 +2015,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVFX(DataCarte c, int posX, int posY) {
+    private double fitnessCVFX(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -2055,21 +2055,21 @@ public class Moteur implements constants.centre, constants.courant {
     //----------------------------------------------------------------------------------------------
     //----------------------- centre : somme des vecteurs CENTRIFUGES unitaires, sur case X --------
     //----------------------------------------------------------------------------------------------
-    public final int majCVFUX(DataCarte c, double limite) {
+    public final int majCVFUX(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFUX(c, posX, posY);
                 ret = booleenCVFUX(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_X, ret);
@@ -2090,21 +2090,21 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVFUX(DataCarte c) {
+    public void calculerFitnessCVFUX(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_X] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_X];
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 1; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 1; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 1; posX < c.getXSize() - 1; posX++) {
+            for (posY = 1; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFUX(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -2113,7 +2113,7 @@ public class Moteur implements constants.centre, constants.courant {
 
     }
 
-    private double fitnessCVFUX(DataCarte c, int posX, int posY) {
+    private double fitnessCVFUX(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -2150,38 +2150,38 @@ public class Moteur implements constants.centre, constants.courant {
 
     //**************************************  centre : somme des VECTEURS_CENTRIFUGES, sur case O centre de 8 mesures *********
     //**********************************************************************************************************************************
-    public int majCVFO(DataCarte c, double limite) {
+    public int majCVFO(DataMap c, double limite) {
         int posX, posY, decX, decY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
         // orientation intelligente :
         for (decX = 0; decX < 2; decX++) {
             for (decY = 0; decY < 2; decY++) {
                 // 4 cas d'initialisation qui permettent de traiter 1/4 de l'oc�an
                 // 3 types de chgt de reperes
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 1);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX() - 1; posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY() - 1; posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize() - 1; posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize() - 1; posY += 2) {
                         n = fitnessCVFO(c, posX, posY);
                         ret = booleenCVFO(n, limite);
                         c.getC(posX, posY).setCfgCentre(VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_O, ret);
@@ -2204,11 +2204,11 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVFO(DataCarte c) {
+    public void calculerFitnessCVFO(DataMap c) {
         int posX, posY, decX, decY;
         double n;
 
-        tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_O];
 
         // orientation intelligente :
@@ -2216,26 +2216,26 @@ public class Moteur implements constants.centre, constants.courant {
             for (decY = 0; decY < 2; decY++) {
                 // 4 cas d'initialisation qui permettent de traiter 1/4 de l'oc�an
                 // 3 types de chgt de reperes
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 1);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX() - 1; posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY() - 1; posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize() - 1; posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize() - 1; posY += 2) {
                         n = fitnessCVFO(c, posX, posY);
                         t.setTablo(posX, posY, n);
                     }
@@ -2245,7 +2245,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVFO(DataCarte c, int posX, int posY) {
+    private double fitnessCVFO(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -2290,38 +2290,38 @@ public class Moteur implements constants.centre, constants.courant {
     //*****************************************************************************************************
     //***************************** centre : somme des vecteurs CENTRIFUGES unitaires, sur case O *********
     //*****************************************************************************************************
-    public int majCVFUO(DataCarte c, double limite) {
+    public int majCVFUO(DataMap c, double limite) {
         int posX, posY, decX, decY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
         // orientation intelligente :
         for (decX = 0; decX < 2; decX++) {
             for (decY = 0; decY < 2; decY++) {
                 // 4 cas d'initialisation qui permettent de traiter 1/4 de l'oc�an
                 // 3 types de chgt de reperes
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 1);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX() - 1; posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY() - 1; posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize() - 1; posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize() - 1; posY += 2) {
                         n = fitnessCVFUO(c, posX, posY);
                         ret = booleenCVFUO(n, limite);
                         c.getC(posX, posY).setCfgCentre(VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_O, ret);
@@ -2344,13 +2344,13 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVFUO(DataCarte c) {
+    public void calculerFitnessCVFUO(DataMap c) {
         int posX, posY, decX, decY;
         boolean ret;
         double n;
         int cpt = 0;
 
-        tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_O] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_O];
 
         // orientation intelligente :
@@ -2358,26 +2358,26 @@ public class Moteur implements constants.centre, constants.courant {
             for (decY = 0; decY < 2; decY++) {
                 // 4 cas d'initialisation qui permettent de traiter 1/4 de l'oc�an
                 // 3 types de chgt de reperes
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 1);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX(); posX += 2) {
-                    for (posY = decY; posY < c.getTailleY(); posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize(); posX += 2) {
+                    for (posY = decY; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = decX; posX < c.getTailleX(); posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY(); posY += 2) {
+                for (posX = decX; posX < c.getXSize(); posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize(); posY += 2) {
                         c.getC(posX, posY).calculCU(1, 0);
                     }
                 }
 
-                for (posX = (decX + 1) % 2; posX < c.getTailleX() - 1; posX += 2) {
-                    for (posY = (decY + 1) % 2; posY < c.getTailleY() - 1; posY += 2) {
+                for (posX = (decX + 1) % 2; posX < c.getXSize() - 1; posX += 2) {
+                    for (posY = (decY + 1) % 2; posY < c.getYSize() - 1; posY += 2) {
                         n = fitnessCVFUO(c, posX, posY);
                         t.setTablo(posX, posY, n);
                     }
@@ -2387,7 +2387,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVFUO(DataCarte c, int posX, int posY) {
+    private double fitnessCVFUO(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -2429,21 +2429,21 @@ public class Moteur implements constants.centre, constants.courant {
     //*****************************en CARRE, ref = point (xmin,Ymin)*******************************************
     //*********************************************************************************************************
     //*********************************************************************************************************
-    public final int majCVFC(DataCarte c, double limite) {
+    public final int majCVFC(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
         // orientation
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFC(c, posX, posY);
                 ret = booleenCVFC(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_CARRE, ret);
@@ -2464,20 +2464,20 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVFC(DataCarte c) {
+    public void calculerFitnessCVFC(DataMap c) {
         int posX, posY;
         boolean ret;
         double n;
-        tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CENTRIFUGES * NB_TYPES + TYPE_CARRE];
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFC(c, posX, posY);
                 t.setTablo(posX, posY, n);
 
@@ -2486,7 +2486,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVFC(DataCarte c, int posX, int posY) {
+    private double fitnessCVFC(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -2513,21 +2513,21 @@ public class Moteur implements constants.centre, constants.courant {
     // *****************************************************************************************************
     // ******************* centre : somme des vecteurs CENTRIFUGES unitaires sur 4 mesures en CARRE ********
     // *****************************************************************************************************
-    public int majCVFUC(DataCarte c, double limite) {
+    public int majCVFUC(DataMap c, double limite) {
         int posX, posY;
         boolean ret;
         double n;
         int cpt = 0;
-        System.out.println("NormeMax " + c.getNormeMax() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
+        System.out.println("NormeMax " + c.getMaxNorm() + " // Limite : " + limite);   // java.util.ArrayList lstPoint = new java.util.ArrayList();
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFUC(c, posX, posY);
                 ret = booleenCVFUC(n, limite);
                 c.getC(posX, posY).setCfgCentre(VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_CARRE, ret);
@@ -2548,21 +2548,21 @@ public class Moteur implements constants.centre, constants.courant {
         return cpt;
     }
 
-    public void calculerFitnessCVFUC(DataCarte c) {
+    public void calculerFitnessCVFUC(DataMap c) {
         int posX, posY;
         double n;
 
-        tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getTailleX(), c.getTailleY());
+        tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_CARRE] = new TabloDouble2D(c.getXSize(), c.getYSize());
         TabloDouble2D t = tabFitness[VECTEURS_CENTRIFUGES_CU * NB_TYPES + TYPE_CARRE];
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 c.getC(posX, posY).calculCU(1, 1);
             }
         }
 
-        for (posX = 0; posX < c.getTailleX() - 1; posX++) {
-            for (posY = 0; posY < c.getTailleY() - 1; posY++) {
+        for (posX = 0; posX < c.getXSize() - 1; posX++) {
+            for (posY = 0; posY < c.getYSize() - 1; posY++) {
                 n = fitnessCVFUC(c, posX, posY);
                 t.setTablo(posX, posY, n);
             }
@@ -2571,7 +2571,7 @@ public class Moteur implements constants.centre, constants.courant {
         avancement += step;
     }
 
-    private double fitnessCVFUC(DataCarte c, int posX, int posY) {
+    private double fitnessCVFUC(DataMap c, int posX, int posY) {
         double fit = 0d;
         try {
             // le courant maximal de l'ocean  ou la limite de d'calage de centre //  est d�j� trouv� : limite
@@ -2598,15 +2598,15 @@ public class Moteur implements constants.centre, constants.courant {
 	//***********************************************************************************************************
     //****************************** Calcule des points de pond�rations pour combiner les differentes methodes **
     //***********************************************************************************************************
-    public int majCombinerGC(DataCarte c, int[] coef, int seuil) {
+    public int majCombinerGC(DataMap c, int[] coef, int seuil) {
         int posX, posY;
         int ret = 0;
         int i, val, cpt = 0;
 
         System.out.println("seuil " + seuil);
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 cpt = 0;
                 for (i = 0; i < NB_METHODES * NB_TYPES; i++) {
                     val = (c.getC(posX, posY).getCfgCentre(i)) ? 1 : 0;
@@ -2630,29 +2630,29 @@ public class Moteur implements constants.centre, constants.courant {
 
     /**
      * apres la mise � jour des centres combin�s, on consid�re que seuls les
-     * centres int�r�ssants sont gard�s ! DiscretiserCentres va ajouter � la
-     * DataCarte des VortexGeom, en ne rep�rant que les groupes de centres
+ centres int�r�ssants sont gard�s ! DiscretiserCentres va ajouter � la
+ DataMap des VortexGeom, en ne rep�rant que les groupes de centres
      *
      */
-    public int discretiserCentres(DataCarte c) {
+    public int discretiserCentres(DataMap c) {
         int posX, posY;
         int ret = 0;
         int i, cpt = 0, mynum = 0;
 
         //System.out.println("connex "+connexite);
-        int[][] tab = new int[c.getTailleX()][c.getTailleY()];
+        int[][] tab = new int[c.getXSize()][c.getYSize()];
         ArrayList coll;
         coll = new ArrayList();
         VortexGeom myV;
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 tab[posX][posY] = NO_INFO;
             }
         }
 
-        for (posX = 0; posX < c.getTailleX(); posX++) {
-            for (posY = 0; posY < c.getTailleY(); posY++) {
+        for (posX = 0; posX < c.getXSize(); posX++) {
+            for (posY = 0; posY < c.getYSize(); posY++) {
                 // si on est sur un centre
                 if (c.getC(posX, posY).getCfgCentre(COMBINER_GC)) {
                     // si lengthcentre n'est pas tagu�

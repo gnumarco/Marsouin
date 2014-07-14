@@ -11,8 +11,8 @@ import java.awt.GraphicsConfiguration;
 import com.sun.j3d.utils.universe.*;
 import javax.media.j3d.*;
 import javax.vecmath.*;
-import data.BatchDataCarte;
-import data.Boucle;
+import data.BatchDataMap;
+import data.Loop;
 
 /**
  *
@@ -21,11 +21,11 @@ import data.Boucle;
 public class Canv3D {
     
     private SimpleUniverse u = null;
-    private BatchDataCarte mother;
+    private BatchDataMap mother;
     private Canvas3D c;
     
     /** Creates a new instance of Canvas3D */
-    public Canv3D(BatchDataCarte m) {
+    public Canv3D(BatchDataMap m) {
         System.out.println("Constructeur canvas 3D");
         mother = m;
         make3D();
@@ -91,13 +91,13 @@ public class Canv3D {
                 objTransMast.addChild(objTrans);
                 Appearance flecheAppear;
                 ColoringAttributes caL1;
-                for(int k=-(mother.getDataCarte(0,w).getTailleY()/2);k<((mother.getDataCarte(0,w).getTailleY()/2)+(mother.getTailleY()%2));k++){
+                for(int k=-(mother.getDataCarte(0,w).getYSize()/2);k<((mother.getDataCarte(0,w).getYSize()/2)+(mother.getYSize()%2));k++){
                     Transform3D translate = new Transform3D();
                     translate.set(new Vector3f(0.0f,(float)-k*0.5f, 0.0f));
                     TransformGroup objTransInter = new TransformGroup(translate);
-                    for(int i=-(mother.getDataCarte(0,w).getTailleX()/2);i<((mother.getDataCarte(0,w).getTailleX()/2)+(mother.getDataCarte(0,w).getTailleX()%2));i++){
-                        int l = i+(mother.getDataCarte(0,w).getTailleX()/2);
-                        int m = (mother.getDataCarte(0,w).getTailleY()-1)-(k+(mother.getDataCarte(0,w).getTailleY()/2));
+                    for(int i=-(mother.getDataCarte(0,w).getXSize()/2);i<((mother.getDataCarte(0,w).getXSize()/2)+(mother.getDataCarte(0,w).getXSize()%2));i++){
+                        int l = i+(mother.getDataCarte(0,w).getXSize()/2);
+                        int m = (mother.getDataCarte(0,w).getYSize()-1)-(k+(mother.getDataCarte(0,w).getYSize()/2));
                         if(mother.getDataCarte(0,w).getOcean()[l][m].norme != 0d){
                             flecheAppear = new Appearance();
                             caL1 = new ColoringAttributes();
@@ -121,7 +121,7 @@ public class Canv3D {
                         caL1 = new ColoringAttributes();
                         float[] cols = mother.getDataCarte(0,w).getVortexAnt().getMetaVortex(i).getCouleur().getRGBColorComponents(null);
                         caL1.setColor(new Color3f(cols[0],cols[1],cols[2]));
-                        Vortex3D v = new Vortex3D((Boucle)mother.getDataCarte(0,w).getVortexAnt().getMetaVortex(i),mother.getDataCarte(0,w).getTailleX(),mother.getDataCarte(0,w).getTailleY(),caL1);
+                        Vortex3D v = new Vortex3D((Loop)mother.getDataCarte(0,w).getVortexAnt().getMetaVortex(i),mother.getDataCarte(0,w).getXSize(),mother.getDataCarte(0,w).getYSize(),caL1);
                         objTransInter.addChild(v.getBG());
                     }
                     objTransMast.addChild(objTransInter);

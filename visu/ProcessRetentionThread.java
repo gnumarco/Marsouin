@@ -32,8 +32,8 @@ public class ProcessRetentionThread extends Thread{
     
     public void run(){
         int tmpCpt = 0;
-        int tX =mem.getDataCarte(id).getTailleX();
-        int tY =mem.getDataCarte(id).getTailleY();
+        int tX =mem.getDataCarte(id).getXSize();
+        int tY =mem.getDataCarte(id).getYSize();
         for(int x=0;x<tX;x++){
             for(int y=0;y<tY;y++){
                 if (!mem.getDataCarte(id).getC(x,y).getSurTerre()) {

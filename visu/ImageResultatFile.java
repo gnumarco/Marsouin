@@ -33,7 +33,7 @@ public class ImageResultatFile extends Thread implements constants.couleur {
     }
 
     public void run() {
-        javax.swing.JFileChooser F = new javax.swing.JFileChooser(new java.io.File(mem.getDataCarte(id).getNomFichier()).getParent());
+        javax.swing.JFileChooser F = new javax.swing.JFileChooser(new java.io.File(mem.getDataCarte(id).getFileName()).getParent());
         F.setDialogTitle(" Choose the name of your image file ");
         // F.setFileFilter( new FileFilter().accept(new File("*.jp*")));
         int returnVal = F.showSaveDialog(mem.getFrmVisu(id));
@@ -72,7 +72,7 @@ public class ImageResultatFile extends Thread implements constants.couleur {
 
     public void sauverSystematiquement() {
 
-        String rad = mem.getDataCarte(id).getNomFichier();
+        String rad = mem.getDataCarte(id).getFileName();
         String suff = ".jpg", img = "img.jpg";
         long i = cpt;
         File fimg = null;
@@ -132,7 +132,7 @@ public class ImageResultatFile extends Thread implements constants.couleur {
 
         gra.drawImage(iPlan, 0, 0, ipw, iph, mem.getFrmVisu(id));
         gra.setColor(COLOR_INFO);
-        //gra.drawString(mem.getDataCarte(id).getNomFichier(),0,iph);
+        //gra.drawString(mem.getDataCarte(id).getFileName(),0,iph);
 
         if (iLgd != null) {
             gra.drawImage(iLgd, ipw, 0, ilw, ilh, mem.getFrmVisu(id));

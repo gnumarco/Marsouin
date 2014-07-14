@@ -43,7 +43,7 @@ public class OpenMapsThread extends Thread {
     }
     
     public void run(){
-        listeDataCartes.addElement(new data.BatchDataCarte(fichier,profondeurs,indexProfondeurs,dates,indexDates,uZ,indexU,vZ,indexV,missingValue,noMissingValue,prog));
+        listeDataCartes.addElement(new data.BatchDataMap(fichier,profondeurs,indexProfondeurs,dates,indexDates,uZ,indexU,vZ,indexV,missingValue,noMissingValue,prog));
         try{
             if(Ok3D)
                 listeFrmVisu.addElement( new FrmCarte3D(mem,id, true) );

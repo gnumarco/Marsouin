@@ -1,18 +1,28 @@
-/*
- * VortexGeom.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 2 avril 2003, 22:08
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package data;
 
 /**
  *
  * @author  Mahler
  */
-public class VortexGeom extends Boucle {
+public class VortexGeom extends Loop {
     
-    private Boucle centreDiscret = null;
+    private Loop centreDiscret = null;
     
     /** Creates a new instance of VortexGeom */
     public VortexGeom() {
@@ -27,7 +37,7 @@ public class VortexGeom extends Boucle {
     }
     
     public void addPointCentre(int x, int y) {
-        if (centreDiscret==null) {centreDiscret=new Boucle();}
+        if (centreDiscret==null) {centreDiscret=new Loop();}
         centreDiscret.addPoint(x,y);
     }
     

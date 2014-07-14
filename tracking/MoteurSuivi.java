@@ -16,14 +16,14 @@ import java.io.File;
  */
 public class MoteurSuivi extends java.lang.Thread implements suivi {
 
-    BatchDataCarte maCarte;
+    BatchDataMap maCarte;
     int deplacementMax = 6;
     String fichierLog = null;
 
     /**
      * Creates a new instance of MoteurSuivi
      */
-    public MoteurSuivi(BatchDataCarte d) {
+    public MoteurSuivi(BatchDataMap d) {
         maCarte = d;
     }
 

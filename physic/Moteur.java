@@ -7,7 +7,7 @@ package physic;
 
 import java.util.ArrayList;
 import java.awt.Point;
-import data.DataCarte;
+import data.DataMap;
 import data.CollVortexPhys;
 import data.TabloDouble2D;
 
@@ -48,7 +48,7 @@ public class Moteur implements constants.courant, constants.physique{
 	}
 
 	/** libere la memoire et la carte */
-	public void reinit(DataCarte mer){
+	public void reinit(DataMap mer){
 				this.dispose();
 				mer.getVortexPhys().dispose();
 	}
@@ -91,14 +91,14 @@ public class Moteur implements constants.courant, constants.physique{
             return 0d;
     }
         /** permet d'affirmer que l'on peut trouver une d�riv�e en ce point ! */
-    public static boolean courantDerivable(DataCarte mer, int x,  int y)
+    public static boolean courantDerivable(DataMap mer, int x,  int y)
     {
         boolean ret = mer.isCorrect(x,y) & !mer.isBorderMap(x,y);
         ret = ret & !(mer.isNearCoast(x,y));
     return ret;
     }
 
-    private boolean courantIsDerivable(DataCarte mer, int x,  int y)
+    private boolean courantIsDerivable(DataMap mer, int x,  int y)
     { return courantDerivable(mer, x, y); }
 
     // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ DERIVATION $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -141,7 +141,7 @@ public class Moteur implements constants.courant, constants.physique{
      *@return renvoie
      *@param on suppose que lengthpoint est valable
      */
-    public double dUdx(DataCarte mer, int posX,  int posY)
+    public double dUdx(DataMap mer, int posX,  int posY)
     {
         double [] param = new double[5];
         int i=0;
@@ -162,7 +162,7 @@ public class Moteur implements constants.courant, constants.physique{
      /** la deriv�e du courant(U,W) en x,y selon y : du/dy
      *@return renvoie
      */
-    public double dUdy(DataCarte mer, int posX,  int posY)
+    public double dUdy(DataMap mer, int posX,  int posY)
     {
         double [] param = new double[5];
         int i=0;
@@ -182,7 +182,7 @@ public class Moteur implements constants.courant, constants.physique{
     /** la deriv�e du courant(U,W) en x,y selon x : dW/dx
      *@return renvoie
      */
-    public double dWdx(DataCarte mer, int posX,  int posY)
+    public double dWdx(DataMap mer, int posX,  int posY)
     {
         double [] param = new double[5];
         int i=0;
@@ -202,7 +202,7 @@ public class Moteur implements constants.courant, constants.physique{
     /** la deriv�e du courant(U,W) en x,y selon y : dW/dy
      *@return renvoie
      */
-    public double dWdy(DataCarte mer, int posX,  int posY)
+    public double dWdy(DataMap mer, int posX,  int posY)
     {
         double [] param = new double[5];
         int i=0;
@@ -225,7 +225,7 @@ public class Moteur implements constants.courant, constants.physique{
      *@return renvoie
      *@param on suppose que le point est valable
      */
-    public double dUdx_CU(DataCarte mer, int posX,  int posY)
+    public double dUdx_CU(DataMap mer, int posX,  int posY)
     {
         double [] param = new double[5];
         int i=0;
@@ -246,7 +246,7 @@ public class Moteur implements constants.courant, constants.physique{
      /** la deriv�e du courant unitaire (U,W) en x,y selon y : du/dy
      *@return renvoie
      */
-    public double dUdy_CU(DataCarte mer, int posX,  int posY)
+    public double dUdy_CU(DataMap mer, int posX,  int posY)
     {
         double [] param = new double[5];
         int i=0;
@@ -266,7 +266,7 @@ public class Moteur implements constants.courant, constants.physique{
     /** la deriv�e du courant unitaire (U,W) en x,y selon x : dW/dx
      *@return renvoie
      */
-    public double dWdx_CU(DataCarte mer, int posX,  int posY)
+    public double dWdx_CU(DataMap mer, int posX,  int posY)
     {
         double [] param = new double[5];
         int i=0;
@@ -286,7 +286,7 @@ public class Moteur implements constants.courant, constants.physique{
     /** la deriv�e du courant unitaire (U,W) en x,y selon y : dW/dy
      *@return renvoie
      */
-    public double dWdy_CU(DataCarte mer, int posX,  int posY)
+    public double dWdy_CU(DataMap mer, int posX,  int posY)
     {
         double [] param = new double[5];
         int i=0;
@@ -308,7 +308,7 @@ public class Moteur implements constants.courant, constants.physique{
 	// $$$$$$$$$$$$$$$$$$$$$$$$$$$$ CALCUL �� CELLULAIRE �� : POUR UN POINT PARTICULER $$$$$$$$$$$$$$$
     /** calcule le rotationnel !
      */
-    public double calculerCurl(DataCarte mer,int  posX,  int posY) {
+    public double calculerCurl(DataMap mer,int  posX,  int posY) {
         if (this.courantIsDerivable(mer,posX,posY)){ return (dUdy(mer,posX,posY) - dWdx(mer,posX,posY) ); }
         else { return 0.0;}
     }
@@ -316,7 +316,7 @@ public class Moteur implements constants.courant, constants.physique{
     /** calcule la divergence !
      *
      */
-    public double calculerDiv(DataCarte mer,int  posX,  int posY) {
+    public double calculerDiv(DataMap mer,int  posX,  int posY) {
         if (this.courantIsDerivable(mer,posX,posY)){ return (dUdx(mer,posX,posY) + dWdy(mer,posX,posY) ); }
         else { return 0.0;}
     }
@@ -324,7 +324,7 @@ public class Moteur implements constants.courant, constants.physique{
 	// $$$$$$$$$$$$$$$$$ CALCUL �� CELLULAIRE �� sur vecteurs UNITAIRES : POUR UN POINT PARTICULER $$$$$$$$$$$$$$$
     /** calcule le rotationnel !
      */
-    public double calculerCurl_CU(DataCarte mer,int  posX,  int posY) {
+    public double calculerCurl_CU(DataMap mer,int  posX,  int posY) {
         if (this.courantIsDerivable(mer,posX,posY)){ return ( dUdy_CU(mer,posX,posY) - dWdx_CU(mer,posX,posY) ); }
         else { return 0.0;}
     }
@@ -332,7 +332,7 @@ public class Moteur implements constants.courant, constants.physique{
     /** calcule la divergence !
 
      */
-    public double calculerDiv_CU(DataCarte mer,int  posX,  int posY) {
+    public double calculerDiv_CU(DataMap mer,int  posX,  int posY) {
         if (this.courantIsDerivable(mer,posX,posY)){ return ( dUdx_CU(mer,posX,posY) + dWdy_CU(mer,posX,posY) ); }
         else { return 0.0;}
     }
@@ -341,48 +341,48 @@ public class Moteur implements constants.courant, constants.physique{
 // ****************** Fonctions d'appel par Memoire : *************************************************
 // ****************************************************************************************************
     /** calcule le rotationnel dans chaque point de la carte  */
-    public void majCurl(DataCarte c) {
+    public void majCurl(DataMap c) {
         int posX,posY;
 
-        for(posX=0; posX<c.getTailleX(); posX++) {
-            for(posY=0;posY<c.getTailleY();posY++) {
+        for(posX=0; posX<c.getXSize(); posX++) {
+            for(posY=0;posY<c.getYSize();posY++) {
                c.getC(posX,posY).setCurl( calculerCurl(c, posX, posY ));
             }
         }
     }
 
-    public void calculerFitnessCurl(DataCarte c) {
+    public void calculerFitnessCurl(DataMap c) {
         int posX,posY;
 
-		tabFitness[CURL]= new TabloDouble2D(c.getTailleX(),c.getTailleY());
+		tabFitness[CURL]= new TabloDouble2D(c.getXSize(),c.getYSize());
 		TabloDouble2D t = tabFitness[CURL];
 
-        for(posX=0; posX<c.getTailleX(); posX++) {
-            for(posY=0;posY<c.getTailleY();posY++) {
+        for(posX=0; posX<c.getXSize(); posX++) {
+            for(posY=0;posY<c.getYSize();posY++) {
                 t.setTablo( posX,posY,calculerCurl(c, posX, posY ));
             }
         }
     }
 
     /** calcule la divergence dans chaque point de la carte  */
-    public void majDiv(DataCarte c) {
+    public void majDiv(DataMap c) {
        int posX,posY;
 
-        for(posX=0; posX<c.getTailleX(); posX++) {
-            for(posY=0;posY<c.getTailleY();posY++) {
+        for(posX=0; posX<c.getXSize(); posX++) {
+            for(posY=0;posY<c.getYSize();posY++) {
                 c.getC(posX,posY).setDiv(calculerDiv(c, posX, posY ));
             }
         }
     }
 
-    public void calculerFitnessDiv(DataCarte c) {
+    public void calculerFitnessDiv(DataMap c) {
        int posX,posY;
 
-       	tabFitness[DIV]= new TabloDouble2D(c.getTailleX(),c.getTailleY());
+       	tabFitness[DIV]= new TabloDouble2D(c.getXSize(),c.getYSize());
 		TabloDouble2D t = tabFitness[DIV];
 
-        for(posX=0; posX<c.getTailleX(); posX++) {
-            for(posY=0;posY<c.getTailleY();posY++) {
+        for(posX=0; posX<c.getXSize(); posX++) {
+            for(posY=0;posY<c.getYSize();posY++) {
                 t.setTablo( posX,posY,calculerDiv(c, posX, posY ));
             }
         }
@@ -390,66 +390,66 @@ public class Moteur implements constants.courant, constants.physique{
 
 // $$$$$$$$$$$$$$$$$$$$$$ Calculer avec le champ unitaire $$$$$$$$$$$$$$$$$$$$$$$$
     /** calcule le rotationnel dans chaque point de la carte  */
-    public void majCurl_CU(DataCarte c) {
+    public void majCurl_CU(DataMap c) {
         int posX,posY;
 
         // calcul du champ unitaire
-        for(posX=0; posX<c.getTailleX(); posX++)
-            for(posY=0;posY<c.getTailleY();posY++)
+        for(posX=0; posX<c.getXSize(); posX++)
+            for(posY=0;posY<c.getYSize();posY++)
                 c.getC(posX,posY).calculCU(1,0);
 
-        for(posX=0; posX<c.getTailleX(); posX++) {
-            for(posY=0;posY<c.getTailleY();posY++) {
+        for(posX=0; posX<c.getXSize(); posX++) {
+            for(posY=0;posY<c.getYSize();posY++) {
                 c.getC(posX,posY).setCurl( calculerCurl_CU(c, posX, posY ));
             }
         }
     }
-    public void calculerFitnessCurl_CU(DataCarte c) {
+    public void calculerFitnessCurl_CU(DataMap c) {
         int posX,posY;
 
-       	tabFitness[CURL_CU]= new TabloDouble2D(c.getTailleX(),c.getTailleY());
+       	tabFitness[CURL_CU]= new TabloDouble2D(c.getXSize(),c.getYSize());
 		TabloDouble2D t = tabFitness[CURL_CU];
 
         // calcul du champ unitaire
-        for(posX=0; posX<c.getTailleX(); posX++)
-            for(posY=0;posY<c.getTailleY();posY++)
+        for(posX=0; posX<c.getXSize(); posX++)
+            for(posY=0;posY<c.getYSize();posY++)
                 c.getC(posX,posY).calculCU(1,0);
 
-        for(posX=0; posX<c.getTailleX(); posX++) {
-            for(posY=0;posY<c.getTailleY();posY++) {
+        for(posX=0; posX<c.getXSize(); posX++) {
+            for(posY=0;posY<c.getYSize();posY++) {
                 t.setTablo( posX,posY, calculerCurl_CU(c, posX, posY ));
             }
         }
     }
 
     /** calcule la divergence dans chaque point de la carte  */
-    public void majDiv_CU(DataCarte c) {
+    public void majDiv_CU(DataMap c) {
        int posX,posY;
 
         // calcul du champ unitaire
-        for(posX=0; posX<c.getTailleX(); posX++)
-            for(posY=0;posY<c.getTailleY();posY++)
+        for(posX=0; posX<c.getXSize(); posX++)
+            for(posY=0;posY<c.getYSize();posY++)
                 c.getC(posX,posY).calculCU(1,0);
 
-        for(posX=0; posX<c.getTailleX(); posX++) {
-            for(posY=0;posY<c.getTailleY();posY++) {
+        for(posX=0; posX<c.getXSize(); posX++) {
+            for(posY=0;posY<c.getYSize();posY++) {
                 c.getC(posX,posY).setDiv(calculerDiv_CU(c, posX, posY ));
             }
         }
     }
-    public void calculerFitnessDiv_CU(DataCarte c) {
+    public void calculerFitnessDiv_CU(DataMap c) {
        int posX,posY;
 
-       	tabFitness[DIV_CU]= new TabloDouble2D(c.getTailleX(),c.getTailleY());
+       	tabFitness[DIV_CU]= new TabloDouble2D(c.getXSize(),c.getYSize());
 		TabloDouble2D t = tabFitness[DIV_CU];
 
         // calcul du champ unitaire
-        for(posX=0; posX<c.getTailleX(); posX++)
-            for(posY=0;posY<c.getTailleY();posY++)
+        for(posX=0; posX<c.getXSize(); posX++)
+            for(posY=0;posY<c.getYSize();posY++)
                 c.getC(posX,posY).calculCU(1,0);
 
-        for(posX=0; posX<c.getTailleX(); posX++) {
-            for(posY=0;posY<c.getTailleY();posY++) {
+        for(posX=0; posX<c.getXSize(); posX++) {
+            for(posY=0;posY<c.getYSize();posY++) {
                 t.setTablo( posX,posY,calculerDiv_CU(c, posX, posY ));
             }
         }
@@ -463,7 +463,7 @@ public class Moteur implements constants.courant, constants.physique{
 
 
     /** pour transferer les resultats en fond de carte */
-    public void setDonneesEnFond(DataCarte c, int RESULT_TO_DISPLAY ) {
+    public void setDonneesEnFond(DataMap c, int RESULT_TO_DISPLAY ) {
 
     if ( RESULT_TO_DISPLAY==TB2D_DIV )
     	{c.setTable(tabFitness[DIV].cloneMe());
@@ -484,24 +484,24 @@ public class Moteur implements constants.courant, constants.physique{
     }
 
     /** trouver les extremas du champ scalaire Curl_CU : */
-    public void extremaCurl_CU(DataCarte mer) {
+    public void extremaCurl_CU(DataMap mer) {
        extremaAreCenters(tabFitness[CURL_CU],mer,CURL_CU);
   	}
     /** trouver les extremas du champ scalaire Curl : */
-    public void extremaCurl(DataCarte mer) {
+    public void extremaCurl(DataMap mer) {
        extremaAreCenters(tabFitness[CURL],mer,CURL);
   	}
     /** trouver les extremas du champ scalaire Div : */
-    public void extremaDiv(DataCarte mer) {
+    public void extremaDiv(DataMap mer) {
        extremaAreCenters(tabFitness[DIV], mer, DIV);
   	}
   	/** trouver les extremas du champ scalaire Div_CU : */
-    public void extremaDiv_CU(DataCarte mer) {
+    public void extremaDiv_CU(DataMap mer) {
        extremaAreCenters(tabFitness[DIV_CU],mer,DIV_CU);
   	}
 
 
-    private void extremaAreCenters(TabloDouble2D tab, DataCarte mer,int tag) {
+    private void extremaAreCenters(TabloDouble2D tab, DataMap mer,int tag) {
        int i;
        ArrayList min,max;
        min = tab.getListeMinimaEnMer(mer);
@@ -550,7 +550,7 @@ public class Moteur implements constants.courant, constants.physique{
 		
 	}
 	/** segmenter le zones de concentration */
-	public int[][] segmenterZone(int flag, DataCarte mer, double seuil, double compacite)
+	public int[][] segmenterZone(int flag, DataMap mer, double seuil, double compacite)
 	{	
 		int[][] ret = null;
 		try{
@@ -578,7 +578,7 @@ public class Moteur implements constants.courant, constants.physique{
 	}
     
     /** fait un seuillage sur les zones POSITIVES !! */    
-	public int[][] segmenterZonePositive(int flag, DataCarte mer, double seuil, double compacite)
+	public int[][] segmenterZonePositive(int flag, DataMap mer, double seuil, double compacite)
 	{	
 		int[][] ret = null;
 		try{
@@ -609,7 +609,7 @@ public class Moteur implements constants.courant, constants.physique{
 	}
 	
 	/** fait un seuillage sur les zones Negatives !! */    
-	public int[][] segmenterZoneNegative(int flag, DataCarte mer, double seuil, double compacite)
+	public int[][] segmenterZoneNegative(int flag, DataMap mer, double seuil, double compacite)
 	{	
 		int[][] ret = null;
 		try{
@@ -642,7 +642,7 @@ public class Moteur implements constants.courant, constants.physique{
 	}
 	
     /** trouve les zones de concentration , par seuillage, et les discretiser */
-        public void trouverConcentration(int flag, DataCarte mer, double seuil, double compacite)
+        public void trouverConcentration(int flag, DataMap mer, double seuil, double compacite)
 	{	
 		int[][] tab = null;
 		try{
@@ -688,7 +688,7 @@ public class Moteur implements constants.courant, constants.physique{
 	private static int NO_INFO = -1;
      
      // recurence
-    private void remplir(int x, int y, DataCarte mer, int[][] sigma, int[][] discret, int monFlag) {
+    private void remplir(int x, int y, DataMap mer, int[][] sigma, int[][] discret, int monFlag) {
 		try {
 			// eliminer
 			if (!mer.isCorrect(x,y)) throw new Exception("hors de carte");
@@ -708,7 +708,7 @@ public class Moteur implements constants.courant, constants.physique{
     } 
 
     // recurence 
-    private void trouverBord(int x, int y, DataCarte mer, int[][] discret, int monFlag, ArrayList vecteur) {
+    private void trouverBord(int x, int y, DataMap mer, int[][] discret, int monFlag, ArrayList vecteur) {
 		try {
 			// eliminer
 			if (!mer.isCorrect(x,y)) throw new Exception("hors de carte");
@@ -744,25 +744,25 @@ public class Moteur implements constants.courant, constants.physique{
 	
     /**
      * apres la mise � jour de sigma, on consid�re que 
-     * seuls les points int�r�ssants sont gard�s !
-     * D'abord on remplit un tableau d'int, avec un flag par vortex;
-     * puis on rentre les vortex;
-     * DiscretiserZone va ajouter � la DataCarte des VortexPhys,
+ seuls les points int�r�ssants sont gard�s !
+ D'abord on remplit un tableau d'int, avec un flag par vortex;
+ puis on rentre les vortex;
+ DiscretiserZone va ajouter � la DataMap des VortexPhys,
      */
-	private int[][] discretiserZones(int[][] sigma, DataCarte c, int flag) {
+	private int[][] discretiserZones(int[][] sigma, DataMap c, int flag) {
         int posX,posY;
         int i,cpt=0,lng = 0;
 
         if (dBug) System.out.println("_ discretisation debut ");
         
-        int[][] tab = new int[c.getTailleX()][c.getTailleY()];
+        int[][] tab = new int[c.getXSize()][c.getYSize()];
         
-        for(posX=0; posX<c.getTailleX(); posX++)
-            for(posY=0;posY<c.getTailleY();posY++)
+        for(posX=0; posX<c.getXSize(); posX++)
+            for(posY=0;posY<c.getYSize();posY++)
                 tab[posX][posY] = NO_INFO;
 
-        for(posX=0; posX<c.getTailleX(); posX++) {
-            for(posY=0;posY<c.getTailleY();posY++) {
+        for(posX=0; posX<c.getXSize(); posX++) {
+            for(posY=0;posY<c.getYSize();posY++) {
                 // si on est sur dans un vortex 
                 if (!c.getC(posX,posY).getSurTerre())
                    	if (sigma[posX][posY]==CONCENTRATION)
@@ -782,8 +782,8 @@ public class Moteur implements constants.courant, constants.physique{
 	        CollVortexPhys maCollection = c.getVortexPhys();
 	        for (cpt=0;cpt<lng;cpt++) {
 		        vecteur = new ArrayList();
-	            for(posX=0; posX<c.getTailleX(); posX++) {
-		            for(posY=0;posY<c.getTailleY();posY++) {
+	            for(posX=0; posX<c.getXSize(); posX++) {
+		            for(posY=0;posY<c.getYSize();posY++) {
 		                // si on est sur dans un vortex 
 		                if (!c.getC(posX,posY).getSurTerre())
 		                   	if (sigma[posX][posY]==CONCENTRATION)
@@ -803,14 +803,14 @@ public class Moteur implements constants.courant, constants.physique{
 
 
 // ******************* segmentation ***************
-	private int[][] segmentationZone(TabloDouble2D data, DataCarte mer, double seuil, double compacite)
+	private int[][] segmentationZone(TabloDouble2D data, DataMap mer, double seuil, double compacite)
 						throws Exception {
 		// algo de segmentation : annexe D th�se de Thomas Corpetti
 		// data contient le champ scalaire dont on veut la segmentation des zones concentr�es
 		// seuil = valeur positive !
 
 		if ((data==null)|(mer==null)|(seuil<0d)) throw new Exception("�� ERREUR physique.moteur.segmentationZone() : arguments non valides");
-		if ((data.getTailleX()!=mer.getTailleX())|(data.getTailleY()!=mer.getTailleY())) throw new Exception("�� ERREUR physique.moteur.segmentationZone() : dimensions non valides");
+		if ((data.getTailleX()!=mer.getXSize())|(data.getTailleY()!=mer.getYSize())) throw new Exception("�� ERREUR physique.moteur.segmentationZone() : dimensions non valides");
 		
 		if (dBug) System.out.println("_ segmentation debut ");
        
@@ -889,7 +889,7 @@ public class Moteur implements constants.courant, constants.physique{
 	}
 	
 	//fonction d'energie locale : i,j n'est pas sur terre !!
-	private double calculerCoutLocalSegmentation(TabloDouble2D data, DataCarte mer,
+	private double calculerCoutLocalSegmentation(TabloDouble2D data, DataMap mer,
 							double seuil, double compacite, int[][] sigma, int i, int j)
 	{
 		double val = 0d, poids = 0d, cost = 0d;
@@ -950,7 +950,7 @@ public class Moteur implements constants.courant, constants.physique{
 		return cost;
 	}
 
-	private double calculerCoutGlobalSegmentation(TabloDouble2D data, DataCarte mer,
+	private double calculerCoutGlobalSegmentation(TabloDouble2D data, DataMap mer,
 							double seuil, double compacite, int[][] sigma)
 	{
 		double val=0d,ponderation=0d, cost = 0d, costmp1 = 0d,costmp2=0d;
@@ -1026,7 +1026,7 @@ public class Moteur implements constants.courant, constants.physique{
 
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$ FONCTIONS DE SAUVEGARDE $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    public void sauverCurl(DataCarte mer, String nom_fichier) {
+    public void sauverCurl(DataMap mer, String nom_fichier) {
         ResultatFile res = new ResultatFile(nom_fichier);
         this.majCurl(mer);
         res.sauverLeCurl(mer);
@@ -1034,22 +1034,22 @@ public class Moteur implements constants.courant, constants.physique{
 
     public String FICHIER_RESULTAT_CURL = "curl.xls";
 
-    public void sauverLaValeurAbsolueDuCurl(DataCarte mer, String nom_fichier) {
+    public void sauverLaValeurAbsolueDuCurl(DataMap mer, String nom_fichier) {
         ResultatFile res = new ResultatFile(nom_fichier);
         this.majCurl(mer);
         res.sauverLaValeurAbsolueDuCurl(mer);
     }
 
-    public void sauverCurl(DataCarte mer) {
+    public void sauverCurl(DataMap mer) {
         sauverCurl(mer,FICHIER_RESULTAT_CURL);
     }
 
-    public void sauverDiv(DataCarte mer, String nom_fichier) {
+    public void sauverDiv(DataMap mer, String nom_fichier) {
         ResultatFile res = new ResultatFile(nom_fichier);
         this.majDiv(mer);
         res.sauverLaDiv(mer);
     }
-    public void sauverLaValeurAbsolueDeLaDivergence(DataCarte mer, String nom_fichier) {
+    public void sauverLaValeurAbsolueDeLaDivergence(DataMap mer, String nom_fichier) {
         ResultatFile res = new ResultatFile(nom_fichier);
         this.majDiv(mer);
         res.sauverLaValeurAbsolueDeLaDivergence(mer);
@@ -1057,7 +1057,7 @@ public class Moteur implements constants.courant, constants.physique{
 
     public String FICHIER_RESULTAT_DIV = "div.xls";
 
-    public void sauverDiv(DataCarte mer) {
+    public void sauverDiv(DataMap mer) {
         sauverDiv(mer,FICHIER_RESULTAT_DIV);
     }
 
@@ -1074,7 +1074,7 @@ public class Moteur implements constants.courant, constants.physique{
      *  complete une collection de boucles.
      *  le seuil est absolut (> 0) !
      */
-//    public void trouvertoutesEnveloppes (DataCarte mer, double seuil) {
+//    public void trouvertoutesEnveloppes (DataMap mer, double seuil) {
 //        int ret = trouverEnveloppesCycloniques(mer ,  seuil);
 //        ret += trouverEnveloppesAntiCycloniques(mer ,  seuil);
 //        System.out.println(ret + " enveloppes trouvees ");
@@ -1084,35 +1084,35 @@ public class Moteur implements constants.courant, constants.physique{
      *  complete une collection de boucles.
      *  le seuil est absolut (> 0) !
      */
-//    public int trouverEnveloppesCycloniques (DataCarte mer, double seuil) {
+//    public int trouverEnveloppesCycloniques (DataMap mer, double seuil) {
 //    return 0;}
 
     /** recherche d'enveloppes !
      *  complete une collection de boucles.
      *  le seuil est absolut (> 0) !
      */
-//    public int trouverEnveloppesAntiCycloniques (DataCarte mer, double seuil) {
+//    public int trouverEnveloppesAntiCycloniques (DataMap mer, double seuil) {
 //    return 0;}
 
     /** recherche d'enveloppes avec seuil proportionnel � l'extrema du centre !
      *  complete une collection de boucles.
      *  le seuil est absolut (> 0) !
      */
-//    public void trouvertoutesEnveloppesProportion (DataCarte mer, double seuil) {
+//    public void trouvertoutesEnveloppesProportion (DataMap mer, double seuil) {
 //    }
 
     /** recherche d'enveloppes avec seuil proportionnel � l'extrema du centre !
      *  complete une collection de boucles.
      *  le seuil est absolut (> 0) !
      */
-//    public void trouverEnveloppesCycloniquesProportion (DataCarte mer, double seuil) {
+//    public void trouverEnveloppesCycloniquesProportion (DataMap mer, double seuil) {
 //    }
 
     /** recherche d'enveloppes avec seuil proportionnel � l'extrema du centre !
      *  complete une collection de boucles.
      *  le seuil est absolut (> 0) !
      */
-//    public void trouverEnveloppesAntiCycloniquesProportion (DataCarte mer, double seuil) {
+//    public void trouverEnveloppesAntiCycloniquesProportion (DataMap mer, double seuil) {
 //    }
 
 

@@ -63,8 +63,8 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
         
         int w = x;
         int h =y;
-        int tX =mem.getDataCarte(id).getTailleX();
-        int tY =mem.getDataCarte(id).getTailleY();
+        int tX =mem.getDataCarte(id).getXSize();
+        int tY =mem.getDataCarte(id).getYSize();
         int largeurCase = w/tX;
         int hauteurCase = h/tY;
         
@@ -182,11 +182,11 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     
     // DESSIN DES BOUCLES ETC ...
     private void afficheBoucle(Graphics2D gra){
-        DataCarte mer = mem.getDataCarte(id);
-        CollBoucle collect = mer.getCollBoucle();
+        DataMap mer = mem.getDataCarte(id);
+        CollLoop collect = mer.getCollLoop();
         
-        int tX =mer.getTailleX();
-        int tY =mer.getTailleY();
+        int tX =mer.getXSize();
+        int tY =mer.getYSize();
         int largeurCase = carteWidth/tX;
         int hauteurCase = carteHeight/tY;
         gra.setColor(COLOR_BOUCLE_STD);
@@ -197,14 +197,14 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     }
     
     private void afficheStream(Graphics2D gra){
-        DataCarte mer = mem.getDataCarte(id);
+        DataMap mer = mem.getDataCarte(id);
         CollVortexStreamlines tab = mer.getVortexStreamlines();
         int X1,X2,Y1,Y2;
         Double temp;
         
         if(mer.collectionVortexStream != null){
-            int tX =mer.getTailleX();
-            int tY =mer.getTailleY();
+            int tX =mer.getXSize();
+            int tY =mer.getYSize();
             int ux = carteWidth/tX;
             int uy = carteHeight/tY;
             gra.setColor(COLOR_BOUCLE_STD);
@@ -235,11 +235,11 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     }
     
     private void afficheMeta(Graphics2D gra){
-        DataCarte mer = mem.getDataCarte(id);
+        DataMap mer = mem.getDataCarte(id);
         CollVortexAnt collect = mer.getVortexAnt();
         
-        int tX =mer.getTailleX();
-        int tY =mer.getTailleY();
+        int tX =mer.getXSize();
+        int tY =mer.getYSize();
         int largeurCase = carteWidth/tX;
         int hauteurCase = carteHeight/tY;
         for (int i=0;i<collect.size();i++){
@@ -272,11 +272,11 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     // DESSINER LE CENTRE DES BOUCLES ....
     
     private void afficheCentreMeta(Graphics2D gra){
-        DataCarte mer = mem.getDataCarte(id);
+        DataMap mer = mem.getDataCarte(id);
         CollVortexAnt collect = mer.getVortexAnt();
         VortexAnt b =null;
-        int tX =mer.getTailleX();
-        int tY =mer.getTailleY();
+        int tX =mer.getXSize();
+        int tY =mer.getYSize();
         int largeurCase = carteWidth/tX;
         int hauteurCase = carteHeight/tY;
         float ux = (float) largeurCase;
@@ -299,11 +299,11 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     }
     
     private void afficheCentreBoucle(Graphics2D gra){
-        DataCarte mer = mem.getDataCarte(id);
-        CollBoucle collect = mer.getCollBoucle();
-        Boucle b =null;
-        int tX =mer.getTailleX();
-        int tY =mer.getTailleY();
+        DataMap mer = mem.getDataCarte(id);
+        CollLoop collect = mer.getCollLoop();
+        Loop b =null;
+        int tX =mer.getXSize();
+        int tY =mer.getYSize();
         int largeurCase = carteWidth/tX;
         int hauteurCase = carteHeight/tY;
         float ux = (float) largeurCase;
@@ -324,11 +324,11 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     //********************VortexPhys *************************************************************
     private void geomAfficheCentreVortexPhys(Graphics2D gra) throws Exception {
         
-        DataCarte mer = mem.getDataCarte(id);
+        DataMap mer = mem.getDataCarte(id);
         CollVortexPhys collect = mer.getVortexPhys();
         VortexPhys b =null;
-        int tX =mer.getTailleX();
-        int tY =mer.getTailleY();
+        int tX =mer.getXSize();
+        int tY =mer.getYSize();
         int largeurCase = carteWidth/tX;
         int hauteurCase = carteHeight/tY;
         if ((largeurCase < 10)|(hauteurCase < 10)) {
@@ -374,11 +374,11 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     }
     //****************************************************************************************************************************************
     private void afficheVortexPhys(Graphics2D gra){
-        DataCarte mer = mem.getDataCarte(id);
+        DataMap mer = mem.getDataCarte(id);
         CollVortexPhys collect = mer.getVortexPhys();
         
-        int tX =mer.getTailleX();
-        int tY =mer.getTailleY();
+        int tX =mer.getXSize();
+        int tY =mer.getYSize();
         int largeurCase = carteWidth/tX;
         int hauteurCase = carteHeight/tY;
         gra.setColor(COLOR_BOUCLE_STD);
@@ -391,10 +391,10 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     
     //*****************************************************************************************
     private void afficheTabInt(Graphics2D gra, int[][] tab, int VALUE_TO_DISPLAY){
-        DataCarte mer = mem.getDataCarte(id);
+        DataMap mer = mem.getDataCarte(id);
         
-        int tX =mer.getTailleX();
-        int tY =mer.getTailleY();
+        int tX =mer.getXSize();
+        int tY =mer.getYSize();
         //verif
         if((tab!=null)&&((tX==tab.length)&&(tY==tab[0].length))) {
             
@@ -419,9 +419,9 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     //  AFFICHER LA PHEROMONE
     private void affichePhero(Graphics2D gra){
-        DataCarte mer = mem.getDataCarte(id);
-        int tX =mer.getTailleX();
-        int tY =mer.getTailleY();
+        DataMap mer = mem.getDataCarte(id);
+        int tX =mer.getXSize();
+        int tY =mer.getYSize();
         int largeurCase = carteWidth/tX;
         int hauteurCase = carteHeight/tY;
         float offsetX = 2f*((float)largeurCase/5f);
@@ -485,8 +485,8 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
         
         // indicateurs de terre
         int indX,indY;
-        int indtX =mem.getDataCarte(id).getTailleX();
-        int indtY =mem.getDataCarte(id).getTailleY();
+        int indtX =mem.getDataCarte(id).getXSize();
+        int indtY =mem.getDataCarte(id).getYSize();
         double scaleX = (double)indtX /(double)tX;
         double scaleY = (double)indtY/(double)tY;
         
@@ -518,8 +518,8 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     private void afficheVecteurs(Graphics2D gra) {
         
         int X1,Y1,X2,Y2;
-        int tX =mem.getDataCarte(id).getTailleX();
-        int tY =mem.getDataCarte(id).getTailleY();
+        int tX =mem.getDataCarte(id).getXSize();
+        int tY =mem.getDataCarte(id).getYSize();
         int largeurCase = carteWidth/tX;
         int hauteurCase = carteHeight/tY;
         
@@ -598,8 +598,8 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     private void geomAfficheCombinerGC(Graphics2D gra) {
         
         int X1,Y1,X2,Y2;
-        int tX =mem.getDataCarte(id).getTailleX();
-        int tY =mem.getDataCarte(id).getTailleY();
+        int tX =mem.getDataCarte(id).getXSize();
+        int tY =mem.getDataCarte(id).getYSize();
         int largeurCase = carteWidth/tX;
         int hauteurCase = carteHeight/tY;
         int offsetX = largeurCase/2;
@@ -622,8 +622,8 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     private void afficheTerre(Graphics2D gra) {
         
         int X1,Y1,X2,Y2;
-        int tX =mem.getDataCarte(id).getTailleX();
-        int tY =mem.getDataCarte(id).getTailleY();
+        int tX =mem.getDataCarte(id).getXSize();
+        int tY =mem.getDataCarte(id).getYSize();
         int largeurCase = carteWidth/tX;
         int hauteurCase = carteHeight/tY;
         gra.setColor(COLOR_TERRE);
@@ -664,15 +664,15 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
         int h = this.getHeight(); //carteHeight
         // CLIC GAUCHE >>>>>>>>> MONTRER UN POINT : afficher 9 vecteurs en autre couleur
         if (!evt.isAltDown() & !evt.isControlDown() & !evt.isShiftDown() & !evt.isMetaDown()) {
-            DataCarte dc = mem.getDataCarte(id);
+            DataMap dc = mem.getDataCarte(id);
             int k,m;
             int X1,Y1,X2,Y2;
-            int largeurCase = w/dc.getTailleX();
-            int hauteurCase = h/dc.getTailleY();
+            int largeurCase = w/dc.getXSize();
+            int hauteurCase = h/dc.getYSize();
             int i = (evt.getX())/largeurCase;
-            int j = dc.getTailleY() -1 -(evt.getY())/hauteurCase ;
+            int j = dc.getYSize() -1 -(evt.getY())/hauteurCase ;
             
-            if (((i<dc.getTailleX())&(j<dc.getTailleY()))&((i>-1)&(j>-1))){
+            if (((i<dc.getXSize())&(j<dc.getYSize()))&((i>-1)&(j>-1))){
                 // on est dans les bornes de la carte
                 
                 double offsetX = (largeurCase/OFFSET_V);
@@ -720,7 +720,7 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
                         if (!matrice[m+1][k+1]) throw new Exception(java.util.ResourceBundle.getBundle("ressources/canvas").getString("_affichage_non_demamd�_"));
                         //if((m|k)==0) throw new Exception("on n affiche pas le vecteur du centre !");
                         X1 = ((i+m)*largeurCase+largeurCase/2);
-                        Y1 = ((dc.getTailleY() -(j+k) -1)*hauteurCase+hauteurCase/2);
+                        Y1 = ((dc.getYSize() -(j+k) -1)*hauteurCase+hauteurCase/2);
                         X2 = X1+(int)(dc.getC(i+m,j+k).getXBase()*offsetX);
                         Y2 = Y1-(int)(dc.getC(i+m,j+k).getYBase()*offsetY);
                         afficheFleche(myGraphics,X1,Y1,X2,Y2);
@@ -746,11 +746,11 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
         }
         // droit >>>>> Propri�t�s
         else if (!evt.isAltDown() & !evt.isControlDown() & !evt.isShiftDown() & evt.isMetaDown()) {
-            DataCarte dc = ((BatchDataCarte)mem.getDataCarte(id)).getCarteActive();
-            int largeurCase = w/dc.getTailleX();
-            int hauteurCase = h/dc.getTailleY();
+            DataMap dc = ((BatchDataMap)mem.getDataCarte(id)).getCarteActive();
+            int largeurCase = w/dc.getXSize();
+            int hauteurCase = h/dc.getYSize();
             int i = (evt.getX())/largeurCase;
-            int j = dc.getTailleY() -1 -(evt.getY())/hauteurCase ;
+            int j = dc.getYSize() -1 -(evt.getY())/hauteurCase ;
             vSeul = 0;
             CollVortexAnt collect = dc.getVortexAnt();
             if((collect != null) && (collect.size()>0)){
@@ -795,7 +795,7 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     }
     
     public void afficherSeul(){
-        BatchDataCarte d;
+        BatchDataMap d;
         d = mem.getBatchDataCarte(id);
         for(int i=0;i<d.getNbDataCartesTps();i++){
             for(int j=0;j<d.getDataCarte(i,0).getVortexAnt().size();j++){
@@ -813,7 +813,7 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     }
     
     public void afficherTout(){
-        BatchDataCarte d;
+        BatchDataMap d;
         d = mem.getBatchDataCarte(id);
         for(int i=0;i<d.getNbDataCartesTps();i++){
             for(int j=0;j<d.getDataCarte(i,0).getVortexAnt().size();j++){
@@ -826,7 +826,7 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     }
     
     void afficherChgColor(int vSeul){
-        BatchDataCarte d = mem.getBatchDataCarte(id);
+        BatchDataMap d = mem.getBatchDataCarte(id);
         CustomColorChooser cc = new CustomColorChooser();
         cc.setVisible(true);
         if(cc.ok){
@@ -837,7 +837,7 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     }
     
     public void afficherProp(int num){
-        DataCarte d = mem.getBatchDataCarte(id).getCarteActive();
+        DataMap d = mem.getBatchDataCarte(id).getCarteActive();
         ProprietesVortex p = new ProprietesVortex(d.getVortexAnt().getMetaVortex(vSeul).getNum());
         p.setUnit(d.getUnit());
         p.setAire(d.getVortexAnt().getMetaVortex(vSeul).getAire());
@@ -879,9 +879,9 @@ public class CanvasCarte extends CanGen implements constants.centre,constants.co
     public int[] getCVprops() {
         int[] ret = new int[LENGTH_CV_PROPS];
         
-        DataCarte mer = mem.getDataCarte(id);
-        int tX =mer.getTailleX();
-        ret[CV_TAILLE_Y] =mer.getTailleY();
+        DataMap mer = mem.getDataCarte(id);
+        int tX =mer.getXSize();
+        ret[CV_TAILLE_Y] =mer.getYSize();
         ret[CV_CASE_WIDTH] = carteWidth/tX;
         ret[CV_CASE_HEIGHT] = carteHeight/ret[CV_TAILLE_Y];
         

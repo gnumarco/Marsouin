@@ -1,14 +1,18 @@
-/*
- * CollBoucle.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 20 november 2002, 17:26
- */
-
-/*
- * @author Mahler
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package data;
 
@@ -18,20 +22,20 @@ import java.awt.Point;
 /**
  * Contient un tableau de boucles.
  */
-public class CollBoucle {
+public class CollLoop {
 
-    private Boucle lot[] = null;
+    private Loop lot[] = null;
 
     /**
      * Cr�e une nouvelle instance de CollBoucle
      *
      * @param n Taille du tableau de Boucles pour l'initialisation
      */
-    public CollBoucle(int n) {
+    public CollLoop(int n) {
         if (n > 0) {
-            lot = new Boucle[n];
+            lot = new Loop[n];
             for (int i = 0; i < n; i++) {
-                lot[n] = new Boucle();
+                lot[n] = new Loop();
             }
         }
     }
@@ -39,7 +43,7 @@ public class CollBoucle {
     /**
      * Cr�e une nouvelle instance vide de CollBoucle.
      */
-    public CollBoucle() {
+    public CollLoop() {
 
     }
 
@@ -48,15 +52,15 @@ public class CollBoucle {
      *
      * @param b La boucle � ajouter.
      */
-    public void ajouter(Boucle b) {
+    public void ajouter(Loop b) {
         if (lot == null) {
-            lot = new Boucle[1];
+            lot = new Loop[1];
             lot[0] = b;
         } else {
             int s = lot.length;
-            Boucle[] tmp = lot;
+            Loop[] tmp = lot;
             lot = null;
-            lot = new Boucle[s + 1];
+            lot = new Loop[s + 1];
             for (s = 0; s < tmp.length; s++) {
                 lot[s] = tmp[s];
             }
@@ -66,15 +70,15 @@ public class CollBoucle {
     }
 
     public void ajouter(int[] xpts, int[] ypts, int npts, int tag) {
-        Boucle b = new Boucle(xpts, ypts, npts, tag);
+        Loop b = new Loop(xpts, ypts, npts, tag);
         if (lot == null) {
-            lot = new Boucle[1];
+            lot = new Loop[1];
             lot[0] = b;
         } else {
             int s = lot.length;
-            Boucle[] tmp = lot;
+            Loop[] tmp = lot;
             lot = null;
-            lot = new Boucle[s + 1];
+            lot = new Loop[s + 1];
             for (s = 0; s < tmp.length; s++) {
                 lot[s] = tmp[s];
             }
@@ -110,8 +114,8 @@ public class CollBoucle {
      * @param num Indice de la boucle a retourner.
      * @return La boucle a l'indice passe en parametre.
      */
-    public Boucle getBoucle(int num) {
-        Boucle ret = null;
+    public Loop getBoucle(int num) {
+        Loop ret = null;
         if ((lot != null) && ((num > -1) & (num < lot.length))) {
             ret = lot[num];
         }
@@ -123,8 +127,8 @@ public class CollBoucle {
      *
      * @return Le tableau de boucles.
      */
-    public Boucle[] getBoucle() {
-        Boucle[] ret = lot;
+    public Loop[] getBoucle() {
+        Loop[] ret = lot;
         return ret;
     }
 
@@ -144,7 +148,7 @@ public class CollBoucle {
             tmp.remove(num);
             lot = null;
             if (tmp.size() > 0) {
-                lot = new Boucle[tmp.size()];
+                lot = new Loop[tmp.size()];
                 tmp.toArray(lot);
             }
         }
@@ -163,7 +167,7 @@ public class CollBoucle {
             }
             lot = null;
             if (tmp.size() > 0) {
-                lot = new Boucle[tmp.size()];
+                lot = new Loop[tmp.size()];
                 tmp.toArray(lot);
             }
         }

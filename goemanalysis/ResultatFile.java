@@ -22,22 +22,22 @@ public class ResultatFile implements constants.centre {
         nomCompletFichier = s;
     }
 
-    public void entete(final DataCarte c, writeTextFile ecrit) {
+    public void entete(final DataMap c, writeTextFile ecrit) {
         ecrit.uneLigne(" # carte analysee : ");
-        ecrit.uneLigne(" datacarte " + c.getNomFichier());
+        ecrit.uneLigne(" datacarte " + c.getFileName());
         ecrit.uneLigne("");
     }
 
     // ecrit un fichier contenant les resultats D'UNE METHODE
-    public void sauverUneMethodeCentre(final DataCarte c, final int FLAGMETHOD) {
+    public void sauverUneMethodeCentre(final DataMap c, final int FLAGMETHOD) {
         try {
             writeTextFile ecrit = new writeTextFile(nomCompletFichier);
             int i, j;
             ecrit.uneLigne(" # Fichier de resultats pour 1 methode ");
             entete(c, ecrit);
             ecrit.uneLigne(COMMENT[FLAGMETHOD]);
-            for (i = 0; i < c.getTailleX(); i++) {
-                for (j = 0; j < c.getTailleY(); j++) {
+            for (i = 0; i < c.getXSize(); i++) {
+                for (j = 0; j < c.getYSize(); j++) {
                     if (c.getC(i, j).getCfgCentre(FLAGMETHOD)) {
                         ecrit.unPointEnLigne(new java.awt.Point(i, j));
                     }
@@ -51,7 +51,7 @@ public class ResultatFile implements constants.centre {
     }
 // ecrit un fichier contenant les resultats DE TOUTES LES METHODES
 
-    public void sauverLesCentres(final DataCarte c) {
+    public void sauverLesCentres(final DataMap c) {
         try {
             int i, j, FLAGMETHOD;
             writeTextFile ecrit = null;
@@ -60,8 +60,8 @@ public class ResultatFile implements constants.centre {
                 lst[i] = new java.util.ArrayList();
             }
 
-            for (i = 0; i < c.getTailleX(); i++) {
-                for (j = 0; j < c.getTailleY(); j++) {
+            for (i = 0; i < c.getXSize(); i++) {
+                for (j = 0; j < c.getYSize(); j++) {
                     for (FLAGMETHOD = 0; FLAGMETHOD < (LENGTH_CFGCENTRE); FLAGMETHOD++) {
                         if (c.getC(i, j).getCfgCentre(FLAGMETHOD)) {
                             lst[FLAGMETHOD].add(new java.awt.Point(i, j));
@@ -91,14 +91,14 @@ public class ResultatFile implements constants.centre {
 
 //*****************************************************************************
 // **********************************************A REFAIRE
-/*    public void LireResultat(final DataCarte c){
+/*    public void LireResultat(final DataMap c){
  try{
  int FLAGMETHOD;
  readTextFile resFile = new readTextFile(nomCompletFichier);
  int i,j;
  boolean EcrirePoint;
- for ( i=0; i<c.getTailleX(); i++)
- for ( j=0; j<c.getTailleY(); j++){
+ for ( i=0; i<c.getXSize(); i++)
+ for ( j=0; j<c.getYSize(); j++){
  EcrirePoint = true;
  for (FLAGMETHOD = 0; FLAGMETHOD<(NB_METHODES*NB_TYPES);FLAGMETHOD++){
  if (c.getC(i,j).getCfgCentre(FLAGMETHOD)) {

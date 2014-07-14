@@ -10,7 +10,7 @@
 
 package visu;
 
-import data.BatchDataCarte;
+import data.BatchDataMap;
 
 /**
  *
@@ -35,7 +35,7 @@ public class FrmCarte3D extends FrmCarte{
         try{
             System.out.println("calculer3D");
             javax.swing.JScrollPane jScrollPane3D = new javax.swing.JScrollPane();;
-            Canv3D tmp = new Canv3D((BatchDataCarte)(mem.getDataCarte(id)));
+            Canv3D tmp = new Canv3D((BatchDataMap)(mem.getDataCarte(id)));
             jScrollPane3D.setViewportView(tmp.getCanvas3D());
             jTabbedPaneCanvas.addTab("Vue 3D", jScrollPane3D);
             tmp = null;

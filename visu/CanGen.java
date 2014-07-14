@@ -52,10 +52,10 @@ public class CanGen extends javax.swing.JPanel implements constants.centre, cons
         if(mem.getBatchDataCarte(id).isLonLat()){
             
             try{
-                BatchDataCarte mer = mem.getBatchDataCarte(id);
+                BatchDataMap mer = mem.getBatchDataCarte(id);
                 double[] tmpTab = mer.getTabX();
-                int tX =mem.getDataCarte(id).getTailleX();
-                int tY =mem.getDataCarte(id).getTailleY();
+                int tX =mem.getDataCarte(id).getXSize();
+                int tY =mem.getDataCarte(id).getYSize();
                 int largeurCase = carteWidth/tX;
                 int hauteurCase = carteHeight/tY;
                 double offsetX = ((largeurCase/OFFSET_V) * COEFF_AFFICHAGE_COURANT);

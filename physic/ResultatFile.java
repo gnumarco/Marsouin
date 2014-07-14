@@ -26,7 +26,7 @@ public class ResultatFile {
     }
     public double COEFF_MULTIPLICATIF = 1000000.0;
     
-    public void sauverLeCurl(final DataCarte c){
+    public void sauverLeCurl(final DataMap c){
         try{
             int i,j;
             writeTextFile ecrit = null;
@@ -34,14 +34,14 @@ public class ResultatFile {
             String ligne = null;
             
             ligne = new String(" ROTATIONNEL ");
-            for ( i=0; i<c.getTailleX(); i++)
+            for ( i=0; i<c.getXSize(); i++)
 	           ligne = ligne + "\t "+ i +".";
             meslignes.addElement(ligne);
             
-            for ( j=0; j<c.getTailleY(); j++)
+            for ( j=0; j<c.getYSize(); j++)
             {
                 ligne = new String(j+". ");
-                for ( i=0; i<c.getTailleX(); i++){
+                for ( i=0; i<c.getXSize(); i++){
 	              if (Moteur.courantDerivable(c,i,j)) {
                           ligne = ligne + "\t "+ (long)(c.getC(i,j).getCurl()*COEFF_MULTIPLICATIF);
                       }
@@ -60,7 +60,7 @@ public class ResultatFile {
     }catch(Exception e){System.out.println(" erreur d ecriture de ResultFile ");e.printStackTrace();}
     }
 
-        public void sauverLaDiv(final DataCarte c){
+        public void sauverLaDiv(final DataMap c){
         try{
             int i,j;
             writeTextFile ecrit = null;
@@ -68,14 +68,14 @@ public class ResultatFile {
             String ligne = null;
             
             ligne = new String(" DIVERGENCE ");
-            for ( i=0; i<c.getTailleX(); i++)
+            for ( i=0; i<c.getXSize(); i++)
 	           ligne = ligne + "\t "+ i +".";
             meslignes.addElement(ligne);
             
-            for ( j=0; j<c.getTailleY(); j++)
+            for ( j=0; j<c.getYSize(); j++)
             {
                 ligne = new String(j+". ");
-                for ( i=0; i<c.getTailleX(); i++){
+                for ( i=0; i<c.getXSize(); i++){
 	              if (Moteur.courantDerivable(c,i,j))
                         ligne = ligne + "\t "+ (long)(c.getC(i,j).getDiv()*COEFF_MULTIPLICATIF);
                       else ligne = ligne + "\t "+"0";
@@ -93,7 +93,7 @@ public class ResultatFile {
     }catch(Exception e){System.out.println(" erreur d ecriture de ResultFile ");}
     }
 
-    public void sauverLaValeurAbsolueDuCurl(final DataCarte c){
+    public void sauverLaValeurAbsolueDuCurl(final DataMap c){
         try{
             int i,j;
             writeTextFile ecrit = null;
@@ -102,14 +102,14 @@ public class ResultatFile {
             long val;
             
             ligne = new String(" ROTATIONNEL ");
-            for ( i=0; i<c.getTailleX(); i++)
+            for ( i=0; i<c.getXSize(); i++)
 	           ligne = ligne + "\t "+ i +".";
             meslignes.addElement(ligne);
             
-            for ( j=0; j<c.getTailleY(); j++)
+            for ( j=0; j<c.getYSize(); j++)
             {
                 ligne = new String(j+". ");
-                for ( i=0; i<c.getTailleX(); i++){
+                for ( i=0; i<c.getXSize(); i++){
 	              if (Moteur.courantDerivable(c,i,j)) {
                           val = (long)(c.getC(i,j).getCurl()*COEFF_MULTIPLICATIF);
                           if (val<0) val = - val;
@@ -130,7 +130,7 @@ public class ResultatFile {
     }catch(Exception e){System.out.println(" erreur d ecriture de ResultFile ");e.printStackTrace();}
     }
 
-    public void sauverLaValeurAbsolueDeLaDivergence(final DataCarte c){
+    public void sauverLaValeurAbsolueDeLaDivergence(final DataMap c){
         try{
             int i,j;
             writeTextFile ecrit = null;
@@ -139,14 +139,14 @@ public class ResultatFile {
             long val;
             
             ligne = new String(" DIVERGENCE ");
-            for ( i=0; i<c.getTailleX(); i++)
+            for ( i=0; i<c.getXSize(); i++)
 	           ligne = ligne + "\t "+ i +".";
             meslignes.addElement(ligne);
             
-            for ( j=0; j<c.getTailleY(); j++)
+            for ( j=0; j<c.getYSize(); j++)
             {
                 ligne = new String(j+". ");
-                for ( i=0; i<c.getTailleX(); i++){
+                for ( i=0; i<c.getXSize(); i++){
 	              if (Moteur.courantDerivable(c,i,j)) {
                         val = (long)(c.getC(i,j).getDiv()*COEFF_MULTIPLICATIF);
                         if (val<0) val = -val;
@@ -167,22 +167,22 @@ public class ResultatFile {
     }catch(Exception e){System.out.println(" erreur d ecriture de ResultFile ");}
     }
     /*
-     public void entete(final DataCarte c,writeTextFile ecrit) {
+     public void entete(final DataMap c,writeTextFile ecrit) {
             ecrit.uneLigne(" # carte analysee : ");
-            ecrit.uneLigne(" datacarte " + c.getNomFichier());
+            ecrit.uneLigne(" datacarte " + c.getFileName());
             ecrit.uneLigne("");
     }
 
     // ecrit un fichier contenant les resultats D'UNE METHODE
-    public void sauverUneMethodeCentre(final DataCarte c,final int FLAGMETHOD){
+    public void sauverUneMethodeCentre(final DataMap c,final int FLAGMETHOD){
         try{
             writeTextFile ecrit = new writeTextFile(nomCompletFichier);
             int i,j;
             ecrit.uneLigne(" # Fichier de resultats pour 1 methode ");
             entete(c,ecrit);
             ecrit.uneLigne(COMMENT[FLAGMETHOD]);
-            for ( i=0; i<c.getTailleX(); i++)
-            for ( j=0; j<c.getTailleY(); j++){
+            for ( i=0; i<c.getXSize(); i++)
+            for ( j=0; j<c.getYSize(); j++){
                 if (c.getC(i,j).getCfgCentre(FLAGMETHOD))
                     ecrit.unPointEnLigne(new java.awt.Point(i,j));
             }
@@ -191,7 +191,7 @@ public class ResultatFile {
     }catch(Exception e){System.out.println(" erreur d ecriture de ResultFile ");}
     }
 // ecrit un fichier contenant les resultats DE TOUTES LES METHODES
-    public void sauverLesCentres(final DataCarte c){
+    public void sauverLesCentres(final DataMap c){
         try{
             int i,j,FLAGMETHOD;
             writeTextFile ecrit = null;
@@ -199,8 +199,8 @@ public class ResultatFile {
             for( i =0; i< lst.length; i++)
                 lst[i] = new java.util.Vector();
 
-            for ( i=0; i<c.getTailleX(); i++)
-            for ( j=0; j<c.getTailleY(); j++)
+            for ( i=0; i<c.getXSize(); i++)
+            for ( j=0; j<c.getYSize(); j++)
 	          for (FLAGMETHOD = 0; FLAGMETHOD<(LENGTH_CFGCENTRE);FLAGMETHOD++)
                       if (c.getC(i,j).getCfgCentre(FLAGMETHOD))
                           lst[FLAGMETHOD].add(new java.awt.Point(i,j));
@@ -224,14 +224,14 @@ public class ResultatFile {
 
 //*****************************************************************************
 // **********************************************A REFAIRE
-/*    public void LireResultat(final DataCarte c){
+/*    public void LireResultat(final DataMap c){
 	        try{
 	            int FLAGMETHOD;
 	            readTextFile resFile = new readTextFile(nomCompletFichier);
 	            int i,j;
 	            boolean EcrirePoint;
-	            for ( i=0; i<c.getTailleX(); i++)
-	            for ( j=0; j<c.getTailleY(); j++){
+	            for ( i=0; i<c.getXSize(); i++)
+	            for ( j=0; j<c.getYSize(); j++){
 	                EcrirePoint = true;
 	                for (FLAGMETHOD = 0; FLAGMETHOD<(NB_METHODES*NB_TYPES);FLAGMETHOD++){
 	                     if (c.getC(i,j).getCfgCentre(FLAGMETHOD)) {

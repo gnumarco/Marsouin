@@ -1,18 +1,23 @@
-/*
- * Fourmi.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 10 septembre 2002, 15:10
- */
-
-/**
- * @author Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package ants;
 
-import data.Boucle;
+import data.Loop;
 import java.util.ArrayList;
 import java.awt.Point;
 import java.util.Random;
@@ -22,9 +27,9 @@ import java.util.Random;
 /** Une fourmi capable de se d�placer de fa�on autonome dans un champ de vecteurs �
  * deux dimensions.
  */
-public class Fourmi implements constants.fourmi, constants.courant{
+public class Ant implements constants.fourmi, constants.courant{
     
-    private MoteurRecherche contexte;
+    private SearchEngine contexte;
     
     private ArrayList resultat=new ArrayList();
     
@@ -58,7 +63,7 @@ public class Fourmi implements constants.fourmi, constants.courant{
      * @param ident Num�ro de la fourmi dans son esp�ce.
      * @param dep Quantit� de ph�romone d�pos�e par la fourmi lors d'une g�n�ration.
      */
-    public Fourmi(MoteurRecherche c, double b, int x, int y, int esp, int ident, double dep, Random r) {
+    public Ant(SearchEngine c, double b, int x, int y, int esp, int ident, double dep, Random r) {
         contexte = c;
         depot = dep;
         Biais = b*(java.lang.Math.PI/3);
@@ -74,7 +79,7 @@ public class Fourmi implements constants.fourmi, constants.courant{
     /** M�thode permettant faire �voluer la fourmi d'une g�n�ration. */    
     public void Deplacer(){
         java.util.Vector candidates = new java.util.Vector();
-        Geometrique loi = new Geometrique();
+        Geometric loi = new Geometric();
         Candidates cdtes = new Candidates();
         int NextCell = 0;
         
@@ -97,27 +102,27 @@ public class Fourmi implements constants.fourmi, constants.courant{
                 case 0:
                     posX = X+1;
                     posY = Y;
-                    if(X==contexte.getMaCarte().getTailleX()-1)
+                    if(X==contexte.getMaCarte().getXSize()-1)
                         valid = false;
                     break;
                 case 1:
                     posX = X+1;
                     posY = Y+1;
-                    if(X==(contexte.getMaCarte().getTailleX()-1) || Y==(contexte.getMaCarte().getTailleY()-1))
+                    if(X==(contexte.getMaCarte().getXSize()-1) || Y==(contexte.getMaCarte().getYSize()-1))
                     
                         valid = false;
                     break;
                 case 2:
                     posX = X;
                     posY = Y+1;
-                    if(Y==(contexte.getMaCarte().getTailleY()-1))
+                    if(Y==(contexte.getMaCarte().getYSize()-1))
                     
                         valid = false;
                     break;
                 case 3:
                     posX = X-1;
                     posY = Y+1;
-                    if(X==0 || Y==(contexte.getMaCarte().getTailleY()-1))
+                    if(X==0 || Y==(contexte.getMaCarte().getYSize()-1))
                     
                         valid = false;
                     break;
@@ -142,7 +147,7 @@ public class Fourmi implements constants.fourmi, constants.courant{
                 case 7:
                     posX = X+1;
                     posY = Y-1;
-                    if(X==(contexte.getMaCarte().getTailleX()-1) || Y==0)
+                    if(X==(contexte.getMaCarte().getXSize()-1) || Y==0)
                         valid = false;
                     break;
             }
@@ -177,26 +182,26 @@ public class Fourmi implements constants.fourmi, constants.courant{
             case 0:
                 NextX = X+1;
                 NextY = Y;
-                if(X==(contexte.getMaCarte().getTailleX()-1))
+                if(X==(contexte.getMaCarte().getXSize()-1))
                     OK = false;
                 break;
             case 1:
                 NextX = X+1;
                 NextY = Y+1;
-                if(X==(contexte.getMaCarte().getTailleX()-1) || (Y==contexte.getMaCarte().getTailleY()-1))
+                if(X==(contexte.getMaCarte().getXSize()-1) || (Y==contexte.getMaCarte().getYSize()-1))
                 
                     OK = false;
                 break;
             case 2:
                 NextX = X;
                 NextY = Y+1;
-                if(Y==(contexte.getMaCarte().getTailleY()-1))
+                if(Y==(contexte.getMaCarte().getYSize()-1))
                     OK = false;
                 break;
             case 3:
                 NextX = X-1;
                 NextY = Y+1;
-                if(X==0 || Y==(contexte.getMaCarte().getTailleY()-1))
+                if(X==0 || Y==(contexte.getMaCarte().getYSize()-1))
                     OK = false;
                 break;
             case 4:
@@ -223,7 +228,7 @@ public class Fourmi implements constants.fourmi, constants.courant{
             case 7:
                 NextX = X+1;
                 NextY = Y-1;
-                if(X==(contexte.getMaCarte().getTailleX()-1) || Y==0)
+                if(X==(contexte.getMaCarte().getXSize()-1) || Y==0)
                 
                     OK = false;
                 break;
@@ -281,7 +286,7 @@ public class Fourmi implements constants.fourmi, constants.courant{
                     orient=true;
                 else
                     orient=false;
-                Boucle bcl=new Boucle(tX,tY,tX.length,id,orient);
+                Loop bcl=new Loop(tX,tY,tX.length,id,orient);
                 if(bcl.npoints>6 && bcl.npoints<40){
                     resultat.add(bcl);
                     res = true;
@@ -309,8 +314,8 @@ public class Fourmi implements constants.fourmi, constants.courant{
     public void ReInit(){
         java.util.Random rd = new java.util.Random();
         
-        X = rd.nextInt(contexte.getMaCarte().getTailleX());
-        Y = rd.nextInt(contexte.getMaCarte().getTailleY());
+        X = rd.nextInt(contexte.getMaCarte().getXSize());
+        Y = rd.nextInt(contexte.getMaCarte().getYSize());
         Trace = new ArrayList();
     }
     

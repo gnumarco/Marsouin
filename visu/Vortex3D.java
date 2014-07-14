@@ -15,15 +15,15 @@ package visu;
 
 import javax.media.j3d.*;
 import javax.vecmath.*;
-import data.Boucle;
+import data.Loop;
 
 public class Vortex3D {
     
-    private Boucle monVortex;
+    private Loop monVortex;
     private BranchGroup VortexBG;
     
     /** Creates a new instance of Vortex3D */
-    public Vortex3D(Boucle v, int maxX, int maxY, ColoringAttributes c) {
+    public Vortex3D(Loop v, int maxX, int maxY, ColoringAttributes c) {
         monVortex = v;
         
         VortexBG = new BranchGroup();

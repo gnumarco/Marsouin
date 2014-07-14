@@ -1,9 +1,19 @@
-/*
- * BatchDataCarte.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 6 mai 2003, 10:11
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /**
  * @author Segond
  * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
@@ -18,7 +28,7 @@ import java.util.ArrayList;
 import ucar.nc2.*;
 import ucar.ma2.*;
 
-public class BatchDataCarte extends DataCarte{
+public class BatchDataMap extends DataMap{
     
     private ArrayList listeDataCartes, listeDimensions;
     private int[] active;
@@ -31,7 +41,7 @@ public class BatchDataCarte extends DataCarte{
     public final static int ONE_SECOND = 1000;
     
     /** Creates a new instance of BatchDataCarte */
-    public BatchDataCarte(String f,int[] prof,int profInd, int[] time, int timeInd, int u, int uInd, int v, int vInd, String MVAtt, boolean noMV, javax.swing.ProgressMonitor prog) {
+    public BatchDataMap(String f,int[] prof,int profInd, int[] time, int timeInd, int u, int uInd, int v, int vInd, String MVAtt, boolean noMV, javax.swing.ProgressMonitor prog) {
         super(f,prof[0],profInd,time[0],timeInd,u,uInd,v,vInd, MVAtt, noMV);
         p = prog;
         varX = u;
@@ -74,9 +84,9 @@ public class BatchDataCarte extends DataCarte{
             for(int k = 0;k<prof.length;k++){
                 try{
                     if((i==0) && (k==0))
-                        ((ArrayList)listeDataCartes.get(i)).add(new DataCarte(this));
+                        ((ArrayList)listeDataCartes.get(i)).add(new DataMap(this));
                     else
-                        ((ArrayList)listeDataCartes.get(i)).add(new DataCarte(f,prof[k],profInd,time[i],timeInd,u,uInd,v,vInd, MVAtt, noMV));
+                        ((ArrayList)listeDataCartes.get(i)).add(new DataMap(f,prof[k],profInd,time[i],timeInd,u,uInd,v,vInd, MVAtt, noMV));
                 }catch(Exception e){System.out.println(e);}
                 cpt++;
                 p.setProgress(cpt);
@@ -86,11 +96,11 @@ public class BatchDataCarte extends DataCarte{
         //t = null;
         
         //Calcul des moyennes
-        listeMoyennes = new double[getDataCarte(0,0).getTailleX()][getDataCarte(0,0).getTailleY()][prof.length][2];
+        listeMoyennes = new double[getDataCarte(0,0).getXSize()][getDataCarte(0,0).getYSize()][prof.length][2];
         for(int j = 0;j<getNbDataCartesProf();j++){
             
-            for(int y=0;y<getDataCarte(0,0).getTailleX();y++){
-                for(int z=0;z<getDataCarte(0,0).getTailleY();z++){
+            for(int y=0;y<getDataCarte(0,0).getXSize();y++){
+                for(int z=0;z<getDataCarte(0,0).getYSize();z++){
                     double tmpX = 0d;
                     double tmpY = 0d;
                     for(int i=0;i<getNbDataCartesTps();i++){
@@ -114,8 +124,8 @@ public class BatchDataCarte extends DataCarte{
     }
     
     public double[] getLonLat(int x, int y){
-        int tX= getTailleX();
-        int tY= getTailleY();
+        int tX= getXSize();
+        int tY= getYSize();
         double[] tmp = new double[2];
         double ttX = Math.abs(getTabX()[getTabX().length-1]-getTabX()[0]);
         double ttY = Math.abs(getTabY()[getTabY().length-1]-getTabY()[0]);
@@ -129,8 +139,8 @@ public class BatchDataCarte extends DataCarte{
     }
     
     public double[] getLonLat(double x, double y){
-        int tX= getTailleX();
-        int tY= getTailleY();
+        int tX= getXSize();
+        int tY= getYSize();
         double[] tmp = new double[2];
         double ttX = Math.abs(getTabX()[getTabX().length-1]-getTabX()[0]);
         double ttY = Math.abs(getTabY()[getTabY().length-1]-getTabY()[0]);
@@ -148,27 +158,27 @@ public class BatchDataCarte extends DataCarte{
     public double[] getTabY(){return ((double[])listeDimensions.get(varY));}
     public int[] getActive(){ return active;}
     
-    public final DataCarte getDataCarte(int idTps, int idProf){ return (DataCarte)((ArrayList)(listeDataCartes.get(idTps))).get(idProf);}
-    public DataCarte getDataCarte(int[] id){ return (DataCarte)((ArrayList)(listeDataCartes.get(id[0]))).get(id[1]);}
+    public final DataMap getDataCarte(int idTps, int idProf){ return (DataMap)((ArrayList)(listeDataCartes.get(idTps))).get(idProf);}
+    public DataMap getDataCarte(int[] id){ return (DataMap)((ArrayList)(listeDataCartes.get(id[0]))).get(id[1]);}
     
     public final int getNbDataCartesTps(){ return listeDataCartes.size();}
     public final int getNbDataCartesProf(){ return ((ArrayList)listeDataCartes.get(0)).size();}
-    public DataCarte getCarteActive(){ return getDataCarte(active);}
+    public DataMap getCarteActive(){ return getDataCarte(active);}
     
     public final void setCarteActive(int idTps, int idProf){
         active[0]=idTps;
         active[1]=idProf;
         this.setOcean(getDataCarte(active).getOcean());
-        this.setTailleX(getDataCarte(active).getTailleX());
-        this.setTailleY(getDataCarte(active).getTailleY());
-        this.setNormeMax(this.calculNormeMax());
-        this.setNbCellValides(this.CalculNbCellValides());
-        this.setCollBoucle(getDataCarte(active).getCollBoucle());
+        this.setTailleX(getDataCarte(active).getXSize());
+        this.setTailleY(getDataCarte(active).getYSize());
+        this.setNormeMax(this.computeMaxNorm());
+        this.setNbCellValides(this.computeNbValidCells());
+        this.setCollBoucle(getDataCarte(active).getCollLoop());
         this.setCollVortexAnt(getDataCarte(active).getVortexAnt());
         this.setCollVortexGeom(getDataCarte(active).getVortexGeom());
         this.setCollVortexPhys(getDataCarte(active).getVortexPhys());
         this.setCollVortexStream(getDataCarte(active).getVortexStreamlines());
-        this.setNomFichier(getDataCarte(active).getNomFichier());
+        this.setNomFichier(getDataCarte(active).getFileName());
     }
     
 }

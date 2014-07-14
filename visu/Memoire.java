@@ -66,14 +66,14 @@ public class Memoire implements constants.physique, constants.centre, constants.
     
     private FrmConf frmConfig=null;
     
-    private ants.MoteurRecherche moteurFourmi=null;
+    private ants.SearchEngine moteurFourmi=null;
     private java.util.Vector moteursFourmi = null;
     
     
     /** Creates a new instance of Memoire */
     public Memoire() {
         //configHistoFile = new ConfigHistoFile();
-        //moteurFourmi = new fourmi.MoteurRecherche();
+        //moteurFourmi = new fourmi.SearchEngine();
     }
     
     public FrmCarte getFrmVisu(int id) {
@@ -174,8 +174,8 @@ public class Memoire implements constants.physique, constants.centre, constants.
         f.dispose();
         return id;
     }
-    public final BatchDataCarte getBatchDataCarte(int id){ return (BatchDataCarte) listeDataCarte.elementAt(id);}
-    public final DataCarte getDataCarte(int id){ return (DataCarte) listeDataCarte.elementAt(id);}
+    public final BatchDataMap getBatchDataCarte(int id){ return (BatchDataMap) listeDataCarte.elementAt(id);}
+    public final DataMap getDataCarte(int id){ return (DataMap) listeDataCarte.elementAt(id);}
     
     public final int getNbDataCarte(){ return listeDataCarte.size();}
     
@@ -214,7 +214,7 @@ public class Memoire implements constants.physique, constants.centre, constants.
     }
     
     public void exporterDetection(int num, java.awt.Component mum){
-        BatchDataCarte d = this.getBatchDataCarte(num);
+        BatchDataMap d = this.getBatchDataCarte(num);
         
         String cheminDefaut;
         
@@ -235,10 +235,10 @@ public class Memoire implements constants.physique, constants.centre, constants.
                 fichs = F.getSelectedFile();
                 setMemCheminExplo(F.getCurrentDirectory().getAbsolutePath());
                 if(fichs!=null){
-                    ArrayInt.D3 arrTags = new ArrayInt.D3(d.getNbDataCartesTps(), d.getDataCarte(0, 0).getTailleY(),d.getDataCarte(0, 0).getTailleX());
+                    ArrayInt.D3 arrTags = new ArrayInt.D3(d.getNbDataCartesTps(), d.getDataCarte(0, 0).getYSize(),d.getDataCarte(0, 0).getXSize());
                     for(int i=0;i<d.getNbDataCartesTps();i++){
-                        for(int j=0;j<d.getDataCarte(i, 0).getTailleX();j++){
-                            for(int k=0;k<d.getDataCarte(i, 0).getTailleY();k++){
+                        for(int j=0;j<d.getDataCarte(i, 0).getXSize();j++){
+                            for(int k=0;k<d.getDataCarte(i, 0).getYSize();k++){
                                 int z = 0;
                                 while((z<d.getDataCarte(i, 0).getVortexAnt().getMetaVortex().length) && (!d.getDataCarte(i, 0).getVortexAnt().getMetaVortex(z).contains(j,k)))
                                     z++;
@@ -255,8 +255,8 @@ public class Memoire implements constants.physique, constants.centre, constants.
                     //System.out.println("Fichier ouvert");
                     ucar.nc2.Dimension[] dim = new ucar.nc2.Dimension[3];
                     dim[0] = out.addDimension("time", d.getNbDataCartesTps());
-                    dim[1] = out.addDimension("lon", d.getDataCarte(0, 0).getTailleY());
-                    dim[2] = out.addDimension("lat", d.getDataCarte(0, 0).getTailleX());
+                    dim[1] = out.addDimension("lon", d.getDataCarte(0, 0).getYSize());
+                    dim[2] = out.addDimension("lat", d.getDataCarte(0, 0).getXSize());
                     
                     out.addVariable("Tags",java.lang.Integer.TYPE , dim);
                     
@@ -286,10 +286,10 @@ public class Memoire implements constants.physique, constants.centre, constants.
                 if(!((java.lang.Boolean)(listeModeBatch.elementAt(i))).booleanValue()){
                     //System.out.println("Mode simple");
                     wtf=new writeTextFile(file);
-                    DataCarte dat = getDataCarte(i);
-                    tab = new int[dat.getTailleX()][dat.getTailleY()];
-                    for(int j=0;j<dat.getTailleX();j++)
-                        for(int k=0;k<dat.getTailleY();k++){
+                    DataMap dat = getDataCarte(i);
+                    tab = new int[dat.getXSize()][dat.getYSize()];
+                    for(int j=0;j<dat.getXSize();j++)
+                        for(int k=0;k<dat.getYSize();k++){
                         int z = 0;
                         while((z<dat.getVortexAnt().getMetaVortex().length) && (!dat.getVortexAnt().getMetaVortex(z).contains(j,k)))
                             z++;
@@ -300,25 +300,25 @@ public class Memoire implements constants.physique, constants.centre, constants.
                         }
                     
                     //Sauvegarde du tabeau dans un fichier texte
-                    String ligne=String.valueOf(dat.getTailleX()) + " " + String.valueOf(dat.getTailleY());
+                    String ligne=String.valueOf(dat.getXSize()) + " " + String.valueOf(dat.getYSize());
                     wtf.uneLigne(ligne);
-                    for (int j=dat.getTailleY()-1;j>=0;j--) {
+                    for (int j=dat.getYSize()-1;j>=0;j--) {
                         ligne=" ";
-                        for (int k=0;k<dat.getTailleX();k++)
+                        for (int k=0;k<dat.getXSize();k++)
                             ligne=ligne+tab[k][j]+" ";
                         wtf.uneLigne(ligne);
                     }
                     wtf.fermer();
                 } else {
                     //System.out.println("Mode batch");
-                    BatchDataCarte dat2 = (BatchDataCarte)(getDataCarte(i));
+                    BatchDataMap dat2 = (BatchDataMap)(getDataCarte(i));
                     for(int h=0;h<dat2.getNbDataCartesTps();h++){
                         file = F.getSelectedFile().getAbsolutePath() + "-" + (h+1)+".csv";
                         wtf=new writeTextFile(file);
-                        DataCarte dat = dat2.getDataCarte(h,0);
-                        tab = new int[dat.getTailleX()][dat.getTailleY()];
-                        for(int j=0;j<dat.getTailleX();j++)
-                            for(int k=0;k<dat.getTailleY();k++){
+                        DataMap dat = dat2.getDataCarte(h,0);
+                        tab = new int[dat.getXSize()][dat.getYSize()];
+                        for(int j=0;j<dat.getXSize();j++)
+                            for(int k=0;k<dat.getYSize();k++){
                             int z = 0;
                             while((z<dat.getVortexAnt().getMetaVortex().length) && (!dat.getVortexAnt().getMetaVortex(z).contains(j,k)))
                                 z++;
@@ -329,11 +329,11 @@ public class Memoire implements constants.physique, constants.centre, constants.
                             }
                         
                         //Sauvegarde du tabeau dans un fichier texte
-                        String ligne=String.valueOf(dat.getTailleX()) + " " + String.valueOf(dat.getTailleY());
+                        String ligne=String.valueOf(dat.getXSize()) + " " + String.valueOf(dat.getYSize());
                         wtf.uneLigne(ligne);
-                        for (int j=dat.getTailleY()-1;j>=0;j--) {
+                        for (int j=dat.getYSize()-1;j>=0;j--) {
                             ligne=" ";
-                            for (int k=0;k<dat.getTailleX();k++)
+                            for (int k=0;k<dat.getXSize();k++)
                                 ligne=ligne+tab[k][j]+" ";
                             wtf.uneLigne(ligne);
                         }
@@ -436,14 +436,14 @@ public class Memoire implements constants.physique, constants.centre, constants.
     
     public void suivi(int id){
         //System.out.println("Moteur suivi");
-        tracking.MoteurSuivi s = new tracking.MoteurSuivi(((BatchDataCarte)(listeDataCarte.elementAt(id))));
+        tracking.MoteurSuivi s = new tracking.MoteurSuivi(((BatchDataMap)(listeDataCarte.elementAt(id))));
         s.LancerSuivi();
     }
     
     public void demarrer(int id) {
         
         this.appliquerParametres(id);
-        BatchDataCarte bdc = ((BatchDataCarte)(listeDataCarte.elementAt(id)));
+        BatchDataMap bdc = ((BatchDataMap)(listeDataCarte.elementAt(id)));
         FrmCarte frmv = ((FrmCarte)(listeFrmVisu.elementAt(id)));
         javax.swing.ProgressMonitor prog = new javax.swing.ProgressMonitor(this.getFrmVisu(id),"Processing detection...","Processing...",0,0);
         int tmpAv = 0;
@@ -454,8 +454,8 @@ public class Memoire implements constants.physique, constants.centre, constants.
             moteursFourmi = new java.util.Vector();
             for(int i=0;i<bdc.getNbDataCartesTps();i++)
                 for(int j=0;j<bdc.getNbDataCartesProf();j++){
-                //moteursFourmi.addElement(new fourmi.MoteurRecherche());
-                //((fourmi.MoteurRecherche)(moteursFourmi.elementAt(i))).reInit();
+                //moteursFourmi.addElement(new fourmi.SearchEngine());
+                //((fourmi.SearchEngine)(moteursFourmi.elementAt(i))).reInit();
                 bdc.getDataCarte(i,j).initCollections();
                 frmv.avMax += getFourmiNB(id)[FOURMI_NB_GENERATIONS];
                 }
@@ -504,20 +504,20 @@ public class Memoire implements constants.physique, constants.centre, constants.
     public void trouverFourmiBoucle(int id, javax.swing.ProgressMonitor p){
         // on suppose que la mis a jour est faite !!
         int i,j,ind,esp,runs;
-        DataCarte dc = (DataCarte)listeDataCarte.elementAt(id);
+        DataMap dc = (DataMap)listeDataCarte.elementAt(id);
         
         esp = this.getFourmiNB(id)[FOURMI_NB_ESPECES];
         ind = this.getFourmiNB(id)[FOURMI_NB_INTRA_ESPECE];
         //System.out.println("especes : " + esp + " nb fourmis : " + ind);
         //dc.majSurTerre();
-        for (i=0; i<dc.getTailleX(); i++)
-            for (j=0; j<dc.getTailleY(); j++) {
+        for (i=0; i<dc.getXSize(); i++)
+            for (j=0; j<dc.getYSize(); j++) {
             dc.getC(i,j).calculNorme();
             dc.getC(i,j).calculCU(1,0);
             dc.getC(i,j).resetPheromone(ind,esp);
             }
         
-        dc.getCollBoucle().effacerTout();
+        dc.getCollLoop().effacerTout();
         
         ((FrmCarte) listeFrmVisu.elementAt(id)).toFront();
         int generations;
@@ -529,30 +529,30 @@ public class Memoire implements constants.physique, constants.centre, constants.
         intType = getTypeInit(id)[0];
         runs = getFourmiNB(id)[FOURMI_NB_RUNS];
         
-        ((BatchDataCarte)(dc)).setCarteActive(0,0);
+        ((BatchDataMap)(dc)).setCarteActive(0,0);
         
-        ants.MoteurRecherche moteur = new ants.MoteurRecherche(((BatchDataCarte)(dc)),getFrmVisu(id),ind, esp, generations, depot, evap, runs, p);
+        ants.SearchEngine moteur = new ants.SearchEngine(((BatchDataMap)(dc)),getFrmVisu(id),ind, esp, generations, depot, evap, runs, p);
         moteur.start();
         
-        if(((BatchDataCarte)(dc)).getNbDataCartesTps()>1)
+        if(((BatchDataMap)(dc)).getNbDataCartesTps()>1)
             ((FrmCarte)(listeFrmVisu.elementAt(id))).EnableTracking();
     }
     
     
     private void demarrerSuivi(int id){
-        tracking.MoteurSuivi m = new tracking.MoteurSuivi(((BatchDataCarte)(listeDataCarte.elementAt(id))));
+        tracking.MoteurSuivi m = new tracking.MoteurSuivi(((BatchDataMap)(listeDataCarte.elementAt(id))));
     }    
     
     private void demarrerStreamlines(int id, javax.swing.ProgressMonitor p){
 
-        ((BatchDataCarte)listeDataCarte.elementAt(id)).getVortexStreamlines().effacerTout();
+        ((BatchDataMap)listeDataCarte.elementAt(id)).getVortexStreamlines().effacerTout();
         //System.out.println("Streamlines mode batch");
         java.util.Vector moteursStream = new java.util.Vector();
         progress = 0;
         int cpt=0;
         done = false;
-        ((BatchDataCarte)listeDataCarte.elementAt(id)).setCarteActive(0,0);
-        streamlines.moteurStreamlines moteur = new streamlines.moteurStreamlines((BatchDataCarte)listeDataCarte.elementAt(id),this,id,p);
+        ((BatchDataMap)listeDataCarte.elementAt(id)).setCarteActive(0,0);
+        streamlines.moteurStreamlines moteur = new streamlines.moteurStreamlines((BatchDataMap)listeDataCarte.elementAt(id),this,id,p);
         moteur.start();
     }
     

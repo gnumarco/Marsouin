@@ -5,7 +5,7 @@
  */
 package visu;
 
-import data.BatchDataCarte;
+import data.BatchDataMap;
 /**
  *
  * @author  Marc Segond
@@ -27,20 +27,20 @@ public class FrmCarte extends javax.swing.JFrame implements constants.couleur {
         monCanvas = new CanvasCarte(mem, id);
         jScrollPane2D.setViewportView(monCanvas);
         jSlider1.setMinimum(0);
-        jSlider1.setMaximum(((BatchDataCarte) (mem.getDataCarte(id))).getNbDataCartesTps() - 1);
+        jSlider1.setMaximum(((BatchDataMap) (mem.getDataCarte(id))).getNbDataCartesTps() - 1);
         jSlider1.setVisible(true);
         jSlider2.setMinimum(0);
-        jSlider2.setMaximum(((BatchDataCarte) (mem.getDataCarte(id))).getNbDataCartesProf() - 1);
+        jSlider2.setMaximum(((BatchDataMap) (mem.getDataCarte(id))).getNbDataCartesProf() - 1);
         jSlider2.setVisible(true);
-        if (((BatchDataCarte) (mem.getDataCarte(id))).getNbDataCartesTps() == 1) {
+        if (((BatchDataMap) (mem.getDataCarte(id))).getNbDataCartesTps() == 1) {
             jSlider1.setVisible(false);
         }
-        if (((BatchDataCarte) (mem.getDataCarte(id))).getNbDataCartesProf() == 1) {
+        if (((BatchDataMap) (mem.getDataCarte(id))).getNbDataCartesProf() == 1) {
             jSlider2.setVisible(false);
         }
         MajNom();
-        mem.getFrmConfig().setNbGen((((BatchDataCarte) (mem.getDataCarte(id))).getTailleX() + ((BatchDataCarte) (mem.getDataCarte(id))).getTailleY()));
-        double tmp = ((((BatchDataCarte) (mem.getDataCarte(id))).getTailleX() * ((BatchDataCarte) (mem.getDataCarte(id))).getTailleY() / 500d) * 4d);
+        mem.getFrmConfig().setNbGen((((BatchDataMap) (mem.getDataCarte(id))).getXSize() + ((BatchDataMap) (mem.getDataCarte(id))).getYSize()));
+        double tmp = ((((BatchDataMap) (mem.getDataCarte(id))).getXSize() * ((BatchDataMap) (mem.getDataCarte(id))).getYSize() / 500d) * 4d);
         mem.getFrmConfig().setNbColo((int) (Math.round(Math.sqrt(tmp))));
         mem.getFrmConfig().setNbFourmis((int) (Math.round(Math.sqrt(tmp))));
     }
@@ -419,11 +419,11 @@ public class FrmCarte extends javax.swing.JFrame implements constants.couleur {
         mem.suivi(id);
     }//GEN-LAST:event_DemarrerSuivi
     public void MajNom() {
-        setTitle(((BatchDataCarte) (mem.getDataCarte(id))).getCarteActive().getDate());
+        setTitle(((BatchDataMap) (mem.getDataCarte(id))).getCarteActive().getDate());
     }
     private void ChangeActiveCard(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ChangeActiveCard
-        if ((jSlider1.getValue() != (((BatchDataCarte) (mem.getDataCarte(id))).getActive())[0]) || (jSlider2.getValue() != (((BatchDataCarte) (mem.getDataCarte(id))).getActive())[1])) {
-            ((BatchDataCarte) (mem.getDataCarte(id))).setCarteActive(jSlider1.getValue(), jSlider2.getValue());
+        if ((jSlider1.getValue() != (((BatchDataMap) (mem.getDataCarte(id))).getActive())[0]) || (jSlider2.getValue() != (((BatchDataMap) (mem.getDataCarte(id))).getActive())[1])) {
+            ((BatchDataMap) (mem.getDataCarte(id))).setCarteActive(jSlider1.getValue(), jSlider2.getValue());
             MajNom();
             monCanvas.processImage();
             monCanvas.repaint();

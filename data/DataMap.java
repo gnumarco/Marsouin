@@ -1,15 +1,4 @@
-/*
- * DataCarte.java
- *
- * Created on 07 septembre 2002, 18:29
- */
 
-/*
- * @author Mahler,Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- *
- */
 
 package data;
 
@@ -18,7 +7,7 @@ import ucar.ma2.*;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class DataCarte implements constants.centre, constants.courant {
+public class DataMap implements constants.centre, constants.courant {
     
     /** booleens qui activent des println() pour un debuggage -manuel- avec "pelle et sceau" */
     private String maDate;
@@ -27,8 +16,8 @@ public class DataCarte implements constants.centre, constants.courant {
     protected int profondeur = 0;
     protected int[] prof = null;
     protected int[] times = null;
-    /** les donnees pricipales : un tableau 2D de vecteurs courants cf data.Courant */
-    private Courant[][] ocean;
+    /** les donnees pricipales : un tableau 2D de vecteurs courants cf data.Stream */
+    private Stream[][] ocean;
     /** taille du tableau */
     private int tailleX,tailleY;
     
@@ -40,7 +29,7 @@ public class DataCarte implements constants.centre, constants.courant {
     private String nomFichier,nomConfig,nomResultat, unit;
     
     /** conteneur des r�sultats des fourmis */
-    private CollBoucle collectionBoucle=null;
+    private CollLoop collectionBoucle=null;
     
     private int NbCellValides = 0;
     private int nbSurTerre = 0;
@@ -59,26 +48,26 @@ public class DataCarte implements constants.centre, constants.courant {
      */
     private TabloDouble2D table = null;
     
-    public DataCarte(DataCarte d){
+    public DataMap(DataMap d){
         collectionVortexAnt = d.getVortexAnt();
         collectionVortexGeom = d.getVortexGeom();
         collectionVortexPhys = d.getVortexPhys();
         collectionVortexStream = d.getVortexStreamlines();
-        NbCellValides = d.getNbCellValides();
-        collectionBoucle = d.getCollBoucle();
-        nomResultat = d.getNomResultat();
-        nomFichier = d.getNomFichier();
-        nomConfig = d.getNomConfig();
-        normeMax = d.getNormeMax();
-        tailleX = d.getTailleX();
-        tailleY = d.getTailleY();
+        NbCellValides = d.getNbValidCells();
+        collectionBoucle = d.getCollLoop();
+        nomResultat = d.getResultName();
+        nomFichier = d.getFileName();
+        nomConfig = d.getConfigName();
+        normeMax = d.getMaxNorm();
+        tailleX = d.getXSize();
+        tailleY = d.getYSize();
         ocean = d.getOcean();
         table = d.getTable();
         maDate = d.getDate();
         nbSurTerre = d.getNbSurTerre();
     }
     
-    public DataCarte(Courant[][] mer,String nFichier,String nConfig) {
+    public DataMap(Stream[][] mer,String nFichier,String nConfig) {
         this(mer,nFichier);
         
         nomConfig = nConfig;
@@ -86,20 +75,20 @@ public class DataCarte implements constants.centre, constants.courant {
         
     }
     
-    public DataCarte(Courant[][] mer,String nFichier){
+    public DataMap(Stream[][] mer,String nFichier){
         ocean = mer;
         tailleX= mer.length;
         tailleY=mer[0].length;
-        normeMax = calculNormeMax();
+        normeMax = computeMaxNorm();
         nomFichier = nFichier;
         nomConfig = nFichier + ".cfg";
         
         initCollections();
         initTabloDouble();
-        NbCellValides = CalculNbCellValides();
+        NbCellValides = computeNbValidCells();
     }
     
-    public DataCarte(String nFichier, int z, int indZ, int c, int indC, int u, int indU, int v, int indV, String MVAtt, boolean noMV) {
+    public DataMap(String nFichier, int z, int indZ, int c, int indC, int u, int indU, int v, int indV, String MVAtt, boolean noMV) {
         try{
             
             OceanFile myFile = new OceanFile(nFichier,  z, indZ, c, indC, u, indU, v, indV, MVAtt, noMV);
@@ -108,7 +97,7 @@ public class DataCarte implements constants.centre, constants.courant {
             tailleX= ocean.length;
             tailleY=ocean[0].length;
             nbSurTerre = myFile.getNbSurTerre();
-            normeMax = this.calculNormeMax();
+            normeMax = this.computeMaxNorm();
             
             myFile=null;
             nomConfig = nFichier + ".cfg";
@@ -116,7 +105,7 @@ public class DataCarte implements constants.centre, constants.courant {
             
             this.initCollections();
             this.initTabloDouble();
-            NbCellValides = CalculNbCellValides();
+            NbCellValides = computeNbValidCells();
             
             NetcdfFile f = new NetcdfFile(nFichier);
             Variable vr = ((Variable)(f.getVariables().get(indC)));
@@ -144,7 +133,7 @@ public class DataCarte implements constants.centre, constants.courant {
     public int getNbSurTerre(){return nbSurTerre;}
     
     public final void initCollections() {
-        collectionBoucle=new CollBoucle();
+        collectionBoucle=new CollLoop();
         collectionVortexAnt = new CollVortexAnt();
         collectionVortexGeom = new CollVortexGeom();
         collectionVortexPhys = new CollVortexPhys();
@@ -156,7 +145,7 @@ public class DataCarte implements constants.centre, constants.courant {
         table = new TabloDouble2D(tailleX,tailleY);
     }
     
-    public final double calculNormeMax(){
+    public final double computeMaxNorm(){
         double nMax=0.0;
         int r,t;
         for(r=0;r<tailleX;r++){
@@ -210,27 +199,27 @@ public class DataCarte implements constants.centre, constants.courant {
             }
     }
     
-    public Courant[][] getOcean() {
+    public Stream[][] getOcean() {
         return ocean;
     }
     
-    public final int getTailleX(){ return tailleX;}
-    public final int getTailleY(){return tailleY;}
-    public final double getNormeMax(){ return normeMax;}
-    public final String getNomConfig(){return nomConfig;}
-    public final String getNomFichier(){return nomFichier;}
-    public final String getNomResultat(){return nomResultat;}
+    public final int getXSize(){ return tailleX;}
+    public final int getYSize(){return tailleY;}
+    public final double getMaxNorm(){ return normeMax;}
+    public final String getConfigName(){return nomConfig;}
+    public final String getFileName(){return nomFichier;}
+    public final String getResultName(){return nomResultat;}
     public final String getDate(){return maDate;}
-    public final Courant getC(int i, int j){ return ocean[i][j];}
+    public final Stream getC(int i, int j){ return ocean[i][j];}
     
-    public CollBoucle getCollBoucle(){ return collectionBoucle;}
+    public CollLoop getCollLoop(){ return collectionBoucle;}
     
     public CollVortexAnt getVortexAnt(){ return collectionVortexAnt;}
     public CollVortexGeom getVortexGeom(){ return collectionVortexGeom;}
     public CollVortexPhys getVortexPhys(){ return collectionVortexPhys;}
     public CollVortexStreamlines getVortexStreamlines(){ return collectionVortexStream;}
     
-    public void setOcean(Courant[][] ocean) {
+    public void setOcean(Stream[][] ocean) {
         this.ocean = ocean;
     }
     
@@ -242,10 +231,10 @@ public class DataCarte implements constants.centre, constants.courant {
     public void setCollVortexGeom(CollVortexGeom coll){collectionVortexGeom = coll;}
     public void setCollVortexPhys(CollVortexPhys coll){collectionVortexPhys = coll;}
     public void setCollVortexStream(CollVortexStreamlines coll){collectionVortexStream = coll;}
-    public void setCollBoucle(CollBoucle coll){collectionBoucle = coll;}
+    public void setCollBoucle(CollLoop coll){collectionBoucle = coll;}
     protected void setNomFichier(String n){nomFichier = n;}
     
-    public boolean[][][] getCarteGeomCentre() {
+    public boolean[][][] getMapGeomCentre() {
         // retourne une copie complete de la carte de booleens centre,
         //     flags resultants des methodes geometriques.
         boolean[][][] tab = new boolean[tailleX][][];
@@ -263,7 +252,7 @@ public class DataCarte implements constants.centre, constants.courant {
         return tab;
     }
     
-    public boolean[][] getCarteIsVortex() {
+    public boolean[][] getMapIsVortex() {
         // retourne une copie complete de la carte de booleen isVortex,
         //     flag resultat des fourmis.
         boolean[][] tab = new boolean[tailleX][];
@@ -327,7 +316,7 @@ public class DataCarte implements constants.centre, constants.courant {
         return ret;
     }
     
-    protected final int CalculNbCellValides(){
+    protected final int computeNbValidCells(){
         int cpt=0;
         for(int i=0;i<tailleX;i++)
             for(int j=0;j<tailleY;j++)
@@ -336,7 +325,7 @@ public class DataCarte implements constants.centre, constants.courant {
         return cpt;
     }
     
-    public int getNbCellValides(){
+    public int getNbValidCells(){
         return NbCellValides;
     }
     

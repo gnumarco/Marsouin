@@ -20,8 +20,8 @@ import data.CollVortexStreamlines;
  */
 public class moteurStreamlines extends Thread implements constants.streamlines {
 
-    private data.BatchDataCarte MaBatchCarte;
-    private data.DataCarte MaCarte = null;
+    private data.BatchDataMap MaBatchCarte;
+    private data.DataMap MaCarte = null;
     //un tableau de vecteurs contenant chacun tous les points d'une streamline
     private CollVortexStreamlines resultat;
     //Distance minimale entre deux points pour que l'int�gration de la streamline s'arrete
@@ -44,7 +44,7 @@ public class moteurStreamlines extends Thread implements constants.streamlines {
     /**
      * Creates a new instance of moteurStreamlines
      */
-    public moteurStreamlines(data.BatchDataCarte d, visu.Memoire m, int i, javax.swing.ProgressMonitor p) {
+    public moteurStreamlines(data.BatchDataMap d, visu.Memoire m, int i, javax.swing.ProgressMonitor p) {
         mem = m;
         MaBatchCarte = d;
         id = i;

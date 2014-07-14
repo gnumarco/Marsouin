@@ -1,9 +1,19 @@
-/*
- * openNetCdf.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 28 avril 2003, 14:12
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 /**
  * @author Segond
  * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
@@ -22,13 +32,13 @@ import java.util.GregorianCalendar;
  *
  * @author  marco
  */
-public class openNetCdf extends javax.swing.JDialog {
+public class OpenNetCdf extends javax.swing.JDialog {
     
-    Courant[][] mer = null;
+    Stream[][] mer = null;
     String nomFichier;
     
     /** Creates new form openNetCdf */
-    public openNetCdf(java.awt.Frame parent, boolean modal, String s) {
+    public OpenNetCdf(java.awt.Frame parent, boolean modal, String s) {
 	super(parent, modal);
 	initComponents();
 	nomFichier = s;
@@ -129,7 +139,7 @@ public class openNetCdf extends javax.swing.JDialog {
 	setResizable(false);
     }//GEN-END:initComponents
     
-    public Courant[][] getMer(){ return mer;}
+    public Stream[][] getMer(){ return mer;}
     
     public final void lireNetCDF(String s){
 	try{
@@ -196,11 +206,11 @@ public class openNetCdf extends javax.swing.JDialog {
 	    NetcdfFile f = new NetcdfFile(nomFichier);
 	    int tailleX = (f.findDimension("lon")).getLength();
 	    int tailleY = (f.findDimension("lat")).getLength();
-	    mer = new Courant[tailleX][tailleY];
+	    mer = new Stream[tailleX][tailleY];
 	    System.out.println("creation d'une matrice "+tailleX+";"+tailleY);
 	    for(int r=0;r<tailleX;r++)
 		for(int t=0;t<tailleY;t++)
-		    mer[r][t] = new Courant();
+		    mer[r][t] = new Stream();
 	    Variable var = f.findVariable("u");
 	    Array tab = var.read();
 	    Index ind = tab.getIndex();

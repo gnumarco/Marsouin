@@ -1,22 +1,25 @@
-/*
- * MetaVortex.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 19 decembre 2002, 11:53
- */
-
-/*
- * @author Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package data;
 
 import java.awt.*;
 import java.util.ArrayList;
 
-public class VortexAnt extends Boucle{
+public class VortexAnt extends Loop{
     
     
     private ArrayList mesVortex = null;
@@ -28,7 +31,7 @@ public class VortexAnt extends Boucle{
         mesVortex = new ArrayList();
     }
     
-    public VortexAnt(Boucle b){
+    public VortexAnt(Loop b){
         super(b);
         mesVortex = new ArrayList();
         mesVortex.add(b);
@@ -37,7 +40,7 @@ public class VortexAnt extends Boucle{
     public VortexAnt(int[] xp, int[] yp, int np, int tag){
         super(xp,yp,np,tag);
         mesVortex = new ArrayList();
-        mesVortex.add(new Boucle(xp,yp,np,tag));
+        mesVortex.add(new Loop(xp,yp,np,tag));
     }
     
     public VortexAnt(ArrayList vect){
@@ -47,24 +50,24 @@ public class VortexAnt extends Boucle{
         int ptMax=0;
         
         for(int i=0;i<vect.size();i++){
-            if(((Boucle)vect.get(i)).npoints>ptMax){
+            if(((Loop)vect.get(i)).npoints>ptMax){
                 ind=i;
-                ptMax = ((Boucle)vect.get(i)).npoints;
+                ptMax = ((Loop)vect.get(i)).npoints;
             }
         }
         mesVortex = vect;
         
-        npoints = ((Boucle)vect.get(ind)).npoints;
-        xpoints = ((Boucle)vect.get(ind)).xpoints;
-        ypoints = ((Boucle)vect.get(ind)).ypoints;
-        tag = ((Boucle)vect.get(ind)).tag;
-        centre = ((Boucle)vect.get(ind)).centre;
-        aire = ((Boucle)vect.get(ind)).aire;
-        aiguilleMontre= ((Boucle)vect.get(ind)).aiguilleMontre;
+        npoints = ((Loop)vect.get(ind)).npoints;
+        xpoints = ((Loop)vect.get(ind)).xpoints;
+        ypoints = ((Loop)vect.get(ind)).ypoints;
+        tag = ((Loop)vect.get(ind)).tag;
+        centre = ((Loop)vect.get(ind)).centre;
+        aire = ((Loop)vect.get(ind)).aire;
+        aiguilleMontre= ((Loop)vect.get(ind)).aiguilleMontre;
         
     }
     
-    public void addBoucle(Boucle b){
+    public void addBoucle(Loop b){
         mesVortex.add(b);
     }
     
@@ -89,8 +92,8 @@ public class VortexAnt extends Boucle{
             centre[0]=0d;
             centre[1]=0d;
             for (Object mesVortex1 : mesVortex) {
-                somme[0] += ((Boucle) mesVortex1).getCentre()[0];
-                somme[1] += ((Boucle) mesVortex1).getCentre()[1];
+                somme[0] += ((Loop) mesVortex1).getCentre()[0];
+                somme[1] += ((Loop) mesVortex1).getCentre()[1];
             }
             centre[0]=somme[0]/(double)mesVortex.size();
             centre[1]=somme[1]/(double)mesVortex.size();
@@ -108,11 +111,11 @@ public class VortexAnt extends Boucle{
         int indiceMax = 0;
         
         for(int i=0;i<mesVortex.size();i++)
-            if(((Boucle)mesVortex.get(i)).getAire()>maxAire){
-                maxAire=((Boucle)mesVortex.get(i)).getAire();
+            if(((Loop)mesVortex.get(i)).getAire()>maxAire){
+                maxAire=((Loop)mesVortex.get(i)).getAire();
                 indiceMax = i;
             }
-        return ((Boucle)mesVortex.get(indiceMax)).getContour();
+        return ((Loop)mesVortex.get(indiceMax)).getContour();
     }
     
 }

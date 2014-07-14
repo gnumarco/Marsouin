@@ -1,20 +1,25 @@
-/*
- * Courant.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 10 septembre 2002, 14:26
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
- * @author Mahler, Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- *
- */
 package data;
 
 import java.util.ArrayList;
 
-public class Courant implements constants.centre, constants.fourmi, constants.courant {
+public class Stream implements constants.centre, constants.fourmi, constants.courant {
 
     // coordonnees du vecteur initial.
     private double XBase;
@@ -59,7 +64,7 @@ public class Courant implements constants.centre, constants.fourmi, constants.co
     /**
      * Creates a new instance of Courant
      */
-    public Courant() {
+    public Stream() {
         XBase = 0.0;
         YBase = 0.0;
         X = 0.0;
@@ -80,7 +85,7 @@ public class Courant implements constants.centre, constants.fourmi, constants.co
         pheromone = null;
     }
 
-    public Courant(double xx, double yy) {
+    public Stream(double xx, double yy) {
         XBase = xx;
         YBase = yy;
         X = xx;
@@ -104,7 +109,7 @@ public class Courant implements constants.centre, constants.fourmi, constants.co
         pheromone = null;
     }
 
-    public Courant(double xx, double yy, float s, float b, float t) {
+    public Stream(double xx, double yy, float s, float b, float t) {
         XBase = xx;
         YBase = yy;
         X = xx;
@@ -226,7 +231,7 @@ public class Courant implements constants.centre, constants.fourmi, constants.co
         return ret;
     }
 
-    public Courant(Courant c) {
+    public Stream(Stream c) {
         this.XBase = c.getXBase();
         this.YBase = c.getYBase();
         this.X = c.X;

@@ -1,16 +1,19 @@
-/*
- * Boucle.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 20 november 2002, 17:26
- */
-
-/*
- * @author Segond, Mahler
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package data;
 
 import java.awt.*;
@@ -18,7 +21,7 @@ import java.awt.Polygon;
 import java.util.ArrayList;
 
 
-public class Boucle extends Polygon implements constants.courant, constants.couleur {
+public class Loop extends Polygon implements constants.courant, constants.couleur {
     
     private ArrayList suivant = null;
     private ArrayList precedent = null;
@@ -40,7 +43,7 @@ public class Boucle extends Polygon implements constants.courant, constants.coul
     
     protected boolean affiche = true;
     
-    public Boucle() {
+    public Loop() {
         super();
         tag = 0;
         centre =null;
@@ -51,7 +54,7 @@ public class Boucle extends Polygon implements constants.courant, constants.coul
         majSens();
     }
     
-    public Boucle(int tag) {
+    public Loop(int tag) {
         super();
         this.tag = tag;
         centre =null;
@@ -62,7 +65,7 @@ public class Boucle extends Polygon implements constants.courant, constants.coul
         majSens();
     }
     
-    public Boucle(int[] xpts, int[] ypts, int npts,int tagg) {
+    public Loop(int[] xpts, int[] ypts, int npts,int tagg) {
         super(xpts,ypts,npts);
         
         tag = tagg;
@@ -79,7 +82,7 @@ public class Boucle extends Polygon implements constants.courant, constants.coul
         majSens();
     }
     
-    public Boucle(int[] xpts, int[] ypts, int npts,int tagg, boolean s) {
+    public Loop(int[] xpts, int[] ypts, int npts,int tagg, boolean s) {
         super(xpts,ypts,npts);
         
         tag = tagg;
@@ -96,7 +99,7 @@ public class Boucle extends Polygon implements constants.courant, constants.coul
         majSens();
     }
     
-    public Boucle(Boucle b) {
+    public Loop(Loop b) {
         super(((int[])b.xpoints.clone()),((int[])b.ypoints.clone()),b.npoints);
         if ( ((xpoints!=null)&&(xpoints.length!=0))
         && ((ypoints!=null)&&(ypoints.length!=0)) ) {
@@ -356,7 +359,7 @@ public class Boucle extends Polygon implements constants.courant, constants.coul
         + ((ypoints[n]-ypoints[ns])*(ypoints[n]-ypoints[ns]))) );
     }
     
-    public double getPeriod(Courant [][] mer) {
+    public double getPeriod(Stream [][] mer) {
         
         //            __n_
         //            \     distance P  P
@@ -402,19 +405,19 @@ public class Boucle extends Polygon implements constants.courant, constants.coul
     
     public void setSuivant(ArrayList b){ suivant = b;}
     
-    public void setSuivant(Boucle b){ suivant.add(b);}
+    public void setSuivant(Loop b){ suivant.add(b);}
     
     public ArrayList getSuivant(){ return suivant;}
     
-    public Boucle getSuivant(int i){ return (Boucle)(suivant.get(i));}
+    public Loop getSuivant(int i){ return (Loop)(suivant.get(i));}
     
     public void setPrecedent(ArrayList b){ precedent = b;}
     
-    public void setPrecedent(Boucle b){ precedent.add(b);}
+    public void setPrecedent(Loop b){ precedent.add(b);}
     
     public ArrayList getPrecedent(){ return precedent;}
     
-    public Boucle getPrecedent(int i){ return (Boucle)precedent.get(i);}
+    public Loop getPrecedent(int i){ return (Loop)precedent.get(i);}
     
     public void setNum(int i){num = i;}
     
