@@ -16,8 +16,12 @@
  */
 package data;
 
+import static java.awt.Toolkit.getDefaultToolkit;
 import java.io.IOException;
+import static java.lang.System.gc;
+import static javax.swing.BorderFactory.createEtchedBorder;
 import ucar.nc2.*;
+import static ucar.nc2.NetcdfFile.open;
 
 /**
  *
@@ -40,7 +44,7 @@ public class OpenNetCdfFile extends javax.swing.JDialog {
         initComponents();
         fichierNetcdf = fich;
         try{
-            monFichier = NetcdfFile.open(fichierNetcdf);
+            monFichier = open(fichierNetcdf);
         }catch(IOException e){System.out.println(e.toString());}
         lireNetCDF(fichierNetcdf);
     }

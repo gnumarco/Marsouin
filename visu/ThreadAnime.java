@@ -1,16 +1,19 @@
-/*
- * ThreadAnime.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 1 octobre 2002, 11:35
- */
-
-/*
- * @author Mahler
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package visu;
 
 public class ThreadAnime extends Thread implements constants.centre {
@@ -27,19 +30,19 @@ public class ThreadAnime extends Thread implements constants.centre {
 
         mere.repaint();
         try{
-                this.yield();
+                yield();
         }catch(Exception e){}
         while (!stop){
             try {
-                this.sleep(ANIME_DELAY);
+                sleep(ANIME_DELAY);
             }catch(Exception e){System.out.println("ThreadAnime : "+e);}
             System.out.println("-=< animation >=-");
             try{
-                this.yield();
+                yield();
             }catch(Exception e){}
            
             try{
-                this.yield();
+                yield();
             }catch(Exception e){}
 
         }

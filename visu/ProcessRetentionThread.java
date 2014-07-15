@@ -1,13 +1,22 @@
-/*
- * ProcessRetentionThread.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 16 mars 2006, 20:31
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package visu;
+
+import static java.lang.Math.round;
 
 /**
  *
@@ -60,11 +69,11 @@ public class ProcessRetentionThread extends Thread{
         int colors[] = new int[3];
         if(v<0.5){
             colors[0]=0;
-            colors[1]=Math.round(510*(float)v);
-            colors[2]=Math.round(-510*(float)v+255);
+            colors[1]=round(510*(float)v);
+            colors[2]=round(-510*(float)v+255);
         }else{
-            colors[0]=Math.round(510*(float)v-255);
-            colors[1]=Math.round(-510*(float)v+510);
+            colors[0]=round(510*(float)v-255);
+            colors[1]=round(-510*(float)v+510);
             colors[2]=0;
         }
         return colors;

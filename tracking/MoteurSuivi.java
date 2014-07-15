@@ -1,7 +1,18 @@
-/*
- * MoteurSuivi.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 5 juin 2003, 10:37
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package tracking;
 
@@ -9,6 +20,11 @@ import data.*;
 import data.VortexAnt;
 import constants.suivi;
 import java.io.File;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+import static java.lang.System.getProperty;
 
 /**
  *
@@ -37,7 +53,7 @@ public class MoteurSuivi extends java.lang.Thread implements suivi {
         VortexAnt vCourant;
         VortexAnt vCandidat;
 
-        javax.swing.JFileChooser F = new javax.swing.JFileChooser(System.getProperty("user.home"));
+        javax.swing.JFileChooser F = new javax.swing.JFileChooser(getProperty("user.home"));
 
         F.setDialogTitle("Fichier de sauvegarde");
         F.setMultiSelectionEnabled(false);
@@ -64,7 +80,7 @@ public class MoteurSuivi extends java.lang.Thread implements suivi {
                             vCourant = maCarte.getDataCarte(j, i).getVortexAnt().get(k);
                             for (int l = 0; l < maCarte.getDataCarte(j + 1, i).getVortexAnt().size(); l++) {
                                 vCandidat = maCarte.getDataCarte(j + 1, i).getVortexAnt().get(l);
-                                double distance = Math.sqrt(Math.pow(Math.abs(vCandidat.getBaricentre()[0] - vCourant.getBaricentre()[0]), 2) + Math.pow(Math.abs(vCandidat.getBaricentre()[1] - vCourant.getBaricentre()[1]), 2));
+                                double distance = sqrt(pow(abs(vCandidat.getBaricentre()[0] - vCourant.getBaricentre()[0]), 2) + pow(abs(vCandidat.getBaricentre()[1] - vCourant.getBaricentre()[1]), 2));
                                 if ((distance <= deplacementMax) && (vCourant.getSens() == vCandidat.getSens())) {
                                     VortexAnt suiv = vCandidat;
                                     suiv.setPrecedent(vCourant);

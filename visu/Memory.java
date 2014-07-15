@@ -1,14 +1,18 @@
-/*
- * Memory.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 24 septembre 2002, 19:00
- */
-
-/*
- * @author Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package visu;
 
@@ -16,9 +20,17 @@ import ants.SearchEngine;
 import data.*;
 import java.io.File;
 import java.io.IOException;
+import static java.lang.String.valueOf;
+import static java.lang.String.valueOf;
+import static java.lang.String.valueOf;
+import static java.lang.String.valueOf;
+import static java.lang.System.exit;
+import static java.lang.System.gc;
+import static java.lang.System.getProperty;
 import java.util.ArrayList;
 import ucar.nc2.*;
 import ucar.ma2.*;
+import static ucar.nc2.NetcdfFileWriter.createNew;
 
 public class Memory implements constants.physique, constants.centre, constants.couleur, constants.fourmi, constants.default_values, constants.courant, constants.streamlines {
 
@@ -269,7 +281,7 @@ public class Memory implements constants.physique, constants.centre, constants.c
         if (getMemCheminExplo() != null) {
             cheminDefaut = getMemCheminExplo();
         } else {
-            cheminDefaut = System.getProperty("user.home");
+            cheminDefaut = getProperty("user.home");
         }
 
         javax.swing.JFileChooser F = new javax.swing.JFileChooser(cheminDefaut);
@@ -301,7 +313,7 @@ public class Memory implements constants.physique, constants.centre, constants.c
                         }
                     }
                     //System.out.println("Ouverture du fichier:"+fichs.getAbsolutePath());
-                    NetcdfFileWriter out = NetcdfFileWriter.createNew(NetcdfFileWriter.Version.netcdf3, fichs.getAbsolutePath(), null);
+                    NetcdfFileWriter out = createNew(NetcdfFileWriter.Version.netcdf3, fichs.getAbsolutePath(), null);
 
                     out.addVariable(null, "Tags", DataType.INT, "time lon lat");
 
@@ -349,7 +361,7 @@ public class Memory implements constants.physique, constants.centre, constants.c
                     }
 
                     //Sauvegarde du tabeau dans un fichier texte
-                    String ligne = String.valueOf(dat.getXSize()) + " " + String.valueOf(dat.getYSize());
+                    String ligne = valueOf(dat.getXSize()) + " " + valueOf(dat.getYSize());
                     wtf.uneLigne(ligne);
                     for (int j = dat.getYSize() - 1; j >= 0; j--) {
                         ligne = " ";
@@ -382,7 +394,7 @@ public class Memory implements constants.physique, constants.centre, constants.c
                         }
 
                         //Sauvegarde du tabeau dans un fichier texte
-                        String ligne = String.valueOf(dat.getXSize()) + " " + String.valueOf(dat.getYSize());
+                        String ligne = valueOf(dat.getXSize()) + " " + valueOf(dat.getYSize());
                         wtf.uneLigne(ligne);
                         for (int j = dat.getYSize() - 1; j >= 0; j--) {
                             ligne = " ";
@@ -619,9 +631,9 @@ public class Memory implements constants.physique, constants.centre, constants.c
     public void fin() {
         configHistoFile = null;
         frmConfig = null;
-        System.gc();
+        gc();
         System.out.println(" memoire : GC ok ;   Fin. ");
-        System.exit(0);
+        exit(0);
     }
 
 }

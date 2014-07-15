@@ -1,18 +1,30 @@
-/*
- * Canvas3D.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 31 mars 2005, 21:26
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package visu;
 
 import com.sun.j3d.utils.behaviors.mouse.*;
 import java.awt.GraphicsConfiguration;
 import com.sun.j3d.utils.universe.*;
+import static com.sun.j3d.utils.universe.SimpleUniverse.getPreferredConfiguration;
 import javax.media.j3d.*;
 import javax.vecmath.*;
 import data.BatchDataMap;
 import data.Loop;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
@@ -38,7 +50,7 @@ public class Canv3D {
     private void make3D(){
         
         try{
-            GraphicsConfiguration config = SimpleUniverse.getPreferredConfiguration();
+            GraphicsConfiguration config = getPreferredConfiguration();
             
             c = new Canvas3D(config);
             c.setDoubleBufferEnable(true);
@@ -52,7 +64,7 @@ public class Canv3D {
             u.getViewingPlatform().setNominalViewingTransform();
             
             u.addBranchGraph(scene);
-        }catch(java.lang.Exception e){javax.swing.JOptionPane.showMessageDialog(null,"Probl�me de configuration 3D, veuillez v�rifier que Java3D est install�\nErreur : "+e.toString());}
+        }catch(java.lang.Exception e){showMessageDialog(null,"Probl�me de configuration 3D, veuillez v�rifier que Java3D est install�\nErreur : "+e.toString());}
     }
     
     public BranchGroup createSceneGraph() throws java.lang.Exception{

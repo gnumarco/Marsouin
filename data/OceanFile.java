@@ -17,8 +17,26 @@
 package data;
 
 import java.io.IOException;
+import static java.lang.Double.isNaN;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
+import static java.lang.Math.abs;
 import ucar.nc2.*;
 import ucar.ma2.*;
+import static ucar.nc2.NetcdfFile.open;
 
 public class OceanFile implements constants.balise {
 
@@ -91,11 +109,11 @@ public class OceanFile implements constants.balise {
         if (isNetCDF) {
             if (batch) {
                 try {
-                    NetcdfFile f = NetcdfFile.open(fileFullName);
+                    NetcdfFile f = open(fileFullName);
                     if (!noMV) {
                         mv = ((Variable) (f.getVariables().get(varU))).findAttribute(MVAttribute).getNumericValue().floatValue();
                     } else {
-                        mv = Double.parseDouble(MVAttribute);
+                        mv = parseDouble(MVAttribute);
                     }
                     tailleX = ((Variable) (f.getVariables().get(varU))).getDimension(indU).getLength();
                     tailleY = ((Variable) (f.getVariables().get(varV))).getDimension(indV).getLength();
@@ -118,8 +136,8 @@ public class OceanFile implements constants.balise {
                                 tbl[indSel] = sel;
                                 ind.set(tbl);
                                 mer[i][j].setXBase(tab.getDouble(ind));
-                                if ((Math.abs(mer[i][j].getXBase()) > max) && (Math.abs(mer[i][j].getXBase()) != mv)) {
-                                    max = Math.abs(mer[i][j].getXBase());
+                                if ((abs(mer[i][j].getXBase()) > max) && (abs(mer[i][j].getXBase()) != mv)) {
+                                    max = abs(mer[i][j].getXBase());
                                 }
 
                             }
@@ -133,8 +151,8 @@ public class OceanFile implements constants.balise {
                                 tbl[indSel2] = sel2;
                                 ind.set(tbl);
                                 mer[i][j].setXBase(tab.getDouble(ind));
-                                if ((Math.abs(mer[i][j].getXBase()) > max) && (Math.abs(mer[i][j].getXBase()) != mv)) {
-                                    max = Math.abs(mer[i][j].getXBase());
+                                if ((abs(mer[i][j].getXBase()) > max) && (abs(mer[i][j].getXBase()) != mv)) {
+                                    max = abs(mer[i][j].getXBase());
                                 }
 
                             }
@@ -154,10 +172,10 @@ public class OceanFile implements constants.balise {
                                 tbl[indSel] = sel;
                                 ind.set(tbl);
                                 mer[i][j].setYBase(tab.getDouble(ind));
-                                if ((Math.abs(mer[i][j].getYBase()) > max) && (Math.abs(mer[i][j].getXBase()) != mv)) {
-                                    max = Math.abs(mer[i][j].getYBase());
+                                if ((abs(mer[i][j].getYBase()) > max) && (abs(mer[i][j].getXBase()) != mv)) {
+                                    max = abs(mer[i][j].getYBase());
                                 }
-                                if ((mer[i][j].getXBase() == mv && mer[i][j].getYBase() == mv) || (Double.isNaN(mer[i][j].getXBase())) || (Double.isNaN(mer[i][j].getYBase()))) {
+                                if ((mer[i][j].getXBase() == mv && mer[i][j].getYBase() == mv) || (isNaN(mer[i][j].getXBase())) || (isNaN(mer[i][j].getYBase()))) {
                                     mer[i][j].setSurTerre(true);
                                     nbSurTerre++;
                                 }
@@ -172,10 +190,10 @@ public class OceanFile implements constants.balise {
                                 tbl[indSel2] = sel2;
                                 ind.set(tbl);
                                 mer[i][j].setYBase(tab.getDouble(ind));
-                                if (Math.abs(mer[i][j].getYBase()) > max) {
-                                    max = Math.abs(mer[i][j].getYBase());
+                                if (abs(mer[i][j].getYBase()) > max) {
+                                    max = abs(mer[i][j].getYBase());
                                 }
-                                if ((mer[i][j].getXBase() == mv && mer[i][j].getYBase() == mv) || (Double.isNaN(mer[i][j].getXBase())) || (Double.isNaN(mer[i][j].getYBase()))) {
+                                if ((mer[i][j].getXBase() == mv && mer[i][j].getYBase() == mv) || (isNaN(mer[i][j].getXBase())) || (isNaN(mer[i][j].getYBase()))) {
                                     mer[i][j].setSurTerre(true);
                                     nbSurTerre++;
                                 }
@@ -226,8 +244,8 @@ public class OceanFile implements constants.balise {
                 line = file.decomposeLigneEnMots();
                 isType1 = isType1 && ((line != null) && (line.size() == 2));
                 if (isType1) {
-                    tailleX = java.lang.Integer.parseInt(line.get(0));
-                    tailleY = java.lang.Integer.parseInt(line.get(1));
+                    tailleX = parseInt(line.get(0));
+                    tailleY = parseInt(line.get(1));
                     if (dBug) {
                         System.out.println("type1 1");
                     }
@@ -332,8 +350,8 @@ public class OceanFile implements constants.balise {
             if (dBug) {
                 System.out.println(" ok dec en mot");
             }
-            tailleX = java.lang.Integer.parseInt(val.get(0).toString());
-            tailleY = java.lang.Integer.parseInt(val.get(1).toString());
+            tailleX = parseInt(val.get(0).toString());
+            tailleY = parseInt(val.get(1).toString());
             //System.out.println(" carte de "+ tailleX + " colonnes et " + tailleY + " lignes");
 
             if (dBug) {
@@ -362,13 +380,13 @@ public class OceanFile implements constants.balise {
                             mer[cpt % tailleX][cpt / tailleX].setXBase(0.0);
                         } else {
                             mer[cpt % tailleX][cpt / tailleX].setXBase(
-                                    COEF_TYPE_1 * java.lang.Double.parseDouble(val.get(r).toString()));
+                                    COEF_TYPE_1 * parseDouble(val.get(r).toString()));
                         }
                     } else if (val.get(r).toString().equalsIgnoreCase("nan")) {
                         mer[(cpt - (tailleX * tailleY)) % tailleX][(cpt - (tailleX * tailleY)) / tailleX].setYBase(0.0);
                     } else {
                         mer[(cpt - (tailleX * tailleY)) % tailleX][(cpt - (tailleX * tailleY)) / tailleX].setYBase(
-                                COEF_TYPE_1 * java.lang.Double.parseDouble(val.get(r).toString()));
+                                COEF_TYPE_1 * parseDouble(val.get(r).toString()));
                     }
                     cpt++;
                 }
@@ -462,7 +480,7 @@ public class OceanFile implements constants.balise {
                         mer[cpt][r].setXBase(0.0);
                         mer[cpt][r].setSurTerre(true);
                     } else {
-                        mer[cpt][r].setXBase(COEF_TYPE_2 * java.lang.Double.parseDouble(val.get(r).toString()));
+                        mer[cpt][r].setXBase(COEF_TYPE_2 * parseDouble(val.get(r).toString()));
                     }
                 }
                 cpt++;
@@ -497,7 +515,7 @@ public class OceanFile implements constants.balise {
                         mer[cpt][r].setYBase(0.0);
                         mer[cpt][r].setSurTerre(true);
                     } else {
-                        mer[cpt][r].setYBase(COEF_TYPE_2 * java.lang.Double.parseDouble(val.get(r).toString()));
+                        mer[cpt][r].setYBase(COEF_TYPE_2 * parseDouble(val.get(r).toString()));
                     }
                 }
                 cpt++;

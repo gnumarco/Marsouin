@@ -1,14 +1,32 @@
-/*
- * FrmVisual.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 3 septembre 2004, 18:14
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
 package visu;
 
 import java.io.File;
 import data.SimpleSaxParser;
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.System.exit;
+import static java.lang.System.getProperty;
+import static javax.swing.JOptionPane.showMessageDialog;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
  *
@@ -29,7 +47,7 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
         mem = m;
         initConfFile();
         if(!Ok3D)
-        javax.swing.JOptionPane.showMessageDialog(this,"Java3D was not detected on your system. 3D visualization will not be available.\nTo download Java3D: http://java.sun.com/products/java-media/3D/","Marsouin v3.1.0",javax.swing.JOptionPane.INFORMATION_MESSAGE,new javax.swing.ImageIcon(this.getIconImage()));
+        showMessageDialog(this,"Java3D was not detected on your system. 3D visualization will not be available.\nTo download Java3D: http://java.sun.com/products/java-media/3D/","Marsouin v3.1.0",javax.swing.JOptionPane.INFORMATION_MESSAGE,new javax.swing.ImageIcon(this.getIconImage()));
     }
     
     @Override
@@ -272,7 +290,7 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
     }//GEN-LAST:event_jCheckBoxUseMethodFourmiActionPerformed
     
     private void afficherInfos(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_afficherInfos
-        javax.swing.JOptionPane.showMessageDialog(this,"Marsouin v3.1.0\nCopyright LIL/ULCO\nMarc Segond, Cyril Fonlupt, Denis Robilliard\nContact: segond@lil.univ-littoral.fr\nWeb Page: http://www-lil.univ-littoral.fr/~segond/EN/Marsouin.html","Marsouin v3.1.0",javax.swing.JOptionPane.INFORMATION_MESSAGE,new javax.swing.ImageIcon(getIconImage()));
+        showMessageDialog(this,"Marsouin v3.1.0\nCopyright LIL/ULCO\nMarc Segond, Cyril Fonlupt, Denis Robilliard\nContact: segond@lil.univ-littoral.fr\nWeb Page: http://www-lil.univ-littoral.fr/~segond/EN/Marsouin.html","Marsouin v3.1.0",javax.swing.JOptionPane.INFORMATION_MESSAGE,new javax.swing.ImageIcon(getIconImage()));
     }//GEN-LAST:event_afficherInfos
     
     private void jMenuItemOuvrirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemOuvrirActionPerformed
@@ -281,7 +299,7 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
         if(mem.getMemCheminExplo() != null)
             cheminDefaut = mem.getMemCheminExplo();
         else
-            cheminDefaut = System.getProperty("user.home");
+            cheminDefaut = getProperty("user.home");
         
         javax.swing.JFileChooser F = new javax.swing.JFileChooser(cheminDefaut);
         
@@ -305,13 +323,13 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
     /** Exit the Application */
     private void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
         saveParams();
-        System.exit(0);
+        exit(0);
     }//GEN-LAST:event_exitForm
     
     private void initConfFile(){
         try{
             File homeDir, configDir, configFile;
-            String userHome = System.getProperty("user.home");
+            String userHome = getProperty("user.home");
             homeDir = new File(userHome);
             if (!homeDir.isDirectory())
                 throw new Exception("homeDir is no dir");
@@ -337,7 +355,7 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
     private void saveParams(){
         try{
             File homeDir, configDir, configFile;
-            String userHome = System.getProperty("user.home");
+            String userHome = getProperty("user.home");
             homeDir = new File(userHome);
             if (!homeDir.isDirectory())
                 throw new Exception("homeDir is no dir");
@@ -414,10 +432,10 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
     
     public final int[] getFourmiNB() {
         int[] tb = new int[LENGTH_FOURMI_NB];
-        tb[FOURMI_NB_GENERATIONS]=Integer.parseInt(jTextFieldNbGen.getText());
-        tb[FOURMI_NB_ESPECES]=Integer.parseInt(jTextFieldNbFourmisDistinctes.getText());
-        tb[FOURMI_NB_INTRA_ESPECE]=Integer.parseInt(NbFourmisParEspeceTextfield.getText());
-        tb[FOURMI_NB_RUNS]=Integer.parseInt(this.jTextFieldNbRechParCarte.getText());
+        tb[FOURMI_NB_GENERATIONS]=parseInt(jTextFieldNbGen.getText());
+        tb[FOURMI_NB_ESPECES]=parseInt(jTextFieldNbFourmisDistinctes.getText());
+        tb[FOURMI_NB_INTRA_ESPECE]=parseInt(NbFourmisParEspeceTextfield.getText());
+        tb[FOURMI_NB_RUNS]=parseInt(this.jTextFieldNbRechParCarte.getText());
         return tb;
     }
     
@@ -435,17 +453,17 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
     
     public final double[] getFourmiCoeff() {
         double[] tb = new double[LENGTH_FOURMI_COEFF];
-        tb[FOURMI_COEFF_EVAPORATION]=Double.parseDouble(jTextFieldCoeffEvap.getText());
-        tb[FOURMI_QTE_DEPOT]=Double.parseDouble(jTextFieldDepotPheromone.getText());
-        tb[FOURMI_TAUX_COURBURE]=Double.parseDouble(jTextFieldBiais.getText());
+        tb[FOURMI_COEFF_EVAPORATION]=parseDouble(jTextFieldCoeffEvap.getText());
+        tb[FOURMI_QTE_DEPOT]=parseDouble(jTextFieldDepotPheromone.getText());
+        tb[FOURMI_TAUX_COURBURE]=parseDouble(jTextFieldBiais.getText());
         return tb;
     }
     
     public final double[] getStreamParams() {
         double[] tb = new double[LENGTH_STREAMLINES_PARAM];
-        tb[STREAM_SEUIL_BOUCLAGE]=Double.parseDouble(jTextFieldStreamSeuilBouclage.getText());
-        tb[STREAM_SEUIL_POINT_CRITIQUE]=Double.parseDouble(jTextFieldStreamSeuilPointCritique.getText());
-        tb[STREAM_PRECISION]=Double.parseDouble(jTextFieldStreamPrecision.getText());
+        tb[STREAM_SEUIL_BOUCLAGE]=parseDouble(jTextFieldStreamSeuilBouclage.getText());
+        tb[STREAM_SEUIL_POINT_CRITIQUE]=parseDouble(jTextFieldStreamSeuilPointCritique.getText());
+        tb[STREAM_PRECISION]=parseDouble(jTextFieldStreamPrecision.getText());
         return tb;
     }
     

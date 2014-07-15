@@ -1,20 +1,23 @@
-/*
- * Comparateur.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 30 juin 2005, 11:09
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * To change this template, choose Tools | Options and locate the template under
- * the Source Creation and Management node. Right-click the template and choose
- * Open. You can then make changes to the template in the Source Editor.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-/**
- *
- * @author segond
- */
-
+import static java.lang.System.gc;
 import ucar.nc2.*;
 import ucar.ma2.*;
+import static ucar.nc2.NetcdfFile.open;
 
 public class Comparateur {
     
@@ -30,7 +33,7 @@ public class Comparateur {
         
         System.out.println("Lecture des exemples");
         try{
-            NetcdfFile f = NetcdfFile.open(r);
+            NetcdfFile f = open(r);
             times = ((Variable)(f.getVariables().get(2))).getDimension(0).getLength();
             System.out.println("times:"+times);
             tailleX = ((Variable)(f.getVariables().get(2))).getDimension(1).getLength();
@@ -58,11 +61,11 @@ public class Comparateur {
             var = null;
             f.close();
         }catch(java.lang.Exception e){System.out.println(e.toString());}
-        System.gc();
+        gc();
         
         System.out.println("lecture des detections");
         try{
-            NetcdfFile f = NetcdfFile.open(d);
+            NetcdfFile f = open(d);
             times = ((Variable)(f.getVariables().get(0))).getDimension(0).getLength();
             System.out.println("times:"+times);
             tailleX = ((Variable)(f.getVariables().get(0))).getDimension(1).getLength();
@@ -91,7 +94,7 @@ public class Comparateur {
             var = null;
             f.close();
         }catch(java.lang.Exception e){System.out.println(e.toString());}
-        System.gc();
+        gc();
     }
     
     private void compare(){

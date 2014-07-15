@@ -1,14 +1,18 @@
-/*
- * CanvasCarte.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 15 septembre 2002, 12:09
- */
-
-/*
- * @author Segond, Mahler
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 /**
  * Classe d'affichage du graphisme : afficher les vecteurs, un fond, les
@@ -24,7 +28,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.Point;
+import static java.lang.Thread.yield;
 import java.util.ArrayList;
+import static java.util.ResourceBundle.getBundle;
 
 public class CanvRet extends CanGen implements constants.centre, constants.couleur, constants.fourmi, constants.courant, constants.physique, javax.swing.Scrollable {
 
@@ -101,7 +107,7 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
         int h = carteHeight;
         myImage = (BufferedImage) this.createImage(w, h);
         if (myImage == null) {
-            System.out.println(java.util.ResourceBundle.getBundle("ressources/canvas").getString("CanvasCarte_:_ERREUR:_myImage=null"));
+            System.out.println(getBundle("ressources/canvas").getString("CanvasCarte_:_ERREUR:_myImage=null"));
         }
 
         myGraphics = myImage.createGraphics();
@@ -214,7 +220,7 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
                 System.out.println("CanvasCarte stopAnime : threadAnim� stopp� " + e);
             }
             try {
-                Thread.yield();
+                yield();
             } catch (Exception e) {
             }
             threadAnime = null;
@@ -499,7 +505,7 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
                         // prend en charge le debordement !
                         try {
                             if (!matrice[m + 1][k + 1]) {
-                                throw new Exception(java.util.ResourceBundle.getBundle("ressources/canvas").getString("_affichage_non_demamd�_"));
+                                throw new Exception(getBundle("ressources/canvas").getString("_affichage_non_demamd�_"));
                             }
                             //if((m|k)==0) throw new Exception("on n affiche pas le vecteur du centre !");
                             X1 = ((i + m) * largeurCase + largeurCase / 2);
@@ -521,7 +527,7 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
             this.getGraphics().drawImage(myImage, 0, 0, w, h, this);
         } // milieu >> RAFRAICHIR
         else if (evt.isAltDown() & !evt.isControlDown() & !evt.isShiftDown() & !evt.isMetaDown()) {
-            System.out.println(java.util.ResourceBundle.getBundle("ressources/canvas").getString("bouton_du_milieu"));
+            System.out.println(getBundle("ressources/canvas").getString("bouton_du_milieu"));
         } // milieu + ctrl >> animation
         else if (evt.isAltDown() & evt.isControlDown() & !evt.isShiftDown() & !evt.isMetaDown()) {
 
@@ -540,10 +546,10 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
                 }
                 if (vSeul < collect.size()) {
                     javax.swing.JPopupMenu popup = new javax.swing.JPopupMenu();
-                    javax.swing.JMenuItem menuProp = new javax.swing.JMenuItem(java.util.ResourceBundle.getBundle("ressources/canvas").getString("Proprietes_vortex_num_") + collect.get(vSeul).getNum());
-                    javax.swing.JMenuItem menuAffSeul = new javax.swing.JMenuItem(java.util.ResourceBundle.getBundle("ressources/canvas").getString("Afficher_seul"));
-                    javax.swing.JMenuItem menuAffTout = new javax.swing.JMenuItem(java.util.ResourceBundle.getBundle("ressources/canvas").getString("Afficher_tout"));
-                    javax.swing.JMenuItem menuChgColor = new javax.swing.JMenuItem(java.util.ResourceBundle.getBundle("ressources/canvas").getString("Changer_la_couleur"));
+                    javax.swing.JMenuItem menuProp = new javax.swing.JMenuItem(getBundle("ressources/canvas").getString("Proprietes_vortex_num_") + collect.get(vSeul).getNum());
+                    javax.swing.JMenuItem menuAffSeul = new javax.swing.JMenuItem(getBundle("ressources/canvas").getString("Afficher_seul"));
+                    javax.swing.JMenuItem menuAffTout = new javax.swing.JMenuItem(getBundle("ressources/canvas").getString("Afficher_tout"));
+                    javax.swing.JMenuItem menuChgColor = new javax.swing.JMenuItem(getBundle("ressources/canvas").getString("Changer_la_couleur"));
                     menuChgColor.addMouseListener(new java.awt.event.MouseAdapter() {
                         public void mouseReleased(java.awt.event.MouseEvent evt) {
                             afficherChgColor(vSeul);

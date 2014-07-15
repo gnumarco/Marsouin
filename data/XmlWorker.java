@@ -16,6 +16,10 @@
  */
 package data;
 
+import static java.lang.Double.parseDouble;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.parseInt;
 import org.xml.sax.*;
 import org.xml.sax.helpers.DefaultHandler;
 import visu.FrmConf;
@@ -100,22 +104,22 @@ public class XmlWorker extends DefaultHandler{
     public void theBigCase(String balise, String param, String value){
         if("fourmis".equals(balise)){
             if("nbfourm".equals(param)){
-                maFrmConf.setNbFourmis(Integer.parseInt(value));
+                maFrmConf.setNbFourmis(parseInt(value));
             }
             if("nbgen".equals(param)){
-                maFrmConf.setNbGen(Integer.parseInt(value));
+                maFrmConf.setNbGen(parseInt(value));
             }
             if("nbcolo".equals(param)){
-                maFrmConf.setNbColo(Integer.parseInt(value));
+                maFrmConf.setNbColo(parseInt(value));
             }
             if("depot".equals(param)){
-                maFrmConf.setDepot(Double.parseDouble(value));
+                maFrmConf.setDepot(parseDouble(value));
             }
             if("evap".equals(param)){
-                maFrmConf.setEvap(Double.parseDouble(value));
+                maFrmConf.setEvap(parseDouble(value));
             }
             if("biais".equals(param)){
-                maFrmConf.setBiais(Double.parseDouble(value));
+                maFrmConf.setBiais(parseDouble(value));
             }
         }
     }

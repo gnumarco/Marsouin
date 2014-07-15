@@ -1,7 +1,18 @@
-/*
- * ImageResultFile.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 17 octobre 2002, 01:00
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package visu;
 
@@ -10,6 +21,8 @@ import javax.imageio.*;
 
 import java.awt.image.*;
 import java.io.*;
+import static java.lang.Math.max;
+import static javax.imageio.ImageIO.write;
 
 public class ImageResultFile extends Thread implements constants.couleur {
 
@@ -124,12 +137,12 @@ public class ImageResultFile extends Thread implements constants.couleur {
         int ilw = 0;
         int ilh = 0;
 
-        BufferedImage bi = new BufferedImage(ipw + ilw, java.lang.Math.max(iph, ilh), ((BufferedImage) iPlan).getType());
+        BufferedImage bi = new BufferedImage(ipw + ilw, max(iph, ilh), ((BufferedImage) iPlan).getType());
 
         Graphics2D gra = bi.createGraphics();
         gra.setColor(COLOR_OCEAN);
-        gra.clearRect(0, 0, ipw + ilw, java.lang.Math.max(iph, ilh));
-        gra.fillRect(0, 0, ipw + ilw, java.lang.Math.max(iph, ilh));
+        gra.clearRect(0, 0, ipw + ilw, max(iph, ilh));
+        gra.fillRect(0, 0, ipw + ilw, max(iph, ilh));
 
         gra.drawImage(iPlan, 0, 0, ipw, iph, mem.getFrmVisu(id));
         gra.setColor(COLOR_INFO);
@@ -159,7 +172,7 @@ public class ImageResultFile extends Thread implements constants.couleur {
                 //mem.getFrmVisu(id).setStatusBar("capture en cours ...");
                 System.out.println("Processing capture...");
                 
-                ImageIO.write(bufferedImage, "jpeg", out);
+                write(bufferedImage, "jpeg", out);
                 System.out.println("Encoding...");
             }
             System.out.println("Capture finished ");

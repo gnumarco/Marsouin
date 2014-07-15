@@ -1,21 +1,27 @@
-/*
- * Vortex3D.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 12 fevrier 2002, 11:00
- */
-
-/*
- * @author Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package visu;
 
 import javax.media.j3d.*;
 import javax.vecmath.*;
 import data.Loop;
+import static java.lang.Math.abs;
+import static java.lang.Math.atan;
+import static java.lang.Math.sqrt;
 
 public class Vortex3D {
     
@@ -33,7 +39,7 @@ public class Vortex3D {
         vortexAppear.setColoringAttributes(caL1);
         Transform3D translate;
         for(int i=0;i<monVortex.npoints-1;i++){
-            double lon = Math.sqrt(((monVortex.xpoints[i+1]-monVortex.xpoints[i])*(monVortex.xpoints[i+1]-monVortex.xpoints[i]))/8d+((monVortex.ypoints[i+1]-monVortex.ypoints[i])*(monVortex.ypoints[i+1]-monVortex.ypoints[i]))/8d);
+            double lon = sqrt(((monVortex.xpoints[i+1]-monVortex.xpoints[i])*(monVortex.xpoints[i+1]-monVortex.xpoints[i]))/8d+((monVortex.ypoints[i+1]-monVortex.ypoints[i])*(monVortex.ypoints[i+1]-monVortex.ypoints[i]))/8d);
             double rotat = getAngle((monVortex.xpoints[i+1]-monVortex.xpoints[i]),(monVortex.ypoints[i+1]-monVortex.ypoints[i]));
             translate = new Transform3D();
             translate.set(new Vector3f((monVortex.xpoints[i]-(maxX/2f))/2f,(monVortex.ypoints[i]-(maxY/2f)+1)/2f, 0.0f));
@@ -53,16 +59,16 @@ public class Vortex3D {
             else
                 res = (3d*Math.PI)/2d;
         else{
-            double YsurX = (double)Math.abs(Y)/(double)Math.abs(X);
+            double YsurX = (double)abs(Y)/(double)abs(X);
             
             if((X >= 0) && (Y >= 0))
-                res= Math.atan(YsurX);
+                res= atan(YsurX);
             if((X < 0) && (Y >= 0))
-                res = Math.PI-Math.atan(YsurX);
+                res = Math.PI-atan(YsurX);
             if((X < 0) && (Y < 0))
-                res = Math.PI+Math.atan(YsurX);
+                res = Math.PI+atan(YsurX);
             if((X >= 0) && (Y < 0))
-                res = (2*Math.PI)-Math.atan(YsurX);
+                res = (2*Math.PI)-atan(YsurX);
         }
         return res;
     }

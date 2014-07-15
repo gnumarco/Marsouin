@@ -1,12 +1,19 @@
-/*
- * CanGen.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 4 mars 2006, 19:14
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package visu;
 
 import data.*;
@@ -14,6 +21,14 @@ import data.*;
 import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import static java.lang.Math.acos;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.sqrt;
+import static java.lang.String.valueOf;
+import static java.lang.String.valueOf;
+import static java.lang.String.valueOf;
+import static java.lang.String.valueOf;
 
 /**
  *
@@ -64,8 +79,8 @@ public class CanGen extends javax.swing.JPanel implements constants.centre, cons
                     X2 = X1;
                     Y2 = tY*hauteurCase;
                     gra.drawLine(X1, Y1, X2, Y2);
-                    gra.drawString(String.valueOf(tmpTab[i]).substring(0,5)+"°",X2,Y2);
-                    gra.drawString(String.valueOf(tmpTab[i]).substring(0,5)+"°",X1,hauteurCase);
+                    gra.drawString(valueOf(tmpTab[i]).substring(0,5)+"°",X2,Y2);
+                    gra.drawString(valueOf(tmpTab[i]).substring(0,5)+"°",X1,hauteurCase);
                 }
                 tmpTab = mer.getTabY();
                 for(int i=0;i<tmpTab.length;i+=zoomLatLon){
@@ -78,8 +93,8 @@ public class CanGen extends javax.swing.JPanel implements constants.centre, cons
                     X2 = tX*largeurCase;
                     Y2 = Y1;
                     gra.drawLine(X1, Y1, X2, Y2);
-                    gra.drawString(String.valueOf(tmpTab[i]).substring(0,5)+"°",X1,Y1);
-                    gra.drawString(String.valueOf(tmpTab[i]).substring(0,5)+"°",X2-largeurCase*3,Y2);
+                    gra.drawString(valueOf(tmpTab[i]).substring(0,5)+"°",X1,Y1);
+                    gra.drawString(valueOf(tmpTab[i]).substring(0,5)+"°",X2-largeurCase*3,Y2);
                 }
             }catch(Exception e){}
         } else{
@@ -99,8 +114,8 @@ public class CanGen extends javax.swing.JPanel implements constants.centre, cons
         
         g.drawLine(x1,y1,x2,y2);
         
-        double Hyp = Math.sqrt(DifX * DifX + DifY * DifY);
-        double Angle = Math.acos(DifX / Hyp) * ((y1 > y2) ? -1 : 1);
+        double Hyp = sqrt(DifX * DifX + DifY * DifY);
+        double Angle = acos(DifX / Hyp) * ((y1 > y2) ? -1 : 1);
         double anc = Angle;
         
         int []PolyX, PolyY;
@@ -111,12 +126,12 @@ public class CanGen extends javax.swing.JPanel implements constants.centre, cons
         PolyY[0] = y2;
         
         Angle = simplifiAngle(Angle - (0.85 * Math.PI));
-        PolyX[1] = (int)(x2 - Math.cos(Angle) * 5.0);
-        PolyY[1] = (int)(y2 + Math.sin(Angle) * 5.0);
+        PolyX[1] = (int)(x2 - cos(Angle) * 5.0);
+        PolyY[1] = (int)(y2 + sin(Angle) * 5.0);
         
         Angle = simplifiAngle(anc + (0.85 * Math.PI));
-        PolyX[2] = (int)(x2 - Math.cos(Angle) * 5.0);
-        PolyY[2] = (int)(y2 + Math.sin(Angle) * 5.0);
+        PolyX[2] = (int)(x2 - cos(Angle) * 5.0);
+        PolyY[2] = (int)(y2 + sin(Angle) * 5.0);
         
         g.fillPolygon(PolyX, PolyY, 3);
     }

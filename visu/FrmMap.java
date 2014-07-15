@@ -1,11 +1,27 @@
-/*
- * FrmMap.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 31 mars 2005, 17:22
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package visu;
 
 import data.BatchDataMap;
+import static java.lang.Math.round;
+import static java.lang.Math.round;
+import static java.lang.Math.sqrt;
+import static java.lang.System.gc;
+import static java.lang.System.getProperty;
 /**
  *
  * @author  Marc Segond
@@ -41,8 +57,8 @@ public class FrmMap extends javax.swing.JFrame implements constants.couleur {
         MajNom();
         mem.getFrmConfig().setNbGen((((BatchDataMap) (mem.getDataCarte(id))).getXSize() + ((BatchDataMap) (mem.getDataCarte(id))).getYSize()));
         double tmp = ((((BatchDataMap) (mem.getDataCarte(id))).getXSize() * ((BatchDataMap) (mem.getDataCarte(id))).getYSize() / 500d) * 4d);
-        mem.getFrmConfig().setNbColo((int) (Math.round(Math.sqrt(tmp))));
-        mem.getFrmConfig().setNbFourmis((int) (Math.round(Math.sqrt(tmp))));
+        mem.getFrmConfig().setNbColo((int) (round(sqrt(tmp))));
+        mem.getFrmConfig().setNbFourmis((int) (round(sqrt(tmp))));
     }
 
     @Override
@@ -299,7 +315,7 @@ public class FrmMap extends javax.swing.JFrame implements constants.couleur {
         if (mem.getMemCheminExplo() != null) {
             cheminDefaut = mem.getMemCheminExplo();
         } else {
-            cheminDefaut = System.getProperty("user.home");
+            cheminDefaut = getProperty("user.home");
         }
 
         javax.swing.JFileChooser F = new javax.swing.JFileChooser(cheminDefaut);
@@ -368,7 +384,7 @@ public class FrmMap extends javax.swing.JFrame implements constants.couleur {
             monCanvasRet.clearRet();
             jTabbedPaneCanvas.remove(jTabbedPaneCanvas.getTabCount() - 1);
             monCanvasRet = null;
-            System.gc();
+            gc();
         }
     }//GEN-LAST:event_jToggleButtonRetentionMapActionPerformed
 

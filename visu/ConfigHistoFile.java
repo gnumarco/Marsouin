@@ -1,21 +1,31 @@
-/*
- * OceanFile.java
+/* 
+ * Copyright (C) 2014 Marc Segond <dr.marc.segond@gmail.com>
  *
- * Created on 18 septembre 2002, 12:58
- */
-
-/*
- * @author Mahler
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package visu;
 
 import data.*;
+import static data.readTextFile.decomposeLigneEnMots;
+import static data.readTextFile.decomposeLigneEnMotsSansEspaces;
 import java.io.*;
+import static java.lang.Integer.parseInt;
+import static java.lang.System.getProperty;
 import java.util.ArrayList;
+import static java.util.Calendar.getInstance;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.showInputDialog;
 
 public class ConfigHistoFile implements constants.centre, constants.balise {
 
@@ -36,7 +46,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
         try {
             // POUR VERIFIER QUE LE FICHIER EXISTE : on essaie de le lire
             File homeDir, configDir, configFile;
-            String userHome = System.getProperty("user.home");
+            String userHome = getProperty("user.home");
             try {
                 homeDir = new File(userHome);
                 if (!homeDir.isDirectory()) {
@@ -103,7 +113,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
 
     public void ecrireEnteteGeneral(writeTextFile ecrit) {
         ecrit.uneLigne(" # <-> Nouveau Fichier de config : " + nomFichier);
-        ecrit.uneLigne(" # <-> Date : " + java.util.Calendar.getInstance().getTime().toString());
+        ecrit.uneLigne(" # <-> Date : " + getInstance().getTime().toString());
     }
 
     public void appliquerConfig(String nomConfig, FrmConf frm) {
@@ -132,29 +142,29 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
             num = 0;
             while (num < oldFile.size()) {
                 ligne = (String) oldFile.get(num);
-                maLigne = readTextFile.decomposeLigneEnMots(ligne);
+                maLigne = decomposeLigneEnMots(ligne);
                 num++;
                 if ((maLigne != null) && (maLigne.contains(NEW_CONFIG))) {
                     // une conf trouv�e
                     debut = num - 1;
                     ligne = (String) oldFile.get(num);
-                    maLigne = readTextFile.decomposeLigneEnMots(ligne);
+                    maLigne = decomposeLigneEnMots(ligne);
                     num++;
                     while ((maLigne != null) && (!maLigne.contains(NOM_CONFIG))) {
                         ligne = (String) oldFile.get(num);
-                        maLigne = readTextFile.decomposeLigneEnMots(ligne);
+                        maLigne = decomposeLigneEnMots(ligne);
                         num++;
                     }
                     if (!maLigne.contains(nomConfig)) {
                         // pas la bonne config : laisser filer
                         ligne = (String) oldFile.get(num);
-                        maLigne = readTextFile.decomposeLigneEnMots(ligne);
+                        maLigne = decomposeLigneEnMots(ligne);
                         num++;
                     } else {
                         // la bonne config
                         while ((maLigne != null) && (!maLigne.contains(END_CONFIG))) {
                             ligne = (String) oldFile.get(num);
-                            maLigne = readTextFile.decomposeLigneEnMotsSansEspaces(ligne);
+                            maLigne = decomposeLigneEnMotsSansEspaces(ligne);
                             num++;
                         }
                         if ((maLigne != null) && (maLigne.contains(END_CONFIG))) {
@@ -197,25 +207,25 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
             num = 0;
             while (num < oldFile.size()) {
                 ligne = (String) oldFile.get(num);
-                maLigne = readTextFile.decomposeLigneEnMotsSansEspaces(ligne);
+                maLigne = decomposeLigneEnMotsSansEspaces(ligne);
                 num++;
                 if ((maLigne != null) && (maLigne.contains(NEW_CONFIG))) {
                     // une conf trouv�e
                     while ((maLigne != null) && (!maLigne.contains(NOM_CONFIG))) {
                         ligne = (String) oldFile.get(num);
-                        maLigne = readTextFile.decomposeLigneEnMotsSansEspaces(ligne);
+                        maLigne = decomposeLigneEnMotsSansEspaces(ligne);
                         num++;
                     }
                     if (!maLigne.contains(nomConf)) {
                         // mauvaise pioche on continue
                         ligne = (String) oldFile.get(num);
-                        maLigne = readTextFile.decomposeLigneEnMotsSansEspaces(ligne);
+                        maLigne = decomposeLigneEnMotsSansEspaces(ligne);
                         num++;
                     } else {
                         // la bonne config
                         while ((maLigne != null) && (!maLigne.contains(COMMENTAIRE_CONFIG))) {
                             ligne = (String) oldFile.get(num);
-                            maLigne = readTextFile.decomposeLigneEnMotsSansEspaces(ligne);
+                            maLigne = decomposeLigneEnMotsSansEspaces(ligne);
                             num++;
                         }
                         if ((maLigne != null) && (maLigne.contains(COMMENTAIRE_CONFIG))) {
@@ -224,11 +234,11 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                             num++;
                             // supprimer les lignes de commentaire anciennes
                             ligne = (String) oldFile.get(num);
-                            maLigne = readTextFile.decomposeLigneEnMotsSansEspaces(ligne);
+                            maLigne = decomposeLigneEnMotsSansEspaces(ligne);
                             while ((maLigne != null) && (!maLigne.contains(END_COMMENTAIRE_CONFIG))) {
                                 oldFile.remove(num);
                                 ligne = (String) oldFile.get(num);
-                                maLigne = readTextFile.decomposeLigneEnMotsSansEspaces(ligne);
+                                maLigne = decomposeLigneEnMotsSansEspaces(ligne);
                             }
                             if ((maLigne != null) && (maLigne.contains(END_COMMENTAIRE_CONFIG))) // arreter :
                             {
@@ -264,22 +274,22 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
             num = 0;
             while (num < oldFile.size()) {
                 ligne = (String) oldFile.get(num);
-                maLigne = readTextFile.decomposeLigneEnMots(ligne);
+                maLigne = decomposeLigneEnMots(ligne);
                 num++;
                 if ((maLigne != null) && (maLigne.contains(NEW_CONFIG))) {
                     // une conf trouv�e
                     ligne = (String) oldFile.get(num);
-                    maLigne = readTextFile.decomposeLigneEnMots(ligne);
+                    maLigne = decomposeLigneEnMots(ligne);
                     num++;
                     while ((maLigne != null) && (!maLigne.contains(NOM_CONFIG))) {
                         ligne = (String) oldFile.get(num);
-                        maLigne = readTextFile.decomposeLigneEnMots(ligne);
+                        maLigne = decomposeLigneEnMots(ligne);
                         num++;
                     }
                     if (!maLigne.contains(oldName)) {
                         // pas la bonne config : laisser filer
                         ligne = (String) oldFile.get(num);
-                        maLigne = readTextFile.decomposeLigneEnMots(ligne);
+                        maLigne = decomposeLigneEnMots(ligne);
                         num++;
                     } else {
                         // la bonne config
@@ -338,7 +348,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                         tab.add(ligne.get(ligne.indexOf(COMBI_GC) + 1));
                     }
 
-                    lng = Integer.parseInt((String) tab.get(1));
+                    lng = parseInt((String) tab.get(1));
                     if (dBug) {
                         System.out.println("cfghf lng : " + lng);
                     }
@@ -453,11 +463,11 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
 
     private void ecrireEnteteConfig(writeTextFile ecrit) {
         ecrit.uneLigne(NEW_CONFIG);
-        ecrit.uneLigne(" # <-> Date : " + java.util.Calendar.getInstance().getTime().toString());
+        ecrit.uneLigne(" # <-> Date : " + getInstance().getTime().toString());
     }
 
     private void ecrirePiedConfig(writeTextFile ecrit) {
-        ecrit.uneLigne(" # <-> Auteur : " + System.getProperty("user.home"));
+        ecrit.uneLigne(" # <-> Auteur : " + getProperty("user.home"));
         ecrit.uneLigne(END_CONFIG);
         ecrit.uneLigne();
     }
@@ -498,13 +508,13 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
 
             try {
                 for (s = 0; s < src.size(); s++) {
-                    ligne = readTextFile.decomposeLigneEnMots(((String) src.get(s)));
+                    ligne = decomposeLigneEnMots(((String) src.get(s)));
                     if (ligne.contains(NOM_CONFIG)) {
                         lenom = ligne.get(ligne.indexOf(NOM_CONFIG + 1));
                         while ((listeTotale.contains(lenom)) | (lenom.lastIndexOf(" ") != -1)) {
                             // changer de nom
                             JO.setInitialValue(lenom + "_" + (new File(source)).getName());
-                            ret = JOptionPane.showInputDialog(this, (lenom + " existe, entrez un nouveau nom SANS ESPACES !"));
+                            ret = showInputDialog(this, (lenom + " existe, entrez un nouveau nom SANS ESPACES !"));
                             lenom = ret;
                         }
                         // effecuter le changement
@@ -601,17 +611,17 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                     }
                     // le commentaire demarre la ligne suivante
                     maLigne = rtf.lectureIntegraleLigne();
-                    ligne = readTextFile.decomposeLigneEnMots(maLigne);
+                    ligne = decomposeLigneEnMots(maLigne);
                     comment = "";
                     if ((ligne != null) && (!ligne.contains(END_COMMENTAIRE_CONFIG))) {
                         comment = maLigne;
                         maLigne = rtf.lectureIntegraleLigne();
-                        ligne = readTextFile.decomposeLigneEnMots(maLigne);
+                        ligne = decomposeLigneEnMots(maLigne);
                     }
                     while ((ligne != null) && (!ligne.contains(END_COMMENTAIRE_CONFIG))) {
                         comment = comment + '\n' + maLigne;
                         maLigne = rtf.lectureIntegraleLigne();
-                        ligne = readTextFile.decomposeLigneEnMots(maLigne);
+                        ligne = decomposeLigneEnMots(maLigne);
                     }
                     liste.add(comment);
                     ligne = null;
