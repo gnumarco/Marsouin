@@ -111,7 +111,6 @@ public class Control extends GPProblem implements SimpleProblemForm {
             ControlData input = (ControlData) (this.input);
 
             int hits = 0;
-            double sum = 0.0;
 
             while (!mem.indivFinished) {
                 try {

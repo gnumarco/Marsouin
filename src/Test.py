@@ -24,31 +24,39 @@ import random
 __author__="Marc Segond <dr.marc.segond@gmail.com>"
 __date__ ="$Jun 24, 2014 1:51:25 PM$"
 
-sensA = 1
-sensB = 2
 
-def calc(a, sA,sB):    
-    return (sA*(2.75*a)+sB*-(0.35*a))
+
+def iterate(a, sA,sB): 
+    sA = (sA*a)+sB*a
+    sB =  (sA*a)+sB*a
+
+    return [sA, sB]
 
 if __name__ == "__main__":
-    jdata = '{"type":"config","values":[{"param":"pop.subpop.0.size","value":"2"},{"param":"generations","value":"3"}]}'
+    sensA = 1
+    sensB = 2
+    jdata = '{"type":"config","values":[{"param":"pop.subpop.0.size","value":"2"},{"param":"generations","value":"10"}]}'
     print(jdata)
     urllib2.urlopen("http://127.0.0.1:8080/control", jdata)
     jdata = '{"type":"start"}'
     urllib2.urlopen("http://127.0.0.1:8080/control", jdata)
     
-    for x in range(0, 10):
-        for y in range(0, 10):
-            sensA= random.random()
-            sensB= random.random()
+    for x in range(0, 200):
+        for y in range(0, 100):
+            #sensA= random.random()
+            #sensB= random.random()
             jdata = '{"type":"sensors","values":[{"value":"'+str(sensA)+'"},{"value":"'+str(sensB)+'"}]}'
             res = urllib2.urlopen("http://127.0.0.1:8080/control", jdata)
             response = json.loads(res.next())
             print(response)
             matching = [s for s in response if "values" in s]
             act = response["values"][0]["value"]
-            syst = calc(act, sensA, sensB)
+            syst = iterate(act, sensA, sensB)
+            sensA= syst[0]
+            sensB = syst[1]
             print(syst)
-        fit = syst
+        fit = syst[0]+syst[1]
+        sensA = 1
+        sensB = 2
         jdata = '{"type":"fitness","values":[{"value":"'+str(fit)+'"}]}'
         urllib2.urlopen("http://127.0.0.1:8080/control", jdata)

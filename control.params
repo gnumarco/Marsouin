@@ -399,7 +399,7 @@ eval.problem.precision = 3
 generations =				4
 quit-on-run-complete =			false
 # subpop size is 100 individuals
-pop.subpop.0.size =			2
+pop.subpop.0.size =			20
 
 # Threads
 evalthreads = 				1
