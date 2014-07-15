@@ -16,9 +16,9 @@ package visu;
 public class ThreadAnime extends Thread implements constants.centre {
 
     private boolean stop = true;
-    private CanvasCarte mere=null;
+    private CanvasMap mere=null;
     /** Creates a new instance of ThreadAnime */
-    public ThreadAnime(CanvasCarte m) {
+    public ThreadAnime(CanvasMap m) {
         mere = m;
         stop=true;
     }

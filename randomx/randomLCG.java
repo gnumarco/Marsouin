@@ -31,7 +31,7 @@ public class randomLCG extends randomX {
 @param seed seed for the generator
     */
 
-    public void setSeed(long seed) {
+    public final void setSeed(long seed) {
         super.setSeed();              // Notify parent seed has changed
         state = seed & 0xFFFFFFFFL;
     }

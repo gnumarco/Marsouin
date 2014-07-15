@@ -13,10 +13,8 @@
  * @author segond
  */
 
-import java.io.File;
 import ucar.nc2.*;
 import ucar.ma2.*;
-import javax.swing.*;
 
 public class Comparateur {
     
@@ -32,7 +30,7 @@ public class Comparateur {
         
         System.out.println("Lecture des exemples");
         try{
-            NetcdfFile f = new NetcdfFile(r);
+            NetcdfFile f = NetcdfFile.open(r);
             times = ((Variable)(f.getVariables().get(2))).getDimension(0).getLength();
             System.out.println("times:"+times);
             tailleX = ((Variable)(f.getVariables().get(2))).getDimension(1).getLength();
@@ -64,7 +62,7 @@ public class Comparateur {
         
         System.out.println("lecture des detections");
         try{
-            NetcdfFile f = new NetcdfFile(d);
+            NetcdfFile f = NetcdfFile.open(d);
             times = ((Variable)(f.getVariables().get(0))).getDimension(0).getLength();
             System.out.println("times:"+times);
             tailleX = ((Variable)(f.getVariables().get(0))).getDimension(1).getLength();

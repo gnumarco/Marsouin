@@ -1,5 +1,5 @@
 /*
- * CanvasCarte.java
+ * CanvasMap.java
  *
  * Created on 15 septembre 2002, 12:09
  */
@@ -21,24 +21,19 @@ import data.*;
 
 import java.awt.Graphics2D;
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.awt.Point;
 import java.util.ArrayList;
 
-public class CanvRet extends CanGen implements constants.centre, constants.couleur, constants.fourmi, constants.courant, constants.physique, javax.swing.Scrollable {
+public class CanvasMap extends CanGen implements constants.centre, constants.couleur, constants.fourmi, constants.courant, constants.physique, javax.swing.Scrollable {
 
     private final boolean dBugDisplay = true;
-
-    private ThreadAnime threadAnime = null;
-
     private Graphics2D myGraphics = null;
-
-    private int[][][] gradient = null;
     private int vSeul = 0;
-    private double[][] retention = null;
 
-    public CanvRet(Memory m, int moi) {
+    public CanvasMap(Memory m, int moi) {
         mem = m;
         id = moi;
 
@@ -99,11 +94,11 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
     public void processImage() {
         int w = carteWidth;
         int h = carteHeight;
-        myImage = (BufferedImage) this.createImage(w, h);
-        if (myImage == null) {
+        try {
+            myImage = (BufferedImage) this.createImage(w, h);
+        } catch (Exception e) {
             System.out.println(java.util.ResourceBundle.getBundle("ressources/canvas").getString("CanvasCarte_:_ERREUR:_myImage=null"));
         }
-
         myGraphics = myImage.createGraphics();
         myGraphics.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_SPEED);
         myGraphics.setRenderingHint(java.awt.RenderingHints.KEY_COLOR_RENDERING, java.awt.RenderingHints.VALUE_COLOR_RENDER_SPEED);
@@ -126,13 +121,39 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
         }
 
         //************* FOND **************
+        myGraphics.setColor(COLOR_OCEAN);
+        myGraphics.clearRect(0, 0, w, h);
+        myGraphics.fillRect(0, 0, w, h);
+        if (mem.getFlagAffich(id)[AFF_FOND] != AFF_RIEN) {
+            afficheDonneesEnFond(myGraphics);
+        }
         afficheTerre(myGraphics);
-        afficheRet(myGraphics);
 
         //************* VECTEURS ***********
         afficheVecteurs(myGraphics);
 
         try {
+            // ************* Analyse GEOMETRIQUE ***********
+            if (mem.getUseMethod(id)[USE_METHOD_GEOMETRIQUE]) {
+
+            }
+
+            // ************* Streamlines ***********
+            if (mem.getUseMethod(id)[USE_METHOD_STREAMLINES]) {
+                afficheStream(myGraphics);
+            }
+            // *************** PHYSIQUE ****************
+            if (mem.getUseMethod(id)[USE_METHOD_PHYSIQUE]) {
+
+            }
+
+            // ***************** FOURMIS *****************
+            if (mem.getUseMethod(id)[USE_METHOD_FOURMI]) {
+
+                this.afficheMeta(myGraphics);
+                this.afficheCentreMeta(myGraphics);
+
+            }
 
             //Affichage latitude/longitude
             afficheGrille(myGraphics);
@@ -141,6 +162,60 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
             System.out.println(e.getMessage());
             if (dBugDisplay) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private void afficheStream(Graphics2D gra) {
+        DataMap mer = mem.getDataCarte(id);
+        ArrayList<VortexStreamlines> tab = mer.getVortexStreamlines();
+        int X1, X2, Y1, Y2;
+        Double temp;
+
+        if (mer.collectionVortexStream != null) {
+            int tX = mer.getXSize();
+            int tY = mer.getYSize();
+            int ux = carteWidth / tX;
+            int uy = carteHeight / tY;
+            gra.setColor(COLOR_BOUCLE_STD);
+            for (VortexStreamlines tab1 : tab) {
+                for (int j = tab1.getContour().length - 1; j > 0; j--) {
+                    temp = tab1.getContour()[j].x;
+                    X1 = (new Double(temp * (double) ux + (double) ux / 2d)).intValue();
+                    temp = tab1.getContour()[j].y;
+                    Y1 = (new Double(((double) tY - 1d - temp) * (double) uy + (double) uy / 2d)).intValue();
+                    temp = tab1.getContour()[j - 1].x;
+                    X2 = (new Double(temp * (double) ux + (double) ux / 2d)).intValue();
+                    temp = tab1.getContour()[j - 1].y;
+                    Y2 = (new Double(((double) tY - 1d - temp) * (double) uy + (double) uy / 2d)).intValue();
+                    afficheFleche(gra, X1, Y1, X2, Y2);
+                }
+                temp = tab1.getContour()[0].x;
+                X2 = (new Double(temp * (double) ux + (double) ux / 2d)).intValue();
+                temp = tab1.getContour()[0].y;
+                Y2 = (new Double(((double) tY - 1d - temp) * (double) uy + (double) uy / 2d)).intValue();
+                temp = tab1.getContour()[tab1.getContour().length - 1].x;
+                X1 = (new Double(temp * (double) ux + (double) ux / 2d)).intValue();
+                temp = tab1.getContour()[tab1.getContour().length - 1].y;
+                Y1 = (new Double(((double) tY - 1d - temp) * (double) uy + (double) uy / 2d)).intValue();
+                afficheFleche(gra, X1, Y1, X2, Y2);
+            }
+
+        }
+    }
+
+    private void afficheMeta(Graphics2D gra) {
+        DataMap mer = mem.getDataCarte(id);
+        ArrayList<VortexAnt> collect = mer.getVortexAnt();
+
+        int tX = mer.getXSize();
+        int tY = mer.getYSize();
+        int largeurCase = carteWidth / tX;
+        int hauteurCase = carteHeight / tY;
+        for (VortexAnt collect1 : collect) {
+            if (collect1.getAffiche()) {
+                gra.setColor(collect1.getCouleur());
+                this.dessineUneBoucle(gra, collect1.getContour(), largeurCase, hauteurCase, tY);
             }
         }
     }
@@ -163,13 +238,116 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
         }
     }
 
+    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+    // DESSINER LE CENTRE DES BOUCLES ....
+    private void afficheCentreMeta(Graphics2D gra) {
+        DataMap mer = mem.getDataCarte(id);
+        ArrayList<VortexAnt> collect = mer.getVortexAnt();
+        VortexAnt b;
+        int tX = mer.getXSize();
+        int tY = mer.getYSize();
+        int largeurCase = carteWidth / tX;
+        int hauteurCase = carteHeight / tY;
+        float ux = (float) largeurCase;
+        float uy = (float) hauteurCase;
+        float offsetX = 2f * ((float) largeurCase / 5f);
+        float offsetY = 2f * ((float) hauteurCase / 5f);
+        int x, y;
+        for (VortexAnt collect1 : collect) {
+            b = collect1;
+            if (b.getAffiche()) {
+                if (b.getBaricentre() != null) {
+                    x = (int) (((float) b.getBaricentre()[0]) * ux + ux / 2f - offsetX);
+                    y = (int) (((float) tY - 1f - (float) b.getBaricentre()[1]) * uy + uy / 2f - offsetY);
+                    gra.setColor(COLOR_CENTRE_BOUCLE_STD);
+                    gra.fillOval(x, y, ((int) (2f * offsetX)), ((int) (2f * offsetY)));
+                    gra.setColor(COLOR_NUM_BOUCLE);
+                    gra.drawString(java.lang.Integer.toString(b.getNum()), x, y);
+                }
+            }
+        }
+    }
+
+
     public Color[] getPalettePhys() {
         return COLOR_CENTRE_PHYSIQUE;
     }
 
+    //****************************************************************************************************************************************
+
+   
+
+
+   
+
+    /**
+     * affiche chaque pixel avec une couleur proportionnelle @ la valeur de la
+     * table de datacarte. table
+     */
+    private void afficheDonneesEnFond(Graphics2D gra) {
+        Color col;
+        double[][] t;
+        if (AFFICHER_FOND_AVEC_INTERPOLATION_GRAND_TABLEAU) //table initiale
+        {
+            t = (mem.getDataCarte(id).getTable()).getGrandTab();
+        } else // tableau interpol�
+        {
+            t = (mem.getDataCarte(id).getTable()).getTablo();
+        }
+
+        int X1, Y1, X2, Y2;
+
+        int BORD;
+        if (AFFICHER_FOND_AVEC_INTERPOLATION_GRAND_TABLEAU) {
+            BORD = 0;
+        } else {
+            BORD = 0;
+        }
+
+        int tX = t.length;
+        int tY = t[0].length;
+        int largeurCase = carteWidth / tX;
+        int hauteurCase = carteHeight / tY;
+        X2 = largeurCase - 2 * BORD;
+        Y2 = hauteurCase - 2 * BORD;
+        int i = 0, j = 0;
+
+        float r, g, b, a;
+
+        // indicateurs de terre
+        int indX, indY;
+        int indtX = mem.getDataCarte(id).getXSize();
+        int indtY = mem.getDataCarte(id).getYSize();
+        double scaleX = (double) indtX / (double) tX;
+        double scaleY = (double) indtY / (double) tY;
+
+        for (i = 0; i < tX; i++) {
+            indX = (int) ((double) i * scaleX);
+            for (j = 0; j < tY; j++) {
+                indY = (int) ((double) j * scaleY);
+                if (!mem.getDataCarte(id).getC(indX, indY).getSurTerre()) {
+
+                    Y1 = tY - j - 1;
+                    System.out.println(java.util.ResourceBundle.getBundle("ressources/canvas").getString("valeur=_") + (float) t[i][j]);
+                    try { // exception si on est en dehors des bornes du tableau
+                        col = getPaletteFond((float) t[i][j]);
+                    } catch (Exception e) {
+                        col = new Color(0.2f, 0.3f, 0.4f, 0.6f);
+                        e.printStackTrace();
+                    }
+
+                    gra.setColor(col);
+                    X1 = largeurCase * i + BORD;
+                    Y1 = hauteurCase * (Y1) + BORD;
+                    gra.fillRect(X1, Y1, X2, Y2);
+                }
+            }
+        }
+    }
+
     //@@@@@@@@@@@@@@@@@ LES FLECHES @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     /**
-     * affiche les fleches qui repr�sentent le courant moyen en chaque point
+     * affiche les fleches qui representent le courant moyen en chaque point
      * d'estimation de la carte
      */
     private void afficheVecteurs(Graphics2D gra) {
@@ -186,39 +364,15 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
         gra.setColor(COLOR_VECTEUR);
         for (int i = 0; i < tX; i++) {
             for (int j = 0; j < tY; j++) {
-                if (!mem.getBatchDataCarte(id).getC(i, j).getSurTerre()) {
+                if (!mem.getDataCarte(id).getC(i, j).getSurTerre()) {
                     X1 = (i * largeurCase + largeurCase / 2);
                     Y1 = ((tY - j - 1) * hauteurCase + hauteurCase / 2);
-                    X2 = X1 + (int) (mem.getBatchDataCarte(id).getMoyenne(i, j, mem.getFrmVisu(id).getProfActive())[0] * offsetX);
-                    Y2 = Y1 - (int) (mem.getBatchDataCarte(id).getMoyenne(i, j, mem.getFrmVisu(id).getProfActive())[1] * offsetY);
+                    X2 = X1 + (int) (mem.getDataCarte(id).getC(i, j).getXNorm() * offsetX);
+                    Y2 = Y1 - (int) (mem.getDataCarte(id).getC(i, j).getYNorm() * offsetY);
                     afficheFleche(gra, X1, Y1, X2, Y2);
                     //System.out.println("coords:"+mem.getDataCarte(id).getC(i,j).getXNorm());
                 }
             }
-        }
-    }
-
-    //*********************************************************************************
-    public boolean estAnime() {
-        return (threadAnime != null);
-    }
-
-    //*********************************************************************************
-    //********************************************************************************
-    public void stopAnime() {
-        if (threadAnime != null) {
-            threadAnime.arret();
-            try {
-                threadAnime.wait();
-            } catch (Exception e) {
-                System.out.println("CanvasCarte stopAnime : threadAnim� stopp� " + e);
-            }
-            try {
-                Thread.yield();
-            } catch (Exception e) {
-            }
-            threadAnime = null;
-            //mem.getFrmVisu(id).setStatusBar("arret de l'animation ");
         }
     }
 
@@ -352,42 +506,6 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
         }
     }
 
-    public void clearRet() {
-        gradient = null;
-    }
-
-    public void processRet(boolean clock) {
-        gradient = new int[mem.getBatchDataCarte(id).getXSize()][mem.getBatchDataCarte(id).getYSize()][3];
-        retention = new double[mem.getBatchDataCarte(id).getXSize()][mem.getBatchDataCarte(id).getYSize()];
-        javax.swing.ProgressMonitor prog = new javax.swing.ProgressMonitor(mem.getFrmVisu(id), "Processing retention...", "Processing...", 0, 0);
-        prog.setMaximum((mem.getBatchDataCarte(id).getXSize() * mem.getBatchDataCarte(id).getYSize() - mem.getBatchDataCarte(id).getNbOnGround()) * mem.getBatchDataCarte(id).getNbDataCartesTps());
-        ProcessRetentionThread prt = new ProcessRetentionThread(mem, gradient, retention, id, prog, clock);
-        prt.start();
-    }
-
-    private void afficheRet(Graphics2D gra) {
-
-        if (gradient != null) {
-            int X1, Y1, X2, Y2;
-            int tX = mem.getDataCarte(id).getXSize();
-            int tY = mem.getDataCarte(id).getYSize();
-            int largeurCase = carteWidth / tX;
-            int hauteurCase = carteHeight / tY;
-
-            for (int x = 0; x < tX; x++) {
-                for (int y = 0; y < tY; y++) {
-                    if (!mem.getDataCarte(id).getC(x, y).getSurTerre()) {
-                        int sum = 0;
-                        X1 = (x * largeurCase);
-                        Y1 = ((tY - y - 1) * hauteurCase);
-                        gra.setColor(new java.awt.Color(gradient[x][y][0], gradient[x][y][1], gradient[x][y][2]));
-                        gra.fillRect(X1, Y1, largeurCase, hauteurCase);
-                    }
-                }
-            }
-        }
-    }
-
     //*********************************************************************************
     /**
      * affiche la surface coti�re, renseign�e par le booleens getSurTerre() en
@@ -431,6 +549,7 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
         processImage();
     }
 
+    @Override
     public void setSize(Dimension dimension) {
         this.setSize(dimension.width, dimension.height);
     }
@@ -674,15 +793,6 @@ public class CanvRet extends CanGen implements constants.centre, constants.coule
         int[] ret = {carteWidth, carteHeight};
         return ret;
 
-    }
-
-    public void setZoomLatLon(int z) {
-        zoomLatLon = z;
-        this.repaint();
-    }
-
-    public double[][] getRetention() {
-        return retention;
     }
 
 }

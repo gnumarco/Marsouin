@@ -16,7 +16,7 @@ import data.SimpleSaxParser;
  */
 public final class FrmConf extends javax.swing.JFrame implements constants.centre, constants.couleur, constants.balise, constants.fourmi, constants.streamlines{
     
-    private Memoire mem = null;
+    private Memory mem = null;
     
     /** Creates new form FrmVisual */
     public FrmConf() {
@@ -24,7 +24,7 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
         initComponents();
     }
     
-    public FrmConf(Memoire m, boolean Ok3D) {
+    public FrmConf(Memory m, boolean Ok3D) {
         initComponents();
         mem = m;
         initConfFile();
@@ -289,7 +289,7 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
         F.setMultiSelectionEnabled(false);
         
         int returnVal=F.showOpenDialog(this);
-        File fichs=null;
+        File fichs;
         try{
             if(returnVal == javax.swing.JFileChooser.APPROVE_OPTION){
                 fichs = F.getSelectedFile();
@@ -297,14 +297,14 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
                 if(fichs!=null){
                     mem.ajoutCarte(fichs.getAbsolutePath());
                 }else
-                    System.out.println("Noms de fichiers = null");
+                    System.out.println("File names = null");
             }
-        }catch(Exception e){ System.out.println(" FrmConf : erreur d'ouverture de carte :"+e.toString());}
+        }catch(Exception e){ System.out.println(" FrmConf : error opening the map :"+e.toString());}
     }//GEN-LAST:event_jMenuItemOuvrirActionPerformed
     
     /** Exit the Application */
     private void exitForm(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_exitForm
-        SaveParams();
+        saveParams();
         System.exit(0);
     }//GEN-LAST:event_exitForm
     
@@ -313,7 +313,7 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
             File homeDir, configDir, configFile;
             String userHome = System.getProperty("user.home");
             homeDir = new File(userHome);
-            if ((homeDir==null)||(!homeDir.isDirectory()))
+            if (!homeDir.isDirectory())
                 throw new Exception("homeDir is no dir");
             configDir = new File(homeDir,CONFIG_DIR);
             //System.out.println("repertoire configuration...");
@@ -334,12 +334,12 @@ public final class FrmConf extends javax.swing.JFrame implements constants.centr
         }catch(Exception e){ System.out.println(e.toString());}
     }
     
-    private void SaveParams(){
+    private void saveParams(){
         try{
             File homeDir, configDir, configFile;
             String userHome = System.getProperty("user.home");
             homeDir = new File(userHome);
-            if ((homeDir==null)||(!homeDir.isDirectory()))
+            if (!homeDir.isDirectory())
                 throw new Exception("homeDir is no dir");
             configDir = new File(homeDir,CONFIG_DIR);
             System.out.println("Entering config directory...");

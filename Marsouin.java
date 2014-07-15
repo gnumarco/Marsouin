@@ -1,12 +1,7 @@
-/** Marsouin.java */
 
 
 import visu.*;
 
-/** Created on 2 octobre 2002, 15:12
- * @author Marc Segond
- * 
- */
 
 public class Marsouin {
     
@@ -15,14 +10,10 @@ public class Marsouin {
         
     }
     
-    /** c'est la methode de lancement du logiciel
-     * une interface graphique de configuration apparait !
-     * @param args pas de parametres en ligne de commande
-     */
     public static void main(String[] args) {
         // objet memoire
         boolean Ok3D = loadClass("javax.media.j3d.Canvas3D");
-        Memoire mem =new Memoire();
+        Memory mem =new Memory();
         // frame de configuration;
         FrmConf fcfg = new FrmConf(mem, Ok3D);
         fcfg.setVisible(true);

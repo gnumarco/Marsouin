@@ -29,7 +29,7 @@ import visu.FrmConf;
  */
 public class SimpleSaxParser {
     
-    private XMLReader saxReader;
+    private final XMLReader saxReader;
     
     /** Creates a new instance of SimpleSaxParser */
     public SimpleSaxParser(FrmConf frm) throws SAXException, IOException {
@@ -40,9 +40,7 @@ public class SimpleSaxParser {
     public void parse(String s){
         try{
         saxReader.parse(s);
-        }catch(IOException e){System.out.println(e.toString());} catch (SAXException e) {
-            System.out.println(e.toString());
-        }
+        }catch(IOException | SAXException e){System.out.println(e.toString());}
     }
     
     

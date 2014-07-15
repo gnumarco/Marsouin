@@ -1,19 +1,8 @@
-/*
- * valeurs_par_defaut.java
- *
- * Created on 21 octobre 2002, 18:19
- */
 
-/*
- * @author Mahler,Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- *
- */
 
 package constants;
 
-public interface valeurs_par_defaut {
+public interface default_values {
 
 // **************************************GENERAL*************************************
 

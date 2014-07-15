@@ -14,11 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * @author Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- */
+
 
 package data;
 
@@ -35,8 +31,7 @@ public class BatchDataMap extends DataMap{
     public int cpt = 0;
     private javax.swing.ProgressMonitor p;
     private int varX, varY;
-    private double[][][][] listeMoyennes;
-    private Timer timer;
+    private final double[][][][] meansList;
     private int nbCartes;
     public final static int ONE_SECOND = 1000;
     
@@ -55,13 +50,13 @@ public class BatchDataMap extends DataMap{
         nbCartes = time.length*prof.length;
         try{
             NetcdfFile fch;
-            fch = new NetcdfFile(f);
+            fch = NetcdfFile.open(f);
             Variable var = ((Variable)(fch.getVariables().get(uInd)));
             Array tab = var.read();
             Index ind = tab.getIndex();
             for(int i=0;i<var.getDimensions().size();i++){
                 //names.add(var.getDimension(i).getName());
-                Variable varTmp = ((Variable)(fch.findVariable(var.getDimension(i).getName())));
+                Variable varTmp = ((Variable)(fch.findVariable(var.getDimension(i).getShortName())));
                 //System.out.println(varTmp.getDataType().toString());
                 double tmpTab[] = new double[var.getDimension(i).getLength()];
                 Array tab2 = varTmp.read();
@@ -75,7 +70,6 @@ public class BatchDataMap extends DataMap{
                 listeDimensions.add(tmpTab);
             }
             fch.close();
-            fch=null;
         }catch(IOException e){System.out.println(e.toString());}
         cpt = 0;
         p.setMaximum(time.length*prof.length);
@@ -96,7 +90,7 @@ public class BatchDataMap extends DataMap{
         //t = null;
         
         //Calcul des moyennes
-        listeMoyennes = new double[getDataCarte(0,0).getXSize()][getDataCarte(0,0).getYSize()][prof.length][2];
+        meansList = new double[getDataCarte(0,0).getXSize()][getDataCarte(0,0).getYSize()][prof.length][2];
         for(int j = 0;j<getNbDataCartesProf();j++){
             
             for(int y=0;y<getDataCarte(0,0).getXSize();y++){
@@ -107,8 +101,8 @@ public class BatchDataMap extends DataMap{
                         tmpX+=getDataCarte(i,j).getC(y,z).getXNorm();
                         tmpY+=getDataCarte(i,j).getC(y,z).getYNorm();
                     }
-                    listeMoyennes[y][z][j][0] = tmpX/(double)(getNbDataCartesTps());
-                    listeMoyennes[y][z][j][1] = tmpY/(double)(getNbDataCartesTps());
+                    meansList[y][z][j][0] = tmpX/(double)(getNbDataCartesTps());
+                    meansList[y][z][j][1] = tmpY/(double)(getNbDataCartesTps());
                 }
             }
             
@@ -118,8 +112,8 @@ public class BatchDataMap extends DataMap{
     
     public double[] getMoyenne(int x, int y, int prof){
         double[] tmp = new double[2];
-        tmp[0] = listeMoyennes[x][y][prof][0];
-        tmp[1] = listeMoyennes[x][y][prof][1];
+        tmp[0] = meansList[x][y][prof][0];
+        tmp[1] = meansList[x][y][prof][1];
         return tmp;
     }
     
@@ -175,8 +169,6 @@ public class BatchDataMap extends DataMap{
         this.setNbCellValides(this.computeNbValidCells());
         this.setCollBoucle(getDataCarte(active).getCollLoop());
         this.setCollVortexAnt(getDataCarte(active).getVortexAnt());
-        this.setCollVortexGeom(getDataCarte(active).getVortexGeom());
-        this.setCollVortexPhys(getDataCarte(active).getVortexPhys());
         this.setCollVortexStream(getDataCarte(active).getVortexStreamlines());
         this.setNomFichier(getDataCarte(active).getFileName());
     }

@@ -14,22 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * @author Mahler
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- */
+
 package data;
 
 import java.util.ArrayList;
 import java.awt.Point;
 
-/**
- * ce tableau permet de stocker en 2D des valeurs doubles, puis de produire un
- * !plus grand! tableau de doubles � partir d'une interpolation
- *
- * @author mahler
- */
 public class TabloDouble2D implements constants.courant {
 
     private boolean dBug = true;
@@ -150,10 +140,10 @@ public class TabloDouble2D implements constants.courant {
      * recherche d'extremas en mer ! construit une liste de java.awt.Point qui
      * ne sont pas sur terre
      */
-    public ArrayList getListeMaximaEnMer(DataMap mer) {
-        ArrayList list = new ArrayList();
+    public ArrayList<Point> getListeMaximaEnMer(DataMap mer) {
+        ArrayList<Point> list = new ArrayList<>();
         int posX, posY, i, j;
-        boolean pointIsMax = false;
+        boolean pointIsMax;
         Point pmax;
         double max;
 
@@ -218,10 +208,10 @@ public class TabloDouble2D implements constants.courant {
      * recherche d'extremas en mer ! construit une liste de java.awt.Point qui
      * ne sont pas sur terre
      */
-    public ArrayList getListeMinimaEnMer(DataMap mer) {
-        ArrayList list = new ArrayList();
+    public ArrayList<Point> getListeMinimaEnMer(DataMap mer) {
+        ArrayList<Point> list = new ArrayList<>();
         int posX, posY, i, j;
-        boolean pointIsMin = false;
+        boolean pointIsMin;
         Point pmin;
         double min;
 
@@ -493,22 +483,6 @@ public class TabloDouble2D implements constants.courant {
     }
 
     /**
-     * destructeur
-     */
-    protected void finalize() {
-        free(tabloRes);
-        free(tab);
-    }
-
-    /**
-     * pour terminer l'utilisation de cet objet
-     */
-    public void dispose() {
-        free(tabloRes);
-        free(tab);
-    }
-
-    /**
      * interpolation de valeur en i,j Indices du TABLEAU INITIAL tab
      */
     public double interpolerTab(double x, double y) {
@@ -724,12 +698,10 @@ public class TabloDouble2D implements constants.courant {
     public void savetab(String s) {
         TabloDouble2DResultatFile r = new TabloDouble2DResultatFile(s);
         r.sauver(tab);
-        r = null;
     }
 
     public void saveGrandTab(String s) {
         TabloDouble2DResultatFile r = new TabloDouble2DResultatFile(s);
         r.sauver(tabloRes);
-        r = null;
     }
 }

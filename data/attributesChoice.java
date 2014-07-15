@@ -32,29 +32,28 @@ public class attributesChoice extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         try{
-            NetcdfFile f = new NetcdfFile(fi);
+            NetcdfFile f = NetcdfFile.open(fi);
             Variable v = ((Variable)(f.getVariables().get(U)));
             //System.out.println(v.getName());
-            java.util.List l = null;
+            java.util.List<Dimension> l;
             l = v.getDimensions();
             String[] tmp = new String[l.size()];
             for(int i=0;i<l.size();i++){
-                tmp[i] = v.getDimension(i).getName();
+                tmp[i] = v.getDimension(i).getShortName();
             }
             absc.setListData(tmp);
             absc.setSelectedIndex(0);
             ord.setListData(tmp);
             ord.setSelectedIndex(1);
             Array tps;
-            String stmp = null;
-            String[] tmpProfs = null;
-            Index ind = null;
-            String[] p = null;
+            String stmp;
+            Index ind;
+            String[] p;
             
             if(prof!=null){
                 Dimension dd = ((NetcdfFile)f).findDimension(prof);
                 //v = dd.getCoordinateVariable();
-                v = ((NetcdfFile)f).findVariable(dd.getName());
+                v = ((NetcdfFile)f).findVariable(dd.getShortName());
                 if(v!=null && v.isCoordinateVariable()){
                     tps = v.read();
                     p = new String[tps.getShape()[0]];
@@ -80,15 +79,12 @@ public class attributesChoice extends javax.swing.JDialog {
             profs.setSelectedIndex(0);
             
             Dimension dd = ((NetcdfFile)f).findDimension(time);
-            v = ((NetcdfFile)f).findVariable(dd.getName());
-            stmp = null;
-            String[] tmpTimes = null;
-            String[] times = null;
+            v = ((NetcdfFile)f).findVariable(dd.getShortName());
+            String[] times;
             if(v!=null && v.isCoordinateVariable()){
                 tps = v.read();
                 times = new String[tps.getShape()[0]];
                 ind = tps.getIndex();
-                tmpTimes = java.util.TimeZone.getAvailableIDs();
                 for(int i=0;i<(tps.getShape())[0];i++){
                     ind.set(i);
                     double t = tps.getDouble(ind);
@@ -111,10 +107,8 @@ public class attributesChoice extends javax.swing.JDialog {
             dates.setListData(times);
             dates.setSelectedIndex(0);
             
-            v = null;
-            tps = null;
             f.close();
-            f=null;
+
         }catch(IOException e){System.out.println(e.toString());}
     }
     

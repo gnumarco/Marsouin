@@ -1,15 +1,7 @@
-/*
- * streamlines.java
- *
- * Created on 6 septembre 2004, 20:47
- */
+
 
 package constants;
 
-/**
- *
- * @author  marco
- */
 public interface streamlines {
     
     

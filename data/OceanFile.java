@@ -14,36 +14,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * OceanFile.java
- *
- * Created on 18 septembre 2002, 12:58
- */
 package data;
 
+import java.io.IOException;
 import ucar.nc2.*;
 import ucar.ma2.*;
-import java.util.ArrayList;
 
-/**
- * cet objet lit le fichier de carte et le m�morise dans un taleau de courants
- *
- * @author Mahler,Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- */
-//import ucar.nc2.*;
-//import java.util.Iterator;
 public class OceanFile implements constants.balise {
 
     private final boolean dBug = true;
     private boolean isType1 = false, isType2 = false, isNetCDF = false;
 
-    private String nomCompletFichier, unit, MVAttribute;
+    private final  String fileFullName;
+    private String unit, MVAttribute;
 
     private boolean batch = false, noMV;
     private int sel, sel2, indU, indV, indSel2, indSel, varU, varV;
-    private ArrayList dims;
     private int nbSurTerre = 0;
 
     /**
@@ -53,12 +39,12 @@ public class OceanFile implements constants.balise {
      *
      */
     public OceanFile(String nomFichier) {
-        nomCompletFichier = nomFichier;
+        fileFullName = nomFichier;
         isNetCDF = testNetCDF(nomFichier);
     }
 
     public OceanFile(String nomFichier, int z, int indZ, int carte, int indCarte, int u, int inU, int v, int inV, String MVAtt, boolean nmv) {
-        nomCompletFichier = nomFichier;
+        fileFullName = nomFichier;
         isNetCDF = testNetCDF(nomFichier);
         indSel2 = indCarte;
         sel2 = carte;
@@ -77,28 +63,11 @@ public class OceanFile implements constants.balise {
         return (f.endsWith(".nc"));
     }
 
-    /**
-     * <
-     * PRE>indique  si le fichier est de type 1 :
-     *    contient des donn�es en cm/s
-     *    possede un entete
-     * </PRE>
-     *
-     * @return vrai si le fichier est de type 1
-     */
     public boolean isType1() {
         return isType1;
     }
 
-    /**
-     * <
-     * PRE>indique  si le fichier est de type 2 :
-     *    contient des donn�es en m/s
-     *    ensemble de 2 fichiers contenant les projections selon chaque axe nord-sud , est-ouest.
-     * </PRE>
-     *
-     * @return vrai si le fichier est de type 2
-     */
+
     public boolean isType2() {
         return isType2;
     }
@@ -117,14 +86,12 @@ public class OceanFile implements constants.balise {
     public final Stream[][] lire() throws Exception {
         Stream mer[][] = null;
         double max = -999999d;
-        double mv = 0d;
+        double mv;
         int tailleX = 0, tailleY = 0;
-        java.util.ArrayList names = new java.util.ArrayList();
-        dims = new java.util.ArrayList();
         if (isNetCDF) {
             if (batch) {
                 try {
-                    NetcdfFile f = new NetcdfFile(nomCompletFichier);
+                    NetcdfFile f = NetcdfFile.open(fileFullName);
                     if (!noMV) {
                         mv = ((Variable) (f.getVariables().get(varU))).findAttribute(MVAttribute).getNumericValue().floatValue();
                     } else {
@@ -173,9 +140,6 @@ public class OceanFile implements constants.balise {
                             }
                         }
                     }
-                    tab = null;
-                    var = null;
-                    System.gc();
 
                     var = (Variable) (f.getVariables().get(varV));
                     tab = var.read();
@@ -218,9 +182,6 @@ public class OceanFile implements constants.balise {
                             }
                         }
                     }
-                    tab = null;
-                    var = null;
-                    System.gc();
 
                     //Normalisation
                     for (int i = 0; i < tailleX; i++) {
@@ -232,24 +193,21 @@ public class OceanFile implements constants.balise {
                         }
                     }
                     f.close();
-                    tab = null;
-                    var = null;
-                    System.gc();
 
-                } catch (Exception e) {
+                } catch (IOException | NumberFormatException e) {
                     System.out.println(e.toString());
                 }
 
             } else {
-                OpenNetCdf dia = new OpenNetCdf(null, true, nomCompletFichier);
+                OpenNetCdf dia = new OpenNetCdf(null, true, fileFullName);
                 mer = dia.getMer();
             }
         } else {
             long cpt, total;
 
-            java.util.ArrayList line = new java.util.ArrayList();
+            java.util.ArrayList<String> line;
             try {
-                readTextFile file = new readTextFile(nomCompletFichier);
+                readTextFile file = new readTextFile(fileFullName);
                 // le fichier existe.
                 // ***************************************DETECTION DU FORMAT DE FICHIER :
                 // si le fichier ne comporte QUE DEUX ELEMENTS ENTIERS >0 SUR LA DEUXIEME LIGNE
@@ -268,8 +226,8 @@ public class OceanFile implements constants.balise {
                 line = file.decomposeLigneEnMots();
                 isType1 = isType1 && ((line != null) && (line.size() == 2));
                 if (isType1) {
-                    tailleX = java.lang.Integer.parseInt(line.get(0).toString());
-                    tailleY = java.lang.Integer.parseInt(line.get(1).toString());
+                    tailleX = java.lang.Integer.parseInt(line.get(0));
+                    tailleY = java.lang.Integer.parseInt(line.get(1));
                     if (dBug) {
                         System.out.println("type1 1");
                     }
@@ -288,7 +246,6 @@ public class OceanFile implements constants.balise {
                     isType1 = isType1 && (total == cpt);
                 }
                 file.fermer();
-                file = null;
 
                 if (isType1) {
                     if (dBug) {
@@ -304,10 +261,10 @@ public class OceanFile implements constants.balise {
                     if (dBug) {
                         System.out.println("type2 1");
                     }
-                    isType2 = isType2 && (((new java.io.File(nomCompletFichier)).getName().startsWith(PREFIXE_TYPE_2_VX))
-                            | ((new java.io.File(nomCompletFichier)).getName().startsWith(PREFIXE_TYPE_2_VY)));
+                    isType2 = isType2 && (((new java.io.File(fileFullName)).getName().startsWith(PREFIXE_TYPE_2_VX))
+                            | ((new java.io.File(fileFullName)).getName().startsWith(PREFIXE_TYPE_2_VY)));
 
-                    file = new readTextFile(nomCompletFichier);
+                    file = new readTextFile(fileFullName);
                     line = file.decomposeLigneEnMots();
                     isType2 = isType2 && (line != null);
                     if (dBug) {
@@ -334,7 +291,6 @@ public class OceanFile implements constants.balise {
                         isType2 = isType2 && (total == cpt);
                     }
                     file.fermer();
-                    file = null;
 
                     if (isType2) {
                         if (dBug) {
@@ -367,7 +323,7 @@ public class OceanFile implements constants.balise {
         Stream mer[][];
         int r, t, cpt, tailleX, tailleY;
         try {
-            readTextFile lect = new readTextFile(nomCompletFichier);
+            readTextFile lect = new readTextFile(fileFullName);
             lect.lectureLigne();
             if (dBug) {
                 System.out.println("1st lect ligne");
@@ -442,19 +398,19 @@ public class OceanFile implements constants.balise {
         String fa, fVX = "", fVY = "";
         try {
             // cas du fichier de composantes horizontales
-            if ((new java.io.File(nomCompletFichier)).getName().startsWith(PREFIXE_TYPE_2_VX)) {
-                fVX = nomCompletFichier;
-                fparent = (new java.io.File(nomCompletFichier)).getParentFile();
-                fa = (new java.io.File(nomCompletFichier)).getName();
+            if ((new java.io.File(fileFullName)).getName().startsWith(PREFIXE_TYPE_2_VX)) {
+                fVX = fileFullName;
+                fparent = (new java.io.File(fileFullName)).getParentFile();
+                fa = (new java.io.File(fileFullName)).getName();
                 fa = PREFIXE_TYPE_2_VY + fa.substring(PREFIXE_TYPE_2_VX.length());
                 fnewVY = new java.io.File(fparent, fa);
                 fVY = fnewVY.getAbsolutePath();
             } else {
                 // cas du fichier de composantes verticales
-                if ((new java.io.File(nomCompletFichier)).getName().startsWith(PREFIXE_TYPE_2_VY)) {
-                    fVY = nomCompletFichier;
-                    fparent = (new java.io.File(nomCompletFichier)).getParentFile();
-                    fa = (new java.io.File(nomCompletFichier)).getName();
+                if ((new java.io.File(fileFullName)).getName().startsWith(PREFIXE_TYPE_2_VY)) {
+                    fVY = fileFullName;
+                    fparent = (new java.io.File(fileFullName)).getParentFile();
+                    fa = (new java.io.File(fileFullName)).getName();
                     fa = PREFIXE_TYPE_2_VX + fa.substring(PREFIXE_TYPE_2_VY.length());
                     fnewVX = new java.io.File(fparent, fa);
                     fVX = fnewVX.getAbsolutePath();
@@ -472,11 +428,6 @@ public class OceanFile implements constants.balise {
             System.out.println("OceanFile : erreur type 2 " + e);
             mer = null;
         }
-
-        fparent = null;
-        fnewVY = null;
-        fnewVX = null;
-        lect = null;
 
         return mer;
     }

@@ -82,22 +82,22 @@ public class VortexAnt extends Loop{
      
     public double[] getBaricentre(){
         double[] somme = new double[2];
-        double[] centre = new double[2];
+        double[] localCentre = new double[2];
         
         if(mesVortex.isEmpty())
             return null;
         else{
             somme[0]=0d;
             somme[1]=0d;
-            centre[0]=0d;
-            centre[1]=0d;
+            localCentre[0]=0d;
+            localCentre[1]=0d;
             for (Object mesVortex1 : mesVortex) {
                 somme[0] += ((Loop) mesVortex1).getCentre()[0];
                 somme[1] += ((Loop) mesVortex1).getCentre()[1];
             }
-            centre[0]=somme[0]/(double)mesVortex.size();
-            centre[1]=somme[1]/(double)mesVortex.size();
-            return centre;
+            localCentre[0]=somme[0]/(double)mesVortex.size();
+            localCentre[1]=somme[1]/(double)mesVortex.size();
+            return localCentre;
         }
     }
     

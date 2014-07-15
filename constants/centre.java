@@ -1,20 +1,7 @@
-/*
- * centre.java
- *
- * Created on 12 septembre 2002, 10:31
- */
-
-/*
- * @author Mahler
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- *
- */
-
 
 package constants;
 
-public interface centre extends valeurs_par_defaut {
+public interface centre extends default_values {
 
 
 

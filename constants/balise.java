@@ -1,22 +1,7 @@
-/*
- * balise_txtfile.java
- *
- * Created on 8 novembre 2002, 16:13
- */
 
-/*
- * @author Mahler
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- *
- */
 
 package constants;
 
-/**
- *
- * @author  mahler
- */
 public interface balise {
     // pour tous les fichiers
     static final char CARACTERE_DE_COMMENTAIRE = '#';

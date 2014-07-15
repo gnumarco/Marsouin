@@ -14,15 +14,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ants;
 
 import java.util.Random;
 import java.util.ArrayList;
 import data.DataMap;
-import data.CollLoop;
 import data.Loop;
-import data.CollVortexAnt;
 import data.VortexAnt;
 import visu.*;
 
@@ -33,19 +30,20 @@ public class SearchEngine extends Thread implements constants.couleur {
     private final int nbGenerations;
     private final double pheromoneAmount;
     private final double evapCoef;
-    private ArrayList team, tmp;
+    private ArrayList<Ant[]> team;
+    private ArrayList<Loop> tmp;
 
     private data.DataMap myMap;
 
     public static int status = 0;
 
-    private CollLoop vortX;
-    private CollVortexAnt metaVortX;
+    private ArrayList<Loop> vortX;
+    private ArrayList<VortexAnt> metaVortX;
     private final data.BatchDataMap myDataMap;
-    private final FrmCarte visu;
+    private final FrmMap visu;
     private final javax.swing.ProgressMonitor prog;
 
-    public SearchEngine(data.BatchDataMap bdc, FrmCarte v, int f, int esp, int g, double p, double c, int nbRuns, javax.swing.ProgressMonitor pm) {
+    public SearchEngine(data.BatchDataMap bdc, FrmMap v, int f, int esp, int g, double p, double c, int nbRuns, javax.swing.ProgressMonitor pm) {
         myDataMap = bdc;
         visu = v;
         nbAnts = f;
@@ -58,7 +56,7 @@ public class SearchEngine extends Thread implements constants.couleur {
 
     @Override
     public void run() {
-        tmp = new ArrayList();
+        tmp = new ArrayList<>();
         Random rdGen = new Random();
         int cptAv = 0;
         for (int k = 0; k < myDataMap.getNbDataCartesTps(); k++) {
@@ -79,7 +77,7 @@ public class SearchEngine extends Thread implements constants.couleur {
                 vortX = maData.getCollLoop();
                 metaVortX = maData.getVortexAnt();
 
-                team = new ArrayList();
+                team = new ArrayList<>();
                 for (int i = 0; i < nbSpecies; i++) {
                     team.add(new Ant[nbAnts]);
                 }
@@ -103,7 +101,7 @@ public class SearchEngine extends Thread implements constants.couleur {
                     cptAv++;
                     for (Object team1 : team) {
                         for (Ant item : ((Ant[]) (team1))) {
-                            item.Deplacer();
+                            item.move();
                         }
                     }
                     evaporation();
@@ -112,7 +110,6 @@ public class SearchEngine extends Thread implements constants.couleur {
                 this.getResultat();
                 for (Object team1 : team) {
                     for (int j = 0; j < ((Ant[]) (team1)).length; j++) {
-                        ((Ant[]) (team1))[j].dispose();
                         ((Ant[]) (team1))[j] = null;
                     }
                 }
@@ -135,14 +132,14 @@ public class SearchEngine extends Thread implements constants.couleur {
     }
 
     private void getResultat() {
-        ArrayList tmpRes;
+        ArrayList<Loop> tmpRes;
 
         for (Object team1 : team) {
             for (Ant item : ((Ant[]) (team1))) {
-                tmpRes = item.getResultat();
+                tmpRes = item.getResult();
                 if ((tmpRes != null) && (tmpRes.size() > 0)) {
-                    for (Object tmpRe : tmpRes) {
-                        vortX.ajouter((Loop) (tmpRe));
+                    for (Loop tmpRe : tmpRes) {
+                        vortX.add(tmpRe);
                     }
                 }
             }
@@ -157,7 +154,6 @@ public class SearchEngine extends Thread implements constants.couleur {
         }
     }
 
-    
     public void reInit() {
         SearchEngine.status = 0;
     }
@@ -166,14 +162,14 @@ public class SearchEngine extends Thread implements constants.couleur {
         tmp.clear();
         double maxArea = 0;
         int iMax = 0;
-        if (vortX.getBoucle() != null) {
+        if (!vortX.isEmpty()) {
             VortexAnt meta;
-            for (int i = 0; i < vortX.getBoucle().length; i++) {
-                if (vortX.getBoucle()[i].getAire() > maxArea) {
-                    maxArea = vortX.getBoucle()[i].getAire();
+            for (int i = 0; i < vortX.size(); i++) {
+                if (vortX.get(i).getAire() > maxArea) {
+                    maxArea = vortX.get(i).getAire();
                     iMax = i;
                 }
-                tmp.add(vortX.getBoucle()[i]);
+                tmp.add(vortX.get(i));
             }
             int compt = 0;
 
@@ -181,13 +177,13 @@ public class SearchEngine extends Thread implements constants.couleur {
                 meta = new VortexAnt((Loop) (tmp.get(iMax)));
                 meta.setNum(compt);
 
-                metaVortX.ajouter(meta);
+                metaVortX.add(meta);
                 compt++;
                 tmp.remove(iMax);
                 maxArea = 0d;
                 iMax = 0;
                 for (int n = 0; n < tmp.size(); n++) {
-                    if ((metaVortX.getMetaVortex(metaVortX.size() - 1)).contains(((Loop) (tmp.get(n))).getCentre()[0], ((Loop) (tmp.get(n))).getCentre()[1])) {
+                    if ((metaVortX.get(metaVortX.size() - 1)).contains(((Loop) (tmp.get(n))).getCentre()[0], ((Loop) (tmp.get(n))).getCentre()[1])) {
                         tmp.remove(n);
                         n--;
                     } else {
@@ -199,16 +195,6 @@ public class SearchEngine extends Thread implements constants.couleur {
                 }
             }
         }
-    }
-
-    private boolean appartient(double[] c, Loop b) {
-        boolean ok = true;
-
-        if (!(b.contains(c[0], c[1]))) {
-            ok = false;
-        }
-
-        return ok;
     }
 
     public DataMap getMaCarte() {

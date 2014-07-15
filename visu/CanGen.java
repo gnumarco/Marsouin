@@ -9,17 +9,11 @@
 
 package visu;
 
-import java.awt.image.*;
 import data.*;
 
 import java.awt.Graphics2D;
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Dimension;
-import java.awt.MediaTracker;
 import java.awt.image.BufferedImage;
-import java.awt.Point;
 
 /**
  *
@@ -29,7 +23,7 @@ public class CanGen extends javax.swing.JPanel implements constants.centre, cons
     
     protected BufferedImage myImage = null;
     protected int id;
-    protected Memoire mem;
+    protected Memory mem;
     protected int carteWidth = 1600;
     protected int carteHeight = 1200;
     protected int zoomLatLon=1;
@@ -80,7 +74,7 @@ public class CanGen extends javax.swing.JPanel implements constants.centre, cons
                     gra.setColor(COLOR_VECTEUR);
                     
                     X1 = 0;
-                    Y1 = ((tY -i -1)*hauteurCase+hauteurCase/2);;
+                    Y1 = ((tY -i -1)*hauteurCase+hauteurCase/2);
                     X2 = tX*largeurCase;
                     Y2 = Y1;
                     gra.drawLine(X1, Y1, X2, Y2);

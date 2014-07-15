@@ -21,7 +21,7 @@ import data.Loop;
 public class Canv3D {
     
     private SimpleUniverse u = null;
-    private BatchDataMap mother;
+    private final BatchDataMap mother;
     private Canvas3D c;
     
     /** Creates a new instance of Canvas3D */
@@ -108,7 +108,7 @@ public class Canv3D {
                             translate.set(new Vector3f((float)i*0.5f, 0.0f, 0.0f));
                             TransformGroup objTransBis = new TransformGroup(translate);
                             objBis.addChild(objTransBis);
-                            Fleche3D fl = new Fleche3D(mother.getDataCarte(0,w).getOcean()[l][m].getAngle(),mother.getDataCarte(0,w).getOcean()[l][m].norme,flecheAppear);
+                            Arrow3D fl = new Arrow3D(mother.getDataCarte(0,w).getOcean()[l][m].getAngle(),mother.getDataCarte(0,w).getOcean()[l][m].norme,flecheAppear);
                             objTransBis.addChild(fl.getBG());
                             objTransInter.addChild(objBis);
                         }
@@ -116,12 +116,12 @@ public class Canv3D {
                     objTrans.addChild(objTransInter);
                 }
                 BranchGroup objTransInter = new BranchGroup();
-                if(mother.getVortexAnt().size()!=0){
+                if(!mother.getVortexAnt().isEmpty()){
                     for(int i=0;i<mother.getDataCarte(0,w).getVortexAnt().size();i++){
                         caL1 = new ColoringAttributes();
-                        float[] cols = mother.getDataCarte(0,w).getVortexAnt().getMetaVortex(i).getCouleur().getRGBColorComponents(null);
+                        float[] cols = mother.getDataCarte(0,w).getVortexAnt().get(i).getCouleur().getRGBColorComponents(null);
                         caL1.setColor(new Color3f(cols[0],cols[1],cols[2]));
-                        Vortex3D v = new Vortex3D((Loop)mother.getDataCarte(0,w).getVortexAnt().getMetaVortex(i),mother.getDataCarte(0,w).getXSize(),mother.getDataCarte(0,w).getYSize(),caL1);
+                        Vortex3D v = new Vortex3D((Loop)mother.getDataCarte(0,w).getVortexAnt().get(i),mother.getDataCarte(0,w).getXSize(),mother.getDataCarte(0,w).getYSize(),caL1);
                         objTransInter.addChild(v.getBG());
                     }
                     objTransMast.addChild(objTransInter);

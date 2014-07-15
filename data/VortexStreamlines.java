@@ -16,11 +16,9 @@
  */
 package data;
 
-/**
- * @author Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- */
+import java.util.Arrays;
+
+
 public class VortexStreamlines{
     
     private PointFloat[] mesPoints = null;
@@ -47,13 +45,10 @@ public class VortexStreamlines{
             mesPoints[0] = p;
         }else{
             java.util.ArrayList temp = new java.util.ArrayList();
-            for (PointFloat mesPoint : mesPoints) {
-                temp.add(mesPoint);
-            }
+            temp.addAll(Arrays.asList(mesPoints));
             temp.add(p);
             mesPoints = new PointFloat[temp.size()];
             temp.toArray(mesPoints);
-            temp = null;
         }
     }
     

@@ -31,10 +31,11 @@ public class MoteurSuivi extends java.lang.Thread implements suivi {
         this.start();
     }
 
+    @Override
     public void run() {
 
-        VortexAnt vCourant = null;
-        VortexAnt vCandidat = null;
+        VortexAnt vCourant;
+        VortexAnt vCandidat;
 
         javax.swing.JFileChooser F = new javax.swing.JFileChooser(System.getProperty("user.home"));
 
@@ -42,7 +43,7 @@ public class MoteurSuivi extends java.lang.Thread implements suivi {
         F.setMultiSelectionEnabled(false);
 
         int returnVal = F.showOpenDialog(null);
-        File fichs = null;
+        File fichs;
         try {
             if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
                 fichs = F.getSelectedFile();
@@ -60,11 +61,9 @@ public class MoteurSuivi extends java.lang.Thread implements suivi {
                         }
                         System.out.println("Suivi sur la date num:" + j);
                         for (int k = 0; k < maCarte.getDataCarte(j, i).getVortexAnt().size(); k++) {
-                            double distanceMin = 99999d;
-                            int indDistanceMin = 0;
-                            vCourant = maCarte.getDataCarte(j, i).getVortexAnt().getMetaVortex(k);
+                            vCourant = maCarte.getDataCarte(j, i).getVortexAnt().get(k);
                             for (int l = 0; l < maCarte.getDataCarte(j + 1, i).getVortexAnt().size(); l++) {
-                                vCandidat = maCarte.getDataCarte(j + 1, i).getVortexAnt().getMetaVortex(l);
+                                vCandidat = maCarte.getDataCarte(j + 1, i).getVortexAnt().get(l);
                                 double distance = Math.sqrt(Math.pow(Math.abs(vCandidat.getBaricentre()[0] - vCourant.getBaricentre()[0]), 2) + Math.pow(Math.abs(vCandidat.getBaricentre()[1] - vCourant.getBaricentre()[1]), 2));
                                 if ((distance <= deplacementMax) && (vCourant.getSens() == vCandidat.getSens())) {
                                     VortexAnt suiv = vCandidat;
@@ -77,7 +76,7 @@ public class MoteurSuivi extends java.lang.Thread implements suivi {
                         }
 
                         for (int k = 0; k < maCarte.getDataCarte(j + 1, i).getVortexAnt().size(); k++) {
-                            vCourant = maCarte.getDataCarte(j + 1, i).getVortexAnt().getMetaVortex(k);
+                            vCourant = maCarte.getDataCarte(j + 1, i).getVortexAnt().get(k);
                             if (vCourant.getPrecedent().isEmpty()) {
                                 numUtilises++;
                                 vCourant.setNum(numUtilises);
@@ -86,7 +85,7 @@ public class MoteurSuivi extends java.lang.Thread implements suivi {
 
                         //Ecriture fichier
                         for (int k = 0; k < maCarte.getDataCarte(j, i).getVortexAnt().size(); k++) {
-                            vCourant = maCarte.getDataCarte(j, i).getVortexAnt().getMetaVortex(k);
+                            vCourant = maCarte.getDataCarte(j, i).getVortexAnt().get(k);
                             String strSuiv = "";
                             String strPrec = "";
                             if (!vCourant.getSuivant().isEmpty()) {
@@ -119,7 +118,7 @@ public class MoteurSuivi extends java.lang.Thread implements suivi {
                     int indI = maCarte.getNbDataCartesProf() - 1;
                     int indJ = maCarte.getNbDataCartesTps() - 1;
                     for (int k = 0; k < maCarte.getDataCarte(maCarte.getNbDataCartesTps() - 1, maCarte.getNbDataCartesProf() - 1).getVortexAnt().size(); k++) {
-                        vCourant = maCarte.getDataCarte(maCarte.getNbDataCartesTps() - 1, maCarte.getNbDataCartesProf() - 1).getVortexAnt().getMetaVortex(k);
+                        vCourant = maCarte.getDataCarte(maCarte.getNbDataCartesTps() - 1, maCarte.getNbDataCartesProf() - 1).getVortexAnt().get(k);
                         String strSuiv = "";
                         String strPrec = "";
                         if (!vCourant.getSuivant().isEmpty()) {
@@ -155,7 +154,6 @@ public class MoteurSuivi extends java.lang.Thread implements suivi {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
-        F = null;
     }
 
     double[] calculCoordBary(VortexAnt vCourant) {

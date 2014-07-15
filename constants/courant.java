@@ -1,15 +1,4 @@
-/*
- * courant.java
- *
- * Created on 27 novembre 2002, 16:39
- */
 
-/*
- * @author Mahler,Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- *
- */
 
 package constants;
 

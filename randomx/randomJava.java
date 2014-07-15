@@ -3,19 +3,6 @@ package randomx;
 
 import java.util.Random;
 
-/**
-    Implementation of a <b>randomX</b>-compliant class based upon the
-    built-in <tt>Java.util.Random</tt> generator.  Note that since the higher
-    level result composition methods are different from those in the
-    (undocumented) standard library, <b>randomJava</b> results will differ
-    from those of the standard library for a given seed.
-
-    <p>
-    Designed and implemented in July 1996 by
-    <a href="http://www.fourmilab.ch/">John Walker</a>,
-    <a href="mailto:kelvin@fourmilab.ch">kelvin@fourmilab.ch</a>.
-*/
-
 public class randomJava extends randomX {
 
     private Random r;

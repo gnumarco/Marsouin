@@ -1,27 +1,5 @@
 package randomx;
 
-/**
-    Abstract superclass for emulations of java.util.Random with
-    various underlying generators.  These generators provide a
-    superset of the methods of the built-in Java generator, and
-    allow easy replacement of the low-level byte-stream random
-    generator without the need to reimplement the higher-level
-    calls.
-<p>
-    The nature of the data returned by the functions in this class
-    depends upon the generator provided by the class derived from it.
-    If the generator is algorithmic, the data are pseudorandom; if a
-    hardware generator is employed, genuine random data may be
-    obtained.  For brevity, in this document, we use <em>random</em>
-    to refer to the data returned, whatever its actual source.
-<p>
-    Designed and implemented in July 1996 by
-    <a href="http://www.fourmilab.ch/">John Walker</a>,
-    <a href="mailto:kelvin@fourmilab.ch">kelvin@fourmilab.ch</a>.
-
-@see java.util.Random
-*/
-
 public abstract class randomX {
 
     private int nbits = 0;

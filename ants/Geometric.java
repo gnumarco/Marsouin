@@ -14,37 +14,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package ants;
 
 public class Geometric {
 
-	private double p;
+    private double p;
 
-	public Geometric() {
-		p=0.5;
-	}
+    public Geometric() {
+        p = 0.5;
+    }
 
-	public Geometric(double proba) {
-		p=proba;
-	}
-	
-	public int tirage() {
-		int n=0;
-		double U;
-	  do{
-		U=Math.random();
-		n++;
-	  }
-	  while (U>p);
-	  return(n);
-	}
-        
-        public double calcul(double p, double x){
-            double res =0.0;
-            
-            res= java.lang.Math.pow((1-p), (x-1))*p;
-            
-            return res;
-        }
+    public Geometric(double proba) {
+        p = proba;
+    }
+
+    public int tirage() {
+        int n = 0;
+        double U;
+        do {
+            U = Math.random();
+            n++;
+        } while (U > p);
+        return (n);
+    }
+
+    public double calcul(double p, double x) {
+        double res;
+
+        res = java.lang.Math.pow((1 - p), (x - 1)) * p;
+
+        return res;
+    }
 }

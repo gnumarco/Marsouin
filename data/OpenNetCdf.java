@@ -56,7 +56,6 @@ public class OpenNetCdf extends javax.swing.JDialog {
 
         cartesDisposLabel = new javax.swing.JLabel();
         cartesDisposOK = new javax.swing.JButton();
-        cartesDiposAnnuler = new javax.swing.JButton();
         timesLabel = new javax.swing.JLabel();
         profLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -143,15 +142,13 @@ public class OpenNetCdf extends javax.swing.JDialog {
     
     public final void lireNetCDF(String s){
 	try{
-	    NetcdfFile f = new NetcdfFile(s);
+	    NetcdfFile f = NetcdfFile.open(s);
 	    Variable var = f.findVariable("time");
 	    Array tps = var.read();
-	    String stmp = null;
-	    String[] tmpTimes = null;
+	    String stmp;
 	    String[] times = new String[tps.getShape()[0]];
 	    System.out.println("nbcartesdispos: "+times.length);
 	    Index ind = tps.getIndex();
-	    tmpTimes = java.util.TimeZone.getAvailableIDs();
 	 /*for(int i=0;i<tmpTimes.length;i++){
 	    System.out.println("ID "+i+":"+tmpTimes[i]);
 	 }*/
@@ -170,9 +167,6 @@ public class OpenNetCdf extends javax.swing.JDialog {
 		times[i]=stmp;
 	    }
 	    cartesDispos.setListData(times);
-	    var = null;
-	    tps = null;
-	    System.gc();
 	    
 	    var = f.findVariable("z");
 	    tps = var.read();
@@ -186,24 +180,16 @@ public class OpenNetCdf extends javax.swing.JDialog {
 	    }
 	    profsDispos.setListData(profs);
 	    profsDispos.setLocale(java.util.Locale.FRENCH);
-	    var = null;
-	    tps = null;
 	    f.close();
-	    System.gc();
 	}catch(IOException e){}
     }
     
-    private void annuler(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_annuler
-	setVisible(false);
-	dispose();
-    }//GEN-LAST:event_annuler
     
     private void ok(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ok
 	int sel = cartesDispos.getSelectedIndex();
-	int sel2 = profsDispos.getSelectedIndex();
 	double max = -9999d;
 	try{
-	    NetcdfFile f = new NetcdfFile(nomFichier);
+	    NetcdfFile f = NetcdfFile.open(nomFichier);
 	    int tailleX = (f.findDimension("lon")).getLength();
 	    int tailleY = (f.findDimension("lat")).getLength();
 	    mer = new Stream[tailleX][tailleY];
@@ -224,9 +210,6 @@ public class OpenNetCdf extends javax.swing.JDialog {
 			mer[i][j].setSurTerre(true);
 		}
 	    }
-	    tab = null;
-	    var = null;
-	    System.gc();
 	    var = f.findVariable("v");
 	    if(var != null){
 		tab = var.read();
@@ -240,9 +223,6 @@ public class OpenNetCdf extends javax.swing.JDialog {
 		    }
 		}
 	    }
-	    tab = null;
-	    var = null;
-	    System.gc();
 	    
 	    //Normalisation
 	    for(int i=0;i<tailleX;i++){
@@ -261,9 +241,6 @@ public class OpenNetCdf extends javax.swing.JDialog {
 		    mer[i][j].setBat(tab.getFloat(ind));
 		}
 	    }
-	    tab = null;
-	    var = null;
-	    System.gc();
 	    
 	    var = f.findVariable("SAL");
 	    tab = var.read();
@@ -274,9 +251,6 @@ public class OpenNetCdf extends javax.swing.JDialog {
 		    mer[i][j].setSal(tab.getFloat(ind));
 		}
 	    }
-	    tab = null;
-	    var = null;
-	    System.gc();
 	    
 	    var = f.findVariable("TEMP");
 	    tab = var.read();
@@ -288,9 +262,6 @@ public class OpenNetCdf extends javax.swing.JDialog {
 		}
 	    }
 	    f.close();
-	    tab = null;
-	    var = null;
-	    System.gc();
 	    
 	}catch(IOException e){System.out.println(e);}
 	setVisible(false);
@@ -306,7 +277,6 @@ public class OpenNetCdf extends javax.swing.JDialog {
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JButton cartesDiposAnnuler;
     private javax.swing.JList cartesDispos;
     private javax.swing.JLabel timesLabel;
     private javax.swing.JScrollPane jScrollPane2;

@@ -31,7 +31,7 @@ public class randomMCG extends randomX {
 @param seed seed for the generator
     */
 
-    public void setSeed(long seed) throws IllegalArgumentException {
+    public final void setSeed(long seed) throws IllegalArgumentException {
         int i;
 
         if (seed == 0) {

@@ -16,12 +16,6 @@
  */
 package data;
 
-
-/**
- * @author Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- */
 public class PointFloat {
     
     public double x,y;

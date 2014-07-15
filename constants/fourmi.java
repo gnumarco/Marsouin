@@ -1,15 +1,4 @@
-/*
- * fourmi.java
- *
- * Created on 8 novembre 2002, 16:13
- */
 
-/*
- * @author Segond, Mahler
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- *
- */
 
 package constants;
 

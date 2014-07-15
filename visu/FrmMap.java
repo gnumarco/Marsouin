@@ -1,5 +1,5 @@
 /*
- * FrmCarte.java
+ * FrmMap.java
  *
  * Created on 31 mars 2005, 17:22
  */
@@ -10,21 +10,21 @@ import data.BatchDataMap;
  *
  * @author  Marc Segond
  */
-public class FrmCarte extends javax.swing.JFrame implements constants.couleur {
+public class FrmMap extends javax.swing.JFrame implements constants.couleur {
 
-    protected Memoire mem = null;
+    protected Memory mem = null;
     protected int id;
-    private CanvasCarte monCanvas = null;
+    private CanvasMap monCanvas = null;
     private CanvRet monCanvasRet = null;
     public int avMax = 0;
     private boolean antialias = false;
 
     /** Creates new form FrmCarte */
-    public FrmCarte(Memoire m, int moi, boolean mode) {
+    public FrmMap(Memory m, int moi, boolean mode) {
         initComponents();
         mem = m;
         id = moi;
-        monCanvas = new CanvasCarte(mem, id);
+        monCanvas = new CanvasMap(mem, id);
         jScrollPane2D.setViewportView(monCanvas);
         jSlider1.setMinimum(0);
         jSlider1.setMaximum(((BatchDataMap) (mem.getDataCarte(id))).getNbDataCartesTps() - 1);
@@ -285,8 +285,8 @@ public class FrmCarte extends javax.swing.JFrame implements constants.couleur {
 
         setJMenuBar(jMenuBar);
 
-        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-800)/2, (screenSize.height-600)/2, 800, 600);
+        setSize(new java.awt.Dimension(800, 600));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void closing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closing
@@ -322,15 +322,10 @@ public class FrmCarte extends javax.swing.JFrame implements constants.couleur {
                     wtf.uneLigne(s);
                 }
                 wtf.fermer();
-                s = null;
-                tmp = null;
-                wtf = null;
             } catch (Exception e) {
                 System.out.println(e.toString());
             }
         }
-        F = null;
-        cheminDefaut = null;
     }//GEN-LAST:event_jMenuItemSaveRetentionActionPerformed
 
     private void jMenuItemExportDetectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemExportDetectionActionPerformed
@@ -339,13 +334,13 @@ public class FrmCarte extends javax.swing.JFrame implements constants.couleur {
 
     private void jMenuItemSaveCurrentImageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveCurrentImageActionPerformed
         javax.swing.ProgressMonitor p = new javax.swing.ProgressMonitor(this, "Saving all maps", "Saving...", 0, 0);
-        ImageResultatFile capture = new ImageResultatFile(mem, id, false, p);
+        ImageResultFile capture = new ImageResultFile(mem, id, false, p);
         capture.start();
     }//GEN-LAST:event_jMenuItemSaveCurrentImageActionPerformed
 
     private void jMenuItemSaveAllImagesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemSaveAllImagesActionPerformed
         javax.swing.ProgressMonitor p = new javax.swing.ProgressMonitor(this, "Saving all maps", "Saving...", 0, 0);
-        ImageResultatFile capture = new ImageResultatFile(mem, id, true, p);
+        ImageResultFile capture = new ImageResultFile(mem, id, true, p);
         capture.start();
     }//GEN-LAST:event_jMenuItemSaveAllImagesActionPerformed
 
@@ -418,7 +413,7 @@ public class FrmCarte extends javax.swing.JFrame implements constants.couleur {
     private void DemarrerSuivi(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DemarrerSuivi
         mem.suivi(id);
     }//GEN-LAST:event_DemarrerSuivi
-    public void MajNom() {
+    public final void MajNom() {
         setTitle(((BatchDataMap) (mem.getDataCarte(id))).getCarteActive().getDate());
     }
     private void ChangeActiveCard(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ChangeActiveCard
@@ -452,7 +447,7 @@ public class FrmCarte extends javax.swing.JFrame implements constants.couleur {
         return jSlider2.getValue();
     }
 
-    public CanvasCarte getMonCanvas() {
+    public CanvasMap getMonCanvas() {
         return monCanvas;
     }
 

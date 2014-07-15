@@ -2,6 +2,7 @@
 
 package data;
 
+import java.util.ArrayList;
 import ucar.nc2.*;
 import ucar.ma2.*;
 import java.util.Date;
@@ -29,18 +30,14 @@ public class DataMap implements constants.centre, constants.courant {
     private String nomFichier,nomConfig,nomResultat, unit;
     
     /** conteneur des r�sultats des fourmis */
-    private CollLoop collectionBoucle=null;
+    private ArrayList<Loop> collectionBoucle=null;
     
     private int NbCellValides = 0;
     private int nbSurTerre = 0;
     /** conteneur des resultats finaux des fourmis */
-    private CollVortexAnt collectionVortexAnt = null;
-    /** conteneur des resultats des methodes geometriques */
-    private CollVortexGeom collectionVortexGeom = null;
-    /** conteneur des resultats des methodes de mecanique des fluides */
-    private CollVortexPhys collectionVortexPhys = null;
+    private ArrayList<VortexAnt> collectionVortexAnt = null;
     
-    public CollVortexStreamlines collectionVortexStream = null;
+    public ArrayList<VortexStreamlines> collectionVortexStream = null;
     
     /** tableau de valeurs doubles que l'on pourra interpoler :
      *  pour afficher sur la carte une valeur en chaque point, on partira de ce tableau
@@ -50,8 +47,6 @@ public class DataMap implements constants.centre, constants.courant {
     
     public DataMap(DataMap d){
         collectionVortexAnt = d.getVortexAnt();
-        collectionVortexGeom = d.getVortexGeom();
-        collectionVortexPhys = d.getVortexPhys();
         collectionVortexStream = d.getVortexStreamlines();
         NbCellValides = d.getNbValidCells();
         collectionBoucle = d.getCollLoop();
@@ -64,7 +59,7 @@ public class DataMap implements constants.centre, constants.courant {
         ocean = d.getOcean();
         table = d.getTable();
         maDate = d.getDate();
-        nbSurTerre = d.getNbSurTerre();
+        nbSurTerre = d.getNbOnGround();
     }
     
     public DataMap(Stream[][] mer,String nFichier,String nConfig) {
@@ -99,7 +94,6 @@ public class DataMap implements constants.centre, constants.courant {
             nbSurTerre = myFile.getNbSurTerre();
             normeMax = this.computeMaxNorm();
             
-            myFile=null;
             nomConfig = nFichier + ".cfg";
             nomFichier = nFichier;
             
@@ -107,14 +101,10 @@ public class DataMap implements constants.centre, constants.courant {
             this.initTabloDouble();
             NbCellValides = computeNbValidCells();
             
-            NetcdfFile f = new NetcdfFile(nFichier);
+            NetcdfFile f = NetcdfFile.open(nFichier);
             Variable vr = ((Variable)(f.getVariables().get(indC)));
             Array tps = vr.read();
-            String stmp = null;
-            String[] tmpTimes = null;
-            String[] times = new String[tps.getShape()[0]];
             Index ind = tps.getIndex();
-            tmpTimes = java.util.TimeZone.getAvailableIDs();
             ind.set(c);
             double t = tps.getDouble(ind);
             f.close();
@@ -127,17 +117,16 @@ public class DataMap implements constants.centre, constants.courant {
             Date cur = new Date(temp);
             maDate = cur.toString();       
             
-        }catch(Exception e){System.out.println("DataCarte : pb a la construction ");e.printStackTrace();}
+        }catch(Exception e){System.out.println("DataCarte : problem building the DataMap");
+        e.toString();}
     }
     
-    public int getNbSurTerre(){return nbSurTerre;}
+    public int getNbOnGround(){return nbSurTerre;}
     
     public final void initCollections() {
-        collectionBoucle=new CollLoop();
-        collectionVortexAnt = new CollVortexAnt();
-        collectionVortexGeom = new CollVortexGeom();
-        collectionVortexPhys = new CollVortexPhys();
-        collectionVortexStream = new CollVortexStreamlines();
+        collectionBoucle=new ArrayList<>();
+        collectionVortexAnt = new ArrayList<>();
+        collectionVortexStream = new ArrayList<>();
     }
     
     /** initialise le tableau qui peut servir pour interpoler des donn�es */
@@ -157,47 +146,6 @@ public class DataMap implements constants.centre, constants.courant {
         return nMax;
     }
     
-    public void dispose() {
-        ocean =null;
-        collectionBoucle.dispose();
-        collectionBoucle=null;
-        collectionVortexGeom.dispose();
-        collectionVortexAnt.dispose();
-        collectionVortexPhys.dispose();
-        
-    }
-    
-    private void majSurTerre()  {
-        int cpt,posX,posY,i,j;
-        
-        for(posX=0; posX<tailleX; posX++)
-            for(posY=0 ;posY<tailleY;posY++ )
-                ocean[posX][posY].setSurTerre(false);
-        
-        for(posX=0; posX<tailleX; posX++)
-            for(posY=0 ;posY<tailleY;posY++ ){
-            try{
-                if (this.ocean[posX][posY].norme <= SEUIL_NORME ) {
-                    // le vecteur est nul : soit on a un centre de phenomene
-                    //                      soit on est sur la terre
-                    cpt=0;
-                    for( i= posX-1; i <= (posX +1) ; i++)
-                        for(j= posY -1 ;j <= posY +1 ; j++){
-                        if (this.ocean[i][j].norme <= SEUIL_NORME )
-                            // on compte les vecteurs nuls autour du point
-                            cpt++;
-                        }
-                    if (cpt >= 3) {
-                        // 3 points = le point en question + 2 autres
-                        for(i= posX-1; i <= (posX +1) ; i++)
-                            for(j= posY -1 ;j <= posY +1 ; j++)
-                                this.ocean[i][j].setSurTerre(this.ocean[i][j].norme <= SEUIL_NORME);
-                        // on peut estimer que c'est la terre en chaque point de courant nul
-                    }
-                }
-            }catch(Exception e){this.ocean[posX][posY].setSurTerre(this.ocean[posX][posY].norme <= SEUIL_NORME);}
-            }
-    }
     
     public Stream[][] getOcean() {
         return ocean;
@@ -212,12 +160,12 @@ public class DataMap implements constants.centre, constants.courant {
     public final String getDate(){return maDate;}
     public final Stream getC(int i, int j){ return ocean[i][j];}
     
-    public CollLoop getCollLoop(){ return collectionBoucle;}
+    public ArrayList<Loop> getCollLoop(){ return collectionBoucle;}
+    public void resetCollLoop(){ collectionBoucle = new ArrayList<>();}
     
-    public CollVortexAnt getVortexAnt(){ return collectionVortexAnt;}
-    public CollVortexGeom getVortexGeom(){ return collectionVortexGeom;}
-    public CollVortexPhys getVortexPhys(){ return collectionVortexPhys;}
-    public CollVortexStreamlines getVortexStreamlines(){ return collectionVortexStream;}
+    public ArrayList<VortexAnt> getVortexAnt(){ return collectionVortexAnt;}
+    public ArrayList<VortexStreamlines> getVortexStreamlines(){ return collectionVortexStream;}
+    public void resetVortexStreamlines(){ collectionVortexStream = new ArrayList<>();}
     
     public void setOcean(Stream[][] ocean) {
         this.ocean = ocean;
@@ -227,18 +175,16 @@ public class DataMap implements constants.centre, constants.courant {
     public void setTailleY(int tY){tailleY = tY;}
     public void setNormeMax(double n){normeMax = n;}
     public void setNbCellValides(int n){NbCellValides = n;}
-    public void setCollVortexAnt(CollVortexAnt coll){collectionVortexAnt = coll;}
-    public void setCollVortexGeom(CollVortexGeom coll){collectionVortexGeom = coll;}
-    public void setCollVortexPhys(CollVortexPhys coll){collectionVortexPhys = coll;}
-    public void setCollVortexStream(CollVortexStreamlines coll){collectionVortexStream = coll;}
-    public void setCollBoucle(CollLoop coll){collectionBoucle = coll;}
+    public void setCollVortexAnt(ArrayList<VortexAnt> coll){collectionVortexAnt = coll;}
+    public void setCollVortexStream(ArrayList<VortexStreamlines> coll){collectionVortexStream = coll;}
+    public void setCollBoucle(ArrayList<Loop> coll){collectionBoucle = coll;}
     protected void setNomFichier(String n){nomFichier = n;}
     
     public boolean[][][] getMapGeomCentre() {
         // retourne une copie complete de la carte de booleens centre,
         //     flags resultants des methodes geometriques.
         boolean[][][] tab = new boolean[tailleX][][];
-        boolean[] cg = null;
+        boolean[] cg;
         int x,y,id;
         for(x=0;x<tailleX; x++) {
             tab[x]=new boolean[tailleY][];
@@ -272,7 +218,6 @@ public class DataMap implements constants.centre, constants.courant {
         // copie la carte de booleens centre,
         //     flags resultants des methodes geometriques.
         // dans CET objet
-        boolean[] cg = null;
         int x,y,id;
         for(x=0;x<tailleX; x++) {
             for(y=0;y<tailleY;y++) {
@@ -365,8 +310,6 @@ public class DataMap implements constants.centre, constants.courant {
     
   
     public void setTable(TabloDouble2D maTable) {
-        this.table.dispose();
-        this.table = null;
         this.table = maTable.cloneMe();
     }
     

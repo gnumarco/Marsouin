@@ -9,6 +9,8 @@
 
 package visu;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author marco
@@ -20,11 +22,11 @@ public class OpenMapsThread extends Thread {
     String missingValue, fichier;
     boolean noMissingValue, Ok3D;
     javax.swing.ProgressMonitor prog;
-    java.util.Vector listeDataCartes, listeFrmVisu;
-    Memoire mem;
+    ArrayList listeDataCartes, listeFrmVisu;
+    Memory mem;
     
     /** Creates a new instance of OpenMapsThread */
-    public OpenMapsThread(String f,int[] prof,int profInd, int[] time, int timeInd, int u, int uInd, int v, int vInd, String MVAtt, boolean noMV, javax.swing.ProgressMonitor p, java.util.Vector liste, boolean troisD, java.util.Vector liste2, int i, Memoire m) {
+    public OpenMapsThread(String f,int[] prof,int profInd, int[] time, int timeInd, int u, int uInd, int v, int vInd, String MVAtt, boolean noMV, javax.swing.ProgressMonitor p, ArrayList liste, boolean troisD, ArrayList liste2, int i, Memory m) {
         fichier = f;
         profondeurs = prof;
         dates = time;
@@ -42,16 +44,17 @@ public class OpenMapsThread extends Thread {
         mem = m;
     }
     
+    @Override
     public void run(){
-        listeDataCartes.addElement(new data.BatchDataMap(fichier,profondeurs,indexProfondeurs,dates,indexDates,uZ,indexU,vZ,indexV,missingValue,noMissingValue,prog));
+        listeDataCartes.add(new data.BatchDataMap(fichier,profondeurs,indexProfondeurs,dates,indexDates,uZ,indexU,vZ,indexV,missingValue,noMissingValue,prog));
         try{
             if(Ok3D)
-                listeFrmVisu.addElement( new FrmCarte3D(mem,id, true) );
+                listeFrmVisu.add( new FrmCarte3D(mem,id, true) );
             else
-                listeFrmVisu.addElement( new FrmCarte(mem,id, true) );
-            ((FrmCarte) listeFrmVisu.elementAt(id)).setVisible(true);
-            ((FrmCarte) listeFrmVisu.elementAt(id)).toFront();
-            ((FrmCarte) listeFrmVisu.elementAt(id)).MajTaille();
+                listeFrmVisu.add( new FrmMap(mem,id, true) );
+            ((FrmMap) listeFrmVisu.get(id)).setVisible(true);
+            ((FrmMap) listeFrmVisu.get(id)).toFront();
+            ((FrmMap) listeFrmVisu.get(id)).MajTaille();
         }catch (Exception e){System.out.println("Mem : erreur a l'ajout de FrmVisu !");
         e.printStackTrace();
         mem.retraitCarte(id);

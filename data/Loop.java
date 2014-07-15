@@ -23,8 +23,8 @@ import java.util.ArrayList;
 
 public class Loop extends Polygon implements constants.courant, constants.couleur {
     
-    private ArrayList suivant = null;
-    private ArrayList precedent = null;
+    private ArrayList<Loop> suivant = null;
+    private ArrayList<Loop> precedent = null;
     
     private Color Couleur = COLOR_BOUCLE_STD;
     
@@ -49,8 +49,8 @@ public class Loop extends Polygon implements constants.courant, constants.couleu
         centre =null;
         aire = -1;
         aiguilleMontre=false;
-        suivant = new ArrayList();
-        precedent = new ArrayList();
+        suivant = new ArrayList<>();
+        precedent = new ArrayList<>();
         majSens();
     }
     
@@ -60,8 +60,8 @@ public class Loop extends Polygon implements constants.courant, constants.couleu
         centre =null;
         aire = -1;
         aiguilleMontre=false;
-        suivant = new ArrayList();
-        precedent = new ArrayList();
+        suivant = new ArrayList<>();
+        precedent = new ArrayList<>();
         majSens();
     }
     
@@ -77,8 +77,8 @@ public class Loop extends Polygon implements constants.courant, constants.couleu
             centre=null;
         }
         aiguilleMontre = false;
-        precedent = new ArrayList();
-        suivant = new ArrayList();
+        precedent = new ArrayList<>();
+        suivant = new ArrayList<>();
         majSens();
     }
     
@@ -94,8 +94,8 @@ public class Loop extends Polygon implements constants.courant, constants.couleu
             centre=null;
         }
         aiguilleMontre = s;
-        precedent = new ArrayList();
-        suivant = new ArrayList();
+        precedent = new ArrayList<>();
+        suivant = new ArrayList<>();
         majSens();
     }
     
@@ -130,8 +130,6 @@ public class Loop extends Polygon implements constants.courant, constants.couleu
     
     public double CalculAngle(int x, int y){
         double theta=0.0;
-        double costheta = 0.0;
-        double sintheta = 0.0;
         double hyp = java.lang.Math.sqrt(x*x+y*y);
         
         if (hyp != 0.0){
@@ -175,16 +173,16 @@ public class Loop extends Polygon implements constants.courant, constants.couleu
     
     public final void majSens(){
         int x1, y1, x2, y2;
-        double sommeAngles = 0d;
+        double sumAngles = 0d;
         for(int i=1; i<npoints-1; i++){
             x1 = xpoints[i]-xpoints[i-1];
             y1 = ypoints[i]-ypoints[i-1];
             x2 = xpoints[i+1]-xpoints[i];
             y2 = ypoints[i+1]-ypoints[i];
-            sommeAngles += ((x1*y2)-(x2*y1));
+            sumAngles += ((x1*y2)-(x2*y1));
         }
-        sommeAngles = sommeAngles/(npoints);
-        if(sommeAngles>0d){
+        sumAngles = sumAngles/(npoints);
+        if(sumAngles>0d){
             aiguilleMontre = true;
             Couleur = COLOR_BOUCLE_STD_2;
         }
@@ -200,10 +198,10 @@ public class Loop extends Polygon implements constants.courant, constants.couleu
     public int getTag() {return tag;  }
     
     private void calculerCentre() {
-        this.calculerCentreSimple();
+        this.computeCentreSimple();
     }
     
-    private void calculerCentreSimple() {
+    private void computeCentreSimple() {
         long sumX=0, sumY=0;
         double[] ret = new double[2];
         int i;
@@ -216,36 +214,8 @@ public class Loop extends Polygon implements constants.courant, constants.couleu
         centre = ret;
     }
     
-    private void calculerCentreMasse() {
-        //              __n_
-        //         1   \       2                 2
-        //X    =  ___   \    (x   +  x  *  x  + x   ) * (y  - y   )
-        // CM           /      i      i-1   i    i-1      i    i-1
-        //        6   /__
-        //             i = 1
-        
-        int[] x= new int[npoints+1];
-        int[] y= new int[npoints+1];
-        int i;
-        x[0]=xpoints[0];
-        y[0]=ypoints[0];
-        for(i=0; i<npoints; i++) {
-            x[i+1]=xpoints[i];
-            y[i+1]=ypoints[i];
-        }
-        long sumX=0, sumY=0;
-        for(i=1; i<=npoints; i++) {
-            sumX += (( x[i]*x[i] + x[i-1]*x[i] + x[i-1]*x[i-1] ) * (y[i] - y[i-1]));
-            sumY += (( y[i]*y[i] + y[i-1]*y[i] + y[i-1]*y[i-1] ) * (x[i] - x[i-1]));
-        }
-        double[] ret = new double[2];
-        ret[0] = (double)sumX /6.0;
-        ret[1] = (double)sumY /6.0;
-        
-        centre = ret;
-    }
     
-    private void calculerAire() {
+    private void computeArea() {
         
         //            __n_
         //         1  \
@@ -315,15 +285,15 @@ public class Loop extends Polygon implements constants.courant, constants.couleu
     }
     
     public double getAire(){
-        calculerAire();
+        computeArea();
         return aire;
     }
     
     @Override
     public void addPoint(int param, int param1) {
         super.addPoint(param, param1);
-        this.calculerCentre();
-        this.calculerAire();
+        calculerCentre();
+        computeArea();
         majSens();
     }
     
@@ -340,12 +310,7 @@ public class Loop extends Polygon implements constants.courant, constants.couleu
         aire = -1;
         centre = null;
     }
-    public void dispose() {
-        xpoints = null;
-        ypoints = null;
-        npoints = 0;
-        reset();
-    }
+
     /** calcule une distance en pas de grille
      * entre deux points consecutifs Pn et Pn+1
      * ou dernier et premier point
@@ -403,21 +368,21 @@ public class Loop extends Polygon implements constants.courant, constants.couleu
             getPrecedent(i).setAffichePrec(b);
     }
     
-    public void setSuivant(ArrayList b){ suivant = b;}
+    public void setSuivant(ArrayList<Loop> b){ suivant = b;}
     
     public void setSuivant(Loop b){ suivant.add(b);}
     
-    public ArrayList getSuivant(){ return suivant;}
+    public ArrayList<Loop> getSuivant(){ return suivant;}
     
     public Loop getSuivant(int i){ return (Loop)(suivant.get(i));}
     
-    public void setPrecedent(ArrayList b){ precedent = b;}
+    public void setPrecedent(ArrayList<Loop> b){ precedent = b;}
     
     public void setPrecedent(Loop b){ precedent.add(b);}
     
-    public ArrayList getPrecedent(){ return precedent;}
+    public ArrayList<Loop> getPrecedent(){ return precedent;}
     
-    public Loop getPrecedent(int i){ return (Loop)precedent.get(i);}
+    public Loop getPrecedent(int i){ return precedent.get(i);}
     
     public void setNum(int i){num = i;}
     

@@ -17,11 +17,7 @@
 package data;
 
 import java.util.ArrayList;
-/**
- * @author Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- */
+
 public class CollVortexStreamlines {
     
     private VortexStreamlines lot[] = null;
@@ -52,7 +48,6 @@ public class CollVortexStreamlines {
 	    for(s=0;s<tmp.length;s++)
 		lot[s] = tmp[s];
 	    lot[tmp.length] = b;
-	    tmp =null;
 	}
     }
 

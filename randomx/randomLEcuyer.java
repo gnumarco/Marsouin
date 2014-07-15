@@ -1,31 +1,6 @@
 package randomx;
 
 
-
-/**
-    Implementation of a <b>randomX</b>-compliant class using
-    L'Ecuyer's two-sequence generator with a Bays-Durham shuffle, as
-    described on page 282 of Press et al., <cite>Numerical Recipes in
-    C</cite>, 2nd edition.  Their implementation was constrained by
-    the absence of a 64-bit integer data type.  Since Java guarantees
-    a <tt>long</tt> to be 64 bit, we can use L'Ecuyer's multiplier and modulus
-    directly, rather than flailing around with Schrage's algorithm.
-    Further, 64-bit <tt>long</tt> arithmetic allows us to directly combine
-    the results from the two generators by adding and taking the modulus of
-    one of them, bypassing the subtract and test for negative gimmick used
-    in <cite>Numerical Recipes</cite>.
-
-    <p>
-    For additional details, see L'Ecuyer's original 1968 paper
-    at page 742 of <cite>Communications of the ACM</cite>,
-    Vol. 31.
-
-    <p>
-    Designed and implemented in July 1996 by
-    <a href="http://www.fourmilab.ch/">John Walker</a>,
-    <a href="mailto:kelvin@fourmilab.ch">kelvin@fourmilab.ch</a>.
-*/
-
 public class randomLEcuyer extends randomX {
 
     /* L'Ecuyer's recommended multiplier and modulus for the two
@@ -74,7 +49,7 @@ public class randomLEcuyer extends randomX {
 @param seed seed for the generator
     */
 
-    public void setSeed(long seed) throws IllegalArgumentException {
+    public final void setSeed(long seed) throws IllegalArgumentException {
         int i;
 
         if (seed == 0) {

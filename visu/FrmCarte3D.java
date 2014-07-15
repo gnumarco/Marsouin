@@ -16,10 +16,10 @@ import data.BatchDataMap;
  *
  * @author Administrateur
  */
-public class FrmCarte3D extends FrmCarte{
-    private javax.swing.JButton jButton6;
+public class FrmCarte3D extends FrmMap{
+    private final javax.swing.JButton jButton6;
     /** Creates a new instance of FrmCarte3D */
-    public FrmCarte3D(Memoire m, int moi, boolean mode) {
+    public FrmCarte3D(Memory m, int moi, boolean mode) {
         super(m, moi, mode);
         jButton6 = new javax.swing.JButton();
         jButton6.setText("Afficher 3D");
@@ -38,7 +38,6 @@ public class FrmCarte3D extends FrmCarte{
             Canv3D tmp = new Canv3D((BatchDataMap)(mem.getDataCarte(id)));
             jScrollPane3D.setViewportView(tmp.getCanvas3D());
             jTabbedPaneCanvas.addTab("Vue 3D", jScrollPane3D);
-            tmp = null;
         }catch(java.lang.Exception e){System.out.println("Java3D n'a pas ete detecte: "+e.toString());}
         
     } 

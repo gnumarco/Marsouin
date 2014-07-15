@@ -212,18 +212,18 @@ public class Stream implements constants.centre, constants.fourmi, constants.cou
     }
 
     public boolean hasPheromone() {
-        boolean ret = false;
+        boolean ret;
         ret = (pheromone != null);
         if (ret) {
-            double ph = 0.0;
-            ph = this.getPheromoneTotale();
+            double ph;
+            ph = getPheromoneTotale();
             ret = (ph >= PHEROMONE_ABSENTE);
         }
         return ret;
     }
 
     public boolean hasPheromone(int i, int j) {
-        boolean ret = false;
+        boolean ret;
         ret = (pheromone != null);
         if (ret) {
             ret = (((double[]) (pheromone.get(i)))[j] > PHEROMONE_ABSENTE);

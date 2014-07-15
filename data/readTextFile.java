@@ -64,14 +64,12 @@ public class readTextFile implements constants.balise {
 
         java.util.ArrayList ret = new java.util.ArrayList();
         String tmp;
-        boolean espace = true;
         int i,j,memDeb = 0, memFin = 0;
         if((s!=null)&&(!"".equals(s))){
             i = 0;
             while(i<s.length()) {
                 if(! java.lang.Character.isWhitespace(s.charAt(i))) {
                     j=i;
-                    tmp = "";
                     while((j<s.length())&&(!java.lang.Character.isWhitespace(s.charAt(j))))
                         j++;
                     //j--;

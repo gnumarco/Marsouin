@@ -1,15 +1,4 @@
-/*
- * physique.java
- *
- * Created on 8 april 2003, 16:13
- */
 
-/** sert � d�finir les constantes du pachackge de methodes physiques.
- * @author Mahler
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- *
- */
 
 package constants;
 

@@ -32,14 +32,14 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
     private void trouverFichier() {
         // prouve l'existance du fichier g�n�ral, ou le cr�e !
         nomFichier = CONFIG_FILE;
-        FileReader fr = null;
+        FileReader fr;
         try {
             // POUR VERIFIER QUE LE FICHIER EXISTE : on essaie de le lire
             File homeDir, configDir, configFile;
             String userHome = System.getProperty("user.home");
             try {
                 homeDir = new File(userHome);
-                if ((homeDir == null) || (!homeDir.isDirectory())) {
+                if (!homeDir.isDirectory()) {
                     throw new Exception("homeDir is no dir");
                 }
             } catch (Exception e) {
@@ -74,14 +74,12 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                 try {
                     fr = new FileReader(configFile.getAbsolutePath());
                     fr.close();
-                    fr = null;
-                } catch (Exception e) { // si lengthfichier n'extiste pas
+                } catch (IOException e) { // si lengthfichier n'extiste pas
                     System.out.println("cr�ation du fichier de configuration...");
                     try {
                         writeTextFile nouvo = new writeTextFile(configFile.getAbsolutePath());
                         this.ecrireEnteteGeneral(nouvo);
                         nouvo.fermer();
-                        nouvo = null;
                         System.out.println("");
                     } catch (Exception f) {
                         System.out.println("ConfigHistoFile : configFile : erreur de creation" + f);
@@ -97,7 +95,6 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                 e.printStackTrace();
                 throw e;
             }
-            fr = null;
             configFile = null;
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,7 +123,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
     }
 
     public void supprimerConfig(String nomConfig) {
-        ArrayList maLigne, oldFile = null;
+        ArrayList<String> maLigne, oldFile;
         String ligne;
         int debut = -1, fin = -1, num = -1;
         try {
@@ -190,7 +187,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
 
     public void setCommentaire(String nomConf, String comment) {
 
-        ArrayList maLigne, oldFile = null;
+        ArrayList<String> maLigne, oldFile = null;
         String ligne;
 
         int num = -1;
@@ -223,7 +220,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                         }
                         if ((maLigne != null) && (maLigne.contains(COMMENTAIRE_CONFIG))) {
                             // remplacer lengthcommentaire
-                            oldFile.add(num, comment);
+                            oldFile.set(num, comment);
                             num++;
                             // supprimer les lignes de commentaire anciennes
                             ligne = (String) oldFile.get(num);
@@ -258,7 +255,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
     }
 
     public void renommerConfig(String oldName, String newName) {
-        ArrayList maLigne, oldFile = null;
+        ArrayList<String> maLigne, oldFile;
         String ligne;
         int num = -1;
         try {
@@ -287,7 +284,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                     } else {
                         // la bonne config
                         num--;
-                        oldFile.add(num, (NOM_CONFIG + " " + newName));
+                        oldFile.set(num, (NOM_CONFIG + " " + newName));
                         num = oldFile.size() + 10;
                     }
                 }
@@ -310,22 +307,22 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
 
     private ArrayList decouperConfig(String nom) throws Exception {
         readTextFile rtf = null;
-        ArrayList ret, tab, ligne = null;
+        ArrayList<String> tab, ligne;
+        ArrayList<ArrayList<String>> ret;
         int i = -1, lng = 0;
-        String tmp = "";
         int numero = this.listerNomConfig().indexOf(nom);
         try {
             // LE FICHIER EXISTE : on le parcours
             rtf = new readTextFile(nomFichier);
             atteindreConfig(numero, rtf);
 
-            ret = new ArrayList();
+            ret = new ArrayList<>();
             ligne = rtf.decomposeLigneEnMots();
             while ((ligne != null) && (!ligne.contains(END_CONFIG))) {
 
                 if (ligne.contains(CHECKBOXC) | ((ligne.contains(LIMITC)) | ((ligne.contains(FLAGAFFICH))
                         | (ligne.contains(COMBI_GC))))) {
-                    tab = new ArrayList();
+                    tab = new ArrayList<>();
 
                     if (ligne.contains(CHECKBOXC)) {
                         tab.add(CHECKBOXC);
@@ -360,15 +357,11 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
             if (dBug) {
                 System.out.println("balisefin");
             }
-
-            tab = null;
             rtf.fermer();
-            rtf = null;
         } catch (Exception e) {
             System.out.println("ConfigHistoFile : decouperConfig erreur " + e);
             e.printStackTrace();
             rtf.fermer();
-            ret = null;
             throw e;
         }
         return ret;
@@ -398,7 +391,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
     }
 
     //////////////////////////////////////////////////////////////////////////////////////
-    public void ajouterConfig(String nomConfig, String commentaire, Memoire m, int id) {
+    public void ajouterConfig(String nomConfig, String commentaire, Memory m, int id) {
         // cote frm visu et data carte
         writeTextFile fichier = null;
         // trouver le fichier general
@@ -411,7 +404,6 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                     m.getFlagAffich(id));
             this.copyFile(fichierInitial, fichier);
             fichier.fermer();
-            fichier = null;
             System.out.println(" Configuration actuelle enregistree dans " + nomFichier);
         } catch (Exception e) {
             System.out.println("ConfigHistoFile : erreur a l'enregistrement " + e);
@@ -423,7 +415,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
 
         try {
             int i;
-            String maligne = "";
+            String maligne;
 
             this.ecrireEnteteConfig(fichier);
 
@@ -483,7 +475,6 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                 ln = rtf.lectureIntegraleLigne();
             }
             rtf.fermer();
-            rtf = null;
         } catch (Exception e) {
             System.out.println("ConfigHistoFile : initFile recopy " + e);
             e.printStackTrace();
@@ -493,15 +484,15 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
 
     public void importerDepuis(String source) {
         try {
-            this.trouverFichier();
-            this.trouverFichier(source);
-            ArrayList oldConfig = getOldFile(nomFichier);
-            ArrayList src = getOldFile(source);
+            trouverFichier();
+            trouverFichier(source);
+            ArrayList<String> oldConfig = getOldFile(nomFichier);
+            ArrayList<String> src = getOldFile(source);
 
             // verifier les doublons
-            int oc = 0, s = 0;
-            ArrayList listeTotale = this.listerNomConfig();
-            ArrayList ligne = null;
+            int s = 0;
+            ArrayList<String> listeTotale = this.listerNomConfig();
+            ArrayList<String> ligne;
             String ret, lenom;
             JOptionPane JO = new JOptionPane("ATTENTION", JOptionPane.WARNING_MESSAGE, JOptionPane.DEFAULT_OPTION, null);
 
@@ -509,7 +500,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                 for (s = 0; s < src.size(); s++) {
                     ligne = readTextFile.decomposeLigneEnMots(((String) src.get(s)));
                     if (ligne.contains(NOM_CONFIG)) {
-                        lenom = new String((String) ligne.get(ligne.indexOf(NOM_CONFIG + 1)));
+                        lenom = ligne.get(ligne.indexOf(NOM_CONFIG + 1));
                         while ((listeTotale.contains(lenom)) | (lenom.lastIndexOf(" ") != -1)) {
                             // changer de nom
                             JO.setInitialValue(lenom + "_" + (new File(source)).getName());
@@ -535,7 +526,6 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
             this.copyFile(oldConfig, fichier);
 
             fichier.fermer();
-            fichier = null;
 
         } catch (Exception e) {
             System.out.println(" ConfigHistoFile : erreur d'importation! " + e);
@@ -548,7 +538,6 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
             writeTextFile fichier = new writeTextFile(fileName);
             this.copyFile(getOldFile(nomFichier), fichier);
             fichier.fermer();
-            fichier = null;
         } catch (Exception e) {
             System.out.println(" ConfigHistoFile : erreur d'exportation! " + e);
         }
@@ -556,9 +545,9 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
 
     public ArrayList listerNomConfig() {
 
-        ArrayList liste = new ArrayList();
-        readTextFile rtf = null;
-        ArrayList ligne = null;
+        ArrayList<String> liste = new ArrayList<>();
+        readTextFile rtf;
+        ArrayList<String> ligne;
 
         this.trouverFichier();
         try {
@@ -580,8 +569,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                 ligne = rtf.decomposeLigneEnMots();
             }
             rtf.fermer();
-            rtf = null;
-            if (liste.size() == 0) {
+            if (liste.isEmpty()) {
                 System.out.println(" aucune configuration trouvee");
                 throw new Exception("NO_CONFIG");
             }
@@ -597,8 +585,8 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
     public ArrayList listerCommentaireConfig() {
 
         ArrayList liste = new ArrayList();
-        readTextFile rtf = null;
-        ArrayList ligne = null;
+        readTextFile rtf;
+        ArrayList ligne ;
         String maLigne, comment = null;
         this.trouverFichier();
         try {
@@ -613,17 +601,17 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
                     }
                     // le commentaire demarre la ligne suivante
                     maLigne = rtf.lectureIntegraleLigne();
-                    ligne = rtf.decomposeLigneEnMots(maLigne);
+                    ligne = readTextFile.decomposeLigneEnMots(maLigne);
                     comment = "";
                     if ((ligne != null) && (!ligne.contains(END_COMMENTAIRE_CONFIG))) {
-                        comment = new String(maLigne);
+                        comment = maLigne;
                         maLigne = rtf.lectureIntegraleLigne();
-                        ligne = rtf.decomposeLigneEnMots(maLigne);
+                        ligne = readTextFile.decomposeLigneEnMots(maLigne);
                     }
                     while ((ligne != null) && (!ligne.contains(END_COMMENTAIRE_CONFIG))) {
-                        comment = comment + '\n' + new String(maLigne);
+                        comment = comment + '\n' + maLigne;
                         maLigne = rtf.lectureIntegraleLigne();
-                        ligne = rtf.decomposeLigneEnMots(maLigne);
+                        ligne = readTextFile.decomposeLigneEnMots(maLigne);
                     }
                     liste.add(comment);
                     ligne = null;
@@ -633,8 +621,7 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
             }
 
             rtf.fermer();
-            rtf = null;
-            if (liste.size() == 0) {
+            if (liste.isEmpty()) {
                 liste = null;
                 throw new Exception();
             }
@@ -648,13 +635,12 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
 
     ///////////////////////////////////////////////////////////////
     private void trouverFichier(String nomFichier) throws Exception {
-        FileReader fr = null;
+        FileReader fr;
         try {
             // POUR VERIFIER QUE LE FICHIER EXISTE : on essaie de le lire
             fr = new FileReader(new File(nomFichier));
             fr.close();
-            fr = null;
-        } catch (Exception f) {
+        } catch (IOException f) {
             System.out.println("ConfigHistoFile : erreur d'ouverture de fichier " + f);
         }
     }
@@ -662,9 +648,8 @@ public class ConfigHistoFile implements constants.centre, constants.balise {
     /////////////////////////////////////////
     private void copyFile(ArrayList fileToCopy, writeTextFile fileToWrite) {
         try {
-            // LE FICHIER EXISTE : on le copie
-            for (int i = 0; i < fileToCopy.size(); i++) {
-                fileToWrite.uneLigne((String) fileToCopy.get(i));
+            for (Object fileToCopy1 : fileToCopy) {
+                fileToWrite.uneLigne((String) fileToCopy1);
             }
         } catch (Exception e) {
             System.out.println("ConfigHistoFile : copyFile erreur " + e);

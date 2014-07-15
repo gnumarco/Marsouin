@@ -38,7 +38,7 @@ public class Vortex3D {
             translate = new Transform3D();
             translate.set(new Vector3f((monVortex.xpoints[i]-(maxX/2f))/2f,(monVortex.ypoints[i]-(maxY/2f)+1)/2f, 0.0f));
             TransformGroup CylindreTGT2 = new TransformGroup(translate);
-            CylindreTGT2.addChild((new Fleche3D((float)rotat,(float)lon, vortexAppear)).getBG());
+            CylindreTGT2.addChild((new Arrow3D((float)rotat,(float)lon, vortexAppear)).getBG());
             VortexBG.addChild(CylindreTGT2);
         }
         

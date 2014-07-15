@@ -26,8 +26,6 @@ import ucar.nc2.*;
 public class OpenNetCdfFile extends javax.swing.JDialog {
     
     String fichierNetcdf;
-    private int profs[] = null;
-    private String times[] = null;
     private boolean ok = false;
     private NetcdfFile monFichier = null;
     
@@ -42,7 +40,7 @@ public class OpenNetCdfFile extends javax.swing.JDialog {
         initComponents();
         fichierNetcdf = fich;
         try{
-            monFichier = new NetcdfFile(fichierNetcdf);
+            monFichier = NetcdfFile.open(fichierNetcdf);
         }catch(IOException e){System.out.println(e.toString());}
         lireNetCDF(fichierNetcdf);
     }
@@ -335,13 +333,13 @@ public class OpenNetCdfFile extends javax.swing.JDialog {
                     Variable v2 = (Variable)(monFichier.getVariables().get(donneesY.getSelectedIndex()));
                     String[] tmp = new String[v1.getDimensions().size()];
                     for(int i=0;i<v1.getDimensions().size();i++){
-                        tmp[i] = v1.getDimension(i).getName();
+                        tmp[i] = v1.getDimension(i).getShortName();
                     }
                     profsDispos.setListData(tmp);
                     cartesDispos.setListData(tmp);
                     jComboMissingValue.removeAllItems();
                     for(int i=0;i<v1.getAttributes().size();i++){
-                        jComboMissingValue.addItem(((Attribute)(v1.getAttributes().get(i))).getName());
+                        jComboMissingValue.addItem(((Attribute)(v1.getAttributes().get(i))).getShortName());
                     }
                 }
             }catch(java.lang.Exception e){System.out.println(e.toString());}
@@ -367,13 +365,13 @@ public class OpenNetCdfFile extends javax.swing.JDialog {
                     Variable v2 = (Variable)(monFichier.getVariables().get(donneesY.getSelectedIndex()));
                     String[] tmp = new String[v1.getDimensions().size()];
                     for(int i=0;i<v1.getDimensions().size();i++){
-                        tmp[i] = v1.getDimension(i).getName();
+                        tmp[i] = v1.getDimension(i).getShortName();
                     }
                     profsDispos.setListData(tmp);
                     cartesDispos.setListData(tmp);
                     jComboMissingValue.removeAllItems();
                     for(int i=0;i<v1.getAttributes().size();i++){
-                        jComboMissingValue.addItem(((Attribute)(v1.getAttributes().get(i))).getName());
+                        jComboMissingValue.addItem(((Attribute)(v1.getAttributes().get(i))).getShortName());
                     }
                 }
             }catch(java.lang.Exception e){System.out.println(e.toString());}
@@ -398,7 +396,7 @@ public class OpenNetCdfFile extends javax.swing.JDialog {
                 if(v1.getDimensions().size()==v2.getDimensions().size()){
                     res = true;
                     for(int i=0;i<v1.getDimensions().size();i++){
-                        if(!v1.getDimension(i).getName().equals(v2.getDimension(i).getName()))
+                        if(!v1.getDimension(i).getShortName().equals(v2.getDimension(i).getShortName()))
                             res=false;
                     }
                 }
@@ -418,7 +416,7 @@ public class OpenNetCdfFile extends javax.swing.JDialog {
             java.util.List l = monFichier.getVariables();
             String[] tmp = new String[l.size()];
             for(int i=0;i<l.size();i++){
-                tmp[i] = ((Variable)(l.get(i))).getName();
+                tmp[i] = ((Variable)(l.get(i))).getShortName();
             }
             donneesX.setListData(tmp);
             donneesY.setListData(tmp);

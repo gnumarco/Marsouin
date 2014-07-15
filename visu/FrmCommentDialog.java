@@ -1,26 +1,14 @@
-/*
- * FrmCommentaireDialogue.java
- *
- * Created on 18 novembre 2002, 11:25
- */
-
-/*
- * @author Mahler
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- *
- */
 
 package visu;
 
-public class FrmCommentaireDialogue extends javax.swing.JDialog {
+public class FrmCommentDialog extends javax.swing.JDialog {
 
     private String nomConfig;
-    private Memoire mem;
+    private final Memory mem;
     private String commentaireConfig;
 
     /** Creates new form FrmCommentaireDialogue */
-    public FrmCommentaireDialogue(java.awt.Frame parent, boolean modal,Memoire m,String nom) {
+    public FrmCommentDialog(java.awt.Frame parent, boolean modal,Memory m,String nom) {
         super(parent, modal);
         mem=m;
         initComponents();
@@ -64,7 +52,7 @@ public class FrmCommentaireDialogue extends javax.swing.JDialog {
 
         getContentPane().setLayout(new java.awt.BorderLayout(5, 5));
 
-        setTitle("jeu de param\u00e8tres");
+        setTitle("Parameter set");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 closeDialog(evt);
@@ -74,7 +62,7 @@ public class FrmCommentaireDialogue extends javax.swing.JDialog {
         jPanel2.setLayout(new java.awt.BorderLayout(15, 0));
 
         jLabeln.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabeln.setText("Nom :");
+        jLabeln.setText("Name :");
         jPanel2.add(jLabeln, java.awt.BorderLayout.WEST);
 
         jTextFieldNomConfig.setEditable(false);
@@ -82,7 +70,7 @@ public class FrmCommentaireDialogue extends javax.swing.JDialog {
         jTextFieldNomConfig.setText("jTextField1");
         jPanel2.add(jTextFieldNomConfig, java.awt.BorderLayout.CENTER);
 
-        jButtonRename.setText("Renommer !");
+        jButtonRename.setText("Rename !");
         jButtonRename.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonRename.setPreferredSize(new java.awt.Dimension(103, 26));
         jButtonRename.addActionListener(new java.awt.event.ActionListener() {
@@ -98,7 +86,7 @@ public class FrmCommentaireDialogue extends javax.swing.JDialog {
         jTextAreaCommentaire.setColumns(10);
         jTextAreaCommentaire.setLineWrap(true);
         jTextAreaCommentaire.setRows(15);
-        jTextAreaCommentaire.setText("commentaire");
+        jTextAreaCommentaire.setText("Comment");
         jTextAreaCommentaire.setWrapStyleWord(true);
         jScrollPaneComm.setViewportView(jTextAreaCommentaire);
 
@@ -106,7 +94,7 @@ public class FrmCommentaireDialogue extends javax.swing.JDialog {
 
         jPanel1.setLayout(new java.awt.GridLayout(2, 2, 5, 5));
 
-        jButtonSauverComm.setText("sauver Commentaire");
+        jButtonSauverComm.setText("Save comment");
         jButtonSauverComm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSauverCommActionPerformed(evt);
@@ -115,7 +103,7 @@ public class FrmCommentaireDialogue extends javax.swing.JDialog {
 
         jPanel1.add(jButtonSauverComm);
 
-        jButtonAnnuler.setText("supprimer");
+        jButtonAnnuler.setText("Delete");
         jButtonAnnuler.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAnnulerActionPerformed(evt);
@@ -124,7 +112,7 @@ public class FrmCommentaireDialogue extends javax.swing.JDialog {
 
         jPanel1.add(jButtonAnnuler);
 
-        jButtonAppliquer.setText("appliquer");
+        jButtonAppliquer.setText("Apply");
         jButtonAppliquer.setSelected(true);
         jButtonAppliquer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -134,7 +122,7 @@ public class FrmCommentaireDialogue extends javax.swing.JDialog {
 
         jPanel1.add(jButtonAppliquer);
 
-        jButtonSupprimer.setText("annuler");
+        jButtonSupprimer.setText("Cancel");
         jButtonSupprimer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSupprimerActionPerformed(evt);
@@ -157,10 +145,10 @@ public class FrmCommentaireDialogue extends javax.swing.JDialog {
         }
         else {
             //System.out.println("toggle button deselected");
-            if ((jTextFieldNomConfig.getText().indexOf(" ")==-1)&&(jTextFieldNomConfig.getText()!="")
+            if ((!jTextFieldNomConfig.getText().contains(" "))&&(!"".equals(jTextFieldNomConfig.getText()))
                     &&(!mem.getConfigHistoFile().listerNomConfig().contains(jTextFieldNomConfig.getText()))) {
 
-                jButtonRename.setText("Renommer !");
+                jButtonRename.setText("Rename !");
                 jTextFieldNomConfig.setEditable(false);
                 mem.getConfigHistoFile().renommerConfig(nomConfig,jTextFieldNomConfig.getText());
                 nomConfig = jTextFieldNomConfig.getText();
@@ -212,7 +200,7 @@ public class FrmCommentaireDialogue extends javax.swing.JDialog {
      * @param args the command line arguments
 
     public static void main(String args[]) {
-        new FrmCommentaireDialogue(new javax.swing.JFrame(), true).show();
+        new FrmCommentDialog(new javax.swing.JFrame(), true).show();
     }
     */
 

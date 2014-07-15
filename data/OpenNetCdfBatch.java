@@ -22,11 +22,6 @@ import ucar.ma2.*;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-/**
- * @author Segond
- * @society Laboratoire D Informatique du Littoral - ULCO - Calais - FRANCE
- * @version 2.0.0
- */
 
 public class OpenNetCdfBatch extends javax.swing.JDialog {
     
@@ -104,7 +99,7 @@ public class OpenNetCdfBatch extends javax.swing.JDialog {
     
     public final void lireNetCDF(String s){
         try{
-         NetcdfFile f = new NetcdfFile(s);
+         NetcdfFile f = NetcdfFile.open(s);
          
          Variable var = f.findVariable("time");
          Array tps = var.read();
@@ -125,22 +120,6 @@ public class OpenNetCdfBatch extends javax.swing.JDialog {
             times[i]=cur.toString();
          }
          profsDispos.setListData(times);
-         
-         /*
-         Variable var = f.findVariable("z");
-         Array tps = var.read();
-         String[] profs = new String[tps.getShape()[0]];
-         Index ind = tps.getIndex();
-         for(int i=0;i<(tps.getShape())[0];i++){
-            ind.set(i);
-            float p = tps.getFloat(ind);
-            
-            profs[i]=Float.toString(p);
-         }
-         profsDispos.setListData(profs);
-         */
-         var = null;
-         tps = null;
          f.close();
          System.gc();
         }catch(IOException e){System.out.println(e.getMessage());}

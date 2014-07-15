@@ -18,11 +18,11 @@ import javax.media.j3d.*;
 import javax.vecmath.*;
 
 
-public class Fleche3D {
+public class Arrow3D {
 
-  private BranchGroup flecheBG;
+  private final BranchGroup flecheBG;
 
-  public Fleche3D(double rotat, double longueur, Appearance a){
+  public Arrow3D(double rotat, double longueur, Appearance a){
       
     float lon = (float)longueur*1.5f;
       

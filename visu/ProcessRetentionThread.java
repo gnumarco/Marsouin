@@ -14,14 +14,14 @@ package visu;
  * @author marco
  */
 public class ProcessRetentionThread extends Thread{
-    Memoire mem;
+    Memory mem;
     int id;
     javax.swing.ProgressMonitor prog;
     private int[][][] degrade = null;
     private double[][] retention = null;
     boolean clockwize = false;
     /** Creates a new instance of ProcessRetentionThread */
-    public ProcessRetentionThread(Memoire m, int[][][] d, double[][] r, int i, javax.swing.ProgressMonitor p, boolean clock) {
+    public ProcessRetentionThread(Memory m, int[][][] d, double[][] r, int i, javax.swing.ProgressMonitor p, boolean clock) {
         mem = m;
         degrade = d;
         retention = r;
@@ -40,9 +40,9 @@ public class ProcessRetentionThread extends Thread{
                     int sum = 0;
                     for(int i=0;i<mem.getBatchDataCarte(id).getNbDataCartesTps();i++){
                         int z=0;
-                        while((z<mem.getBatchDataCarte(id).getDataCarte(i,mem.getFrmVisu(id).getProfActive()).getVortexAnt().getMetaVortex().length) && (!mem.getBatchDataCarte(id).getDataCarte(i,mem.getFrmVisu(id).getProfActive()).getVortexAnt().getMetaVortex(z).contains(x,y)))
+                        while((z<mem.getBatchDataCarte(id).getDataCarte(i,mem.getFrmVisu(id).getProfActive()).getVortexAnt().size()) && (!mem.getBatchDataCarte(id).getDataCarte(i,mem.getFrmVisu(id).getProfActive()).getVortexAnt().get(z).contains(x,y)))
                             z++;
-                        if((z<mem.getBatchDataCarte(id).getDataCarte(i,mem.getFrmVisu(id).getProfActive()).getVortexAnt().getMetaVortex().length) && (mem.getBatchDataCarte(id).getDataCarte(i,mem.getFrmVisu(id).getProfActive()).getVortexAnt().getMetaVortex(z).getSens()==clockwize))
+                        if((z<mem.getBatchDataCarte(id).getDataCarte(i,mem.getFrmVisu(id).getProfActive()).getVortexAnt().size()) && (mem.getBatchDataCarte(id).getDataCarte(i,mem.getFrmVisu(id).getProfActive()).getVortexAnt().get(z).getSens()==clockwize))
                             sum++;
                         tmpCpt++;
                         prog.setProgress(tmpCpt);

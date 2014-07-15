@@ -1,5 +1,5 @@
 /*
- * ImageResultatFile.java
+ * ImageResultFile.java
  *
  * Created on 17 octobre 2002, 01:00
  */
@@ -11,9 +11,9 @@ import javax.imageio.*;
 import java.awt.image.*;
 import java.io.*;
 
-public class ImageResultatFile extends Thread implements constants.couleur {
+public class ImageResultFile extends Thread implements constants.couleur {
 
-    protected Memoire mem;
+    protected Memory mem;
     protected int id;
     // coef de qualite : best = 1.0f , top=0.75f , mid = 0.5f , less = 0.25f
     private final float JPEG_QUALITY = 1.0f;
@@ -21,10 +21,10 @@ public class ImageResultatFile extends Thread implements constants.couleur {
      * compteur cpt pour enregistrer images a la volee !
      */
     private long cpt = 0;
-    private boolean batch;
-    private javax.swing.ProgressMonitor prog;
+    private final boolean batch;
+    private final javax.swing.ProgressMonitor prog;
 
-    public ImageResultatFile(Memoire mem, int id, boolean b, javax.swing.ProgressMonitor p) {
+    public ImageResultFile(Memory mem, int id, boolean b, javax.swing.ProgressMonitor p) {
         this.mem = mem;
         this.id = id;
         cpt = 0;
@@ -32,6 +32,7 @@ public class ImageResultatFile extends Thread implements constants.couleur {
         prog = p;
     }
 
+    @Override
     public void run() {
         javax.swing.JFileChooser F = new javax.swing.JFileChooser(new java.io.File(mem.getDataCarte(id).getFileName()).getParent());
         F.setDialogTitle(" Choose the name of your image file ");
@@ -75,7 +76,7 @@ public class ImageResultatFile extends Thread implements constants.couleur {
         String rad = mem.getDataCarte(id).getFileName();
         String suff = ".jpg", img = "img.jpg";
         long i = cpt;
-        File fimg = null;
+        File fimg;
         boolean fileHere = true;
         while (fileHere) {
             fileHere = false;
@@ -148,17 +149,19 @@ public class ImageResultatFile extends Thread implements constants.couleur {
 
     protected synchronized void saveImage(BufferedImage bufferedImage, String filename) {
         try {
-            // Create sample buffered image
-            //final BufferedImage bufferedImage = (BufferedImage) i;
-            // Initialize output stream
-            FileOutputStream out = new FileOutputStream(filename);
             // Encode in JPEG
             //mem.getFrmVisu(id).setStatusBar("capture en cours ...");
-            System.out.println("Processing capture...");
-
-            ImageIO.write(bufferedImage, "jpeg", out);
-            System.out.println("Encoding...");
-            out.close();
+            try ( // Create sample buffered image
+            //final BufferedImage bufferedImage = (BufferedImage) i;
+            // Initialize output stream
+                    FileOutputStream out = new FileOutputStream(filename)) {
+                // Encode in JPEG
+                //mem.getFrmVisu(id).setStatusBar("capture en cours ...");
+                System.out.println("Processing capture...");
+                
+                ImageIO.write(bufferedImage, "jpeg", out);
+                System.out.println("Encoding...");
+            }
             System.out.println("Capture finished ");
 
         } catch (IOException e) { //mem.getFrmVisu(id).setStatusBar("Erreur pendant la capture !",COLOR_ERROR);
@@ -168,39 +171,3 @@ public class ImageResultatFile extends Thread implements constants.couleur {
         }
     }
 }
-/*
- protected synchronized void sauverImage(Image i, String fn) {
- String fn0 = this.fileName;
- this.fileName = new String(fn);
- sauverImage(i);
- this.fileName = new String(fn0);
- fn0=null;
- }
-     
-     
- public synchronized void sauverEncoreJPanel(javax.swing.JPanel p) {
-     
- Image i = p.createImage(p.getWidth(),p.getHeight());
- sauverImage(i,new String(radical + Integer.toString(cpt) + ext ));
- cpt++;
- }
- public synchronized void sauverEncoreCanvasCarte(CanvasCarte c) {
-     
- Image i = c.createImage(c.getWidth(),c.getHeight());
- sauverImage(i,new String(radical + Integer.toString(cpt) + ext ));
- cpt++;
- }
-     
- public synchronized void sauverJPanel(javax.swing.JPanel p, String fn) throws Exception {
- if (fn==null) throw new Exception(" ImageResultatFile : erreur de creation : nom de fichier null ");
- if(fn=="") throw  new Exception(" ImageResultatFile : erreur de creation : nom de fichier vide ");
- fileName= fn;
- this.sauverJPanel(p);
- }
-     
- public synchronized void sauverJPanel(javax.swing.JPanel p) {
- Image i = p.createImage(p.getWidth(),p.getHeight());
- sauverImage(i);
- }
-     
- */
