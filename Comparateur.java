@@ -13,10 +13,8 @@
  * @author segond
  */
 
-import java.io.File;
 import ucar.nc2.*;
 import ucar.ma2.*;
-import javax.swing.*;
 
 public class Comparateur {
     
