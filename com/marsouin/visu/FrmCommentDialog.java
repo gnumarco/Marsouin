@@ -22,7 +22,6 @@ public class FrmCommentDialog extends javax.swing.JDialog {
     private final Memory mem;
     private String commentaireConfig;
 
-    /** Creates new form FrmCommentaireDialogue */
     public FrmCommentDialog(java.awt.Frame parent, boolean modal,Memory m,String nom) {
         super(parent, modal);
         mem=m;
@@ -69,6 +68,7 @@ public class FrmCommentDialog extends javax.swing.JDialog {
 
         setTitle("Parameter set");
         addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 closeDialog(evt);
             }
@@ -89,6 +89,7 @@ public class FrmCommentDialog extends javax.swing.JDialog {
         jButtonRename.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         jButtonRename.setPreferredSize(new java.awt.Dimension(103, 26));
         jButtonRename.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonRenameActionPerformed(evt);
             }
@@ -111,6 +112,7 @@ public class FrmCommentDialog extends javax.swing.JDialog {
 
         jButtonSauverComm.setText("Save comment");
         jButtonSauverComm.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSauverCommActionPerformed(evt);
             }
@@ -120,6 +122,7 @@ public class FrmCommentDialog extends javax.swing.JDialog {
 
         jButtonAnnuler.setText("Delete");
         jButtonAnnuler.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAnnulerActionPerformed(evt);
             }
@@ -130,6 +133,7 @@ public class FrmCommentDialog extends javax.swing.JDialog {
         jButtonAppliquer.setText("Apply");
         jButtonAppliquer.setSelected(true);
         jButtonAppliquer.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAppliquerActionPerformed(evt);
             }
@@ -139,6 +143,7 @@ public class FrmCommentDialog extends javax.swing.JDialog {
 
         jButtonSupprimer.setText("Cancel");
         jButtonSupprimer.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSupprimerActionPerformed(evt);
             }

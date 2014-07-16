@@ -406,8 +406,7 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
 
         } catch (Exception e) {
             log.log(Level.SEVERE, "problem in applying the parameters", e);
-        };
-
+        }
     }
 
     private boolean hasOnlyOneLeft(int id) {

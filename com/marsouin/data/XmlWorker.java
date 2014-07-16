@@ -131,12 +131,6 @@ public class XmlWorker extends DefaultHandler {
         }
     }
 
-    /**
-     * Evenement recu a chaque fermeture de balise.
-     *
-     * @see org.xml.sax.ContentHandler#endElement(java.lang.String,
-     * java.lang.String, java.lang.String)
-     */
     @Override
     public void endElement(String nameSpaceURI, String localName, String rawName) throws SAXException {
         //System.out.print("Fermeture de la balise : " + localName);

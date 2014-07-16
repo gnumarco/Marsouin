@@ -17,15 +17,16 @@
 package com.marsouin.visu;
 
 import java.awt.*;
-import javax.imageio.*;
-
 import java.awt.image.*;
 import java.io.*;
 import static java.lang.Math.max;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static javax.imageio.ImageIO.write;
 
 public class ImageResultFile extends Thread implements com.marsouin.constants.Colors {
 
+    private static final Logger log = Logger.getLogger(ImageResultFile.class.getName());
     protected Memory mem;
     protected int id;
     // coef de qualite : best = 1.0f , top=0.75f , mid = 0.5f , less = 0.25f
@@ -43,6 +44,7 @@ public class ImageResultFile extends Thread implements com.marsouin.constants.Co
         cpt = 0;
         batch = b;
         prog = p;
+        log.setLevel(log.getParent().getLevel());
     }
 
     @Override
@@ -76,10 +78,7 @@ public class ImageResultFile extends Thread implements com.marsouin.constants.Co
             }
 
         } catch (Exception e) {
-            String msg = " ImageResultatFile: erreur d'ecriture de la capture ! " + e;
-            e.printStackTrace();
-            //mem.getFrmVisu(id).setStatusBar(msg,COLOR_ERROR);
-            System.out.println(msg);
+            log.log(Level.SEVERE,"Error trying to write the image to file",e);
         }
         this.interrupt();
     }
@@ -87,7 +86,7 @@ public class ImageResultFile extends Thread implements com.marsouin.constants.Co
     public void sauverSystematiquement() {
 
         String rad = mem.getDataCarte(id).getFileName();
-        String suff = ".jpg", img = "img.jpg";
+        String suff, img = "img.jpg";
         long i = cpt;
         File fimg;
         boolean fileHere = true;
@@ -101,9 +100,8 @@ public class ImageResultFile extends Thread implements com.marsouin.constants.Co
                 if (fileHere) {
                     i++;
                 }
-                fimg = null;
             } catch (Exception e) {
-                e.printStackTrace();
+                log.log(Level.SEVERE,"Error trying to save images to files",e);
             }
         }
         cpt = i;
@@ -112,10 +110,7 @@ public class ImageResultFile extends Thread implements com.marsouin.constants.Co
             this.saveImage(this.getCaptureFinale(), img);
 
         } catch (Exception e) {
-            String msg = " ImageResultatFile: erreur d'ecriture de la capture systematique ! " + e;
-            e.printStackTrace();
-            //mem.getFrmVisu(id).setStatusBar(msg,COLOR_ERROR);
-            System.out.println(msg);
+            log.log(Level.SEVERE,"Error trying to systematically save images to files",e);
         }
 
         System.out.println("++  sauvegarde  OK dans " + img);
@@ -177,10 +172,8 @@ public class ImageResultFile extends Thread implements com.marsouin.constants.Co
             }
             System.out.println("Capture finished ");
 
-        } catch (IOException e) { //mem.getFrmVisu(id).setStatusBar("Erreur pendant la capture !",COLOR_ERROR);
-            System.out.println("ImageResultatFile : save image exception  " + e);
-            e.printStackTrace();
-
+        } catch (IOException e) {
+            log.log(Level.SEVERE,"Error during image acquisition",e);
         }
     }
 }

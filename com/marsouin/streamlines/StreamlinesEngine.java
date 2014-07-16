@@ -19,23 +19,6 @@ package com.marsouin.streamlines;
 import com.marsouin.data.PointFloat;
 import com.marsouin.data.VortexStreamlines;
 import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
 import static java.lang.Math.ceil;
 import static java.lang.Math.floor;
 import static java.lang.Math.pow;
@@ -68,10 +51,7 @@ public class StreamlinesEngine extends Thread implements com.marsouin.constants.
     private final javax.swing.ProgressMonitor prog;
 
     com.marsouin.visu.Memory mem;
-
-    /**
-     * Creates a new instance of moteurStreamlines
-     */
+    
     public StreamlinesEngine(com.marsouin.data.BatchDataMap d, com.marsouin.visu.Memory m, int i, javax.swing.ProgressMonitor p) {
         mem = m;
         myBatchMap = d;

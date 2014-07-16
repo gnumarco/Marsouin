@@ -16,10 +16,6 @@
  */
 package com.marsouin.visu;
 
-/**
- *
- * @author  Marc Segond
- */
 public class CustomColorChooser extends javax.swing.JDialog {
     
     public boolean ok = false;

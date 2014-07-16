@@ -24,12 +24,13 @@ import com.marsouin.data.BatchDataMap;
  */
 public class FrmCarte3D extends FrmMap{
     private final javax.swing.JButton jButton6;
-    /** Creates a new instance of FrmCarte3D */
+
     public FrmCarte3D(Memory m, int moi, boolean mode) {
         super(m, moi, mode);
         jButton6 = new javax.swing.JButton();
         jButton6.setText("Afficher 3D");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 Calculer3D(evt);
             }
@@ -40,7 +41,7 @@ public class FrmCarte3D extends FrmMap{
     private void Calculer3D(java.awt.event.ActionEvent evt) {                            
         try{
             System.out.println("calculer3D");
-            javax.swing.JScrollPane jScrollPane3D = new javax.swing.JScrollPane();;
+            javax.swing.JScrollPane jScrollPane3D = new javax.swing.JScrollPane();
             Canv3D tmp = new Canv3D((BatchDataMap)(mem.getDataCarte(id)));
             jScrollPane3D.setViewportView(tmp.getCanvas3D());
             jTabbedPaneCanvas.addTab("Vue 3D", jScrollPane3D);

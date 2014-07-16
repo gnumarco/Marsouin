@@ -48,7 +48,7 @@ public class CanGen extends javax.swing.JPanel implements com.marsouin.constants
         return myImage;
     }
     
-    // dessine ce composant :
+    @Override
     public void paintComponent(Graphics g) {
         g.drawImage(myImage,0,0,carteWidth,carteHeight,this);
     }

@@ -20,30 +20,19 @@ import java.io.IOException;
 import static java.lang.Double.isNaN;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.parseInt;
 import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
-import static java.lang.Math.abs;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import ucar.nc2.*;
 import ucar.ma2.*;
 import static ucar.nc2.NetcdfFile.open;
 
 public class OceanFile implements com.marsouin.constants.Balise {
 
-    private final boolean dBug = true;
+    private static final Logger log = Logger.getLogger(OceanFile.class.getName());
     private boolean isType1 = false, isType2 = false, isNetCDF = false;
 
-    private final  String fileFullName;
+    private final String fileFullName;
     private String unit, MVAttribute;
 
     private boolean batch = false, noMV;
@@ -59,6 +48,7 @@ public class OceanFile implements com.marsouin.constants.Balise {
     public OceanFile(String nomFichier) {
         fileFullName = nomFichier;
         isNetCDF = testNetCDF(nomFichier);
+        log.setLevel(log.getParent().getLevel());
     }
 
     public OceanFile(String nomFichier, int z, int indZ, int carte, int indCarte, int u, int inU, int v, int inV, String MVAtt, boolean nmv) {
@@ -75,6 +65,7 @@ public class OceanFile implements com.marsouin.constants.Balise {
         batch = true;
         MVAttribute = MVAtt;
         noMV = nmv;
+        log.setLevel(log.getParent().getLevel());
     }
 
     private boolean testNetCDF(String f) {
@@ -84,7 +75,6 @@ public class OceanFile implements com.marsouin.constants.Balise {
     public boolean isType1() {
         return isType1;
     }
-
 
     public boolean isType2() {
         return isType2;
@@ -238,9 +228,9 @@ public class OceanFile implements com.marsouin.constants.Balise {
                 if (isType1) {
                     tailleX = parseInt(line.get(0));
                     tailleY = parseInt(line.get(1));
-                    if (dBug) {
-                        System.out.println("type1 1");
-                    }
+
+                    log.info("type1 1");
+
                     // comptage.
                     cpt = 0;
                     line = file.decomposeLigneEnMots();
@@ -250,40 +240,40 @@ public class OceanFile implements com.marsouin.constants.Balise {
                     }
 
                     total = (long) 2 * (long) tailleX * (long) tailleY;
-                    if (dBug) {
-                        System.out.println("type1 1 f cpt" + cpt + "total " + total);
-                    }
+
+                    log.info("type1 1 f cpt" + cpt + "total " + total);
+
                     isType1 = isType1 && (total == cpt);
                 }
                 file.fermer();
 
                 if (isType1) {
-                    if (dBug) {
-                        System.out.println("type1 2");
-                    }
+
+                    log.info("type1 2");
+
                     mer = this.lireType1();
-                    if (dBug) {
-                        System.out.println("type1 OK");
-                    }
+
+                    log.info("type1 OK");
+
                 } else {
                     isType1 = false;
                     isType2 = true;
-                    if (dBug) {
-                        System.out.println("type2 1");
-                    }
+
+                    log.info("type2 1");
+
                     isType2 = isType2 && (((new java.io.File(fileFullName)).getName().startsWith(PREFIXE_TYPE_2_VX))
                             | ((new java.io.File(fileFullName)).getName().startsWith(PREFIXE_TYPE_2_VY)));
 
                     file = new ReadTextFile(fileFullName);
                     line = file.decomposeLigneEnMots();
                     isType2 = isType2 && (line != null);
-                    if (dBug) {
-                        System.out.println("type2 1 i");
-                    }
+
+                    log.info("type2 1 i");
+
                     if (isType2) {
-                        if (dBug) {
-                            System.out.println("type2 1 m");
-                        }
+
+                        log.info("type2 1 m");
+
                         tailleY = line.size();
                         tailleX = 1;
                         cpt = (long) line.size();
@@ -295,27 +285,28 @@ public class OceanFile implements com.marsouin.constants.Balise {
                             line = file.decomposeLigneEnMots();
                         }
                         total = (long) tailleX * (long) tailleY;
-                        if (dBug) {
-                            System.out.println("type1 2 1 f cpt" + cpt + "total " + total);
-                        }
+
+                        log.log(Level.INFO, "type1 2 1 f cpt{0}total {1}", new Object[]{cpt, total});
+
                         isType2 = isType2 && (total == cpt);
                     }
                     file.fermer();
 
                     if (isType2) {
-                        if (dBug) {
-                            System.out.println("type2 2");
-                        }
+
+                        log.info("type2 2");
+
                         mer = this.lireType2(tailleX, tailleY);
-                        if (dBug) {
-                            System.out.println("type2 OK");
-                        }
+
+                        log.info("type2 OK");
+
                     } else {
-                        throw new Exception(" mauvais type de fichier ");
+                        throw new Exception("Wrong file type");
                     }
                 }
 
             } catch (Exception e) {
+                log.log(Level.SEVERE, "Error in reading file", e);
                 throw e;
             }
         }
@@ -330,37 +321,32 @@ public class OceanFile implements com.marsouin.constants.Balise {
     public final Stream[][] lireType1() {
         /* Lecture du fichier des vitesses pour construire une carte de simu */
 
-        Stream mer[][];
+        Stream mer[][] = null;
         int r, t, cpt, tailleX, tailleY;
         try {
             ReadTextFile lect = new ReadTextFile(fileFullName);
             lect.lectureLigne();
-            if (dBug) {
-                System.out.println("1st lect ligne");
-            }
+            log.info("1st lect ligne");
+
             java.util.ArrayList val = lect.decomposeLigneEnMots();
-            if (dBug) {
-                System.out.println(" ok dec en mot");
-            }
+            log.info(" ok dec en mot");
+
             tailleX = parseInt(val.get(0).toString());
             tailleY = parseInt(val.get(1).toString());
             //System.out.println(" carte de "+ tailleX + " colonnes et " + tailleY + " lignes");
 
-            if (dBug) {
-                System.out.println("taille recup ok");
-            }
+            log.info("taille recup ok");
+
             mer = new Stream[tailleX][tailleY];
-            if (dBug) {
-                System.out.println("mer tab ini ok");
-            }
+            log.info("mer tab ini ok");
+
             for (r = 0; r < tailleX; r++) {
                 for (t = 0; t < tailleY; t++) {
                     mer[r][t] = new Stream();
                 }
             }
-            if (dBug) {
-                System.out.println("mer tab courant ini ok");
-            }
+
+            log.info("mer tab courant ini ok");
 
             val = lect.decomposeLigneEnMots();
             cpt = 0;
@@ -384,20 +370,17 @@ public class OceanFile implements com.marsouin.constants.Balise {
                 }
                 val = lect.decomposeLigneEnMots();
             }
-            if (dBug) {
-                System.out.println("fin fichier");
-            }
+
+            log.info("fin fichier");
+
             lect.fermer();
-            if (dBug) {
-                System.out.println("fichier ferm�");
-            }
-            return mer;
+
+            log.info("fichier ferm�");
 
         } catch (Exception e) {
-            System.out.println("OceanFile : erreur de lecture de l'ocean : " + e);
-            return null;
+            log.log(Level.SEVERE, "Error in reading velocity field file");
         }
-
+        return mer;
     }
 
     public final Stream[][] lireType2(int tailleX, int tailleY) {
@@ -456,9 +439,8 @@ public class OceanFile implements com.marsouin.constants.Balise {
                     mer[r][t] = new Stream();
                 }
             }
-            if (dBug) {
-                System.out.println("mer tab courant ini ok");
-            }
+
+            log.info("mer tab courant ini ok");
 
             java.util.ArrayList val = lect.decomposeLigneEnMots();
             cpt = 0;
@@ -478,9 +460,9 @@ public class OceanFile implements com.marsouin.constants.Balise {
                 cpt++;
                 val = lect.decomposeLigneEnMots();
             }
-            if (dBug) {
-                System.out.println("fin fichier");
-            }
+
+            log.info("fin fichier");
+
             return mer;
 
         } catch (Exception e) {
@@ -513,9 +495,8 @@ public class OceanFile implements com.marsouin.constants.Balise {
                 cpt++;
                 val = lect.decomposeLigneEnMots();
             }
-            if (dBug) {
-                System.out.println("fin fichier");
-            }
+
+            log.info("fin fichier");
 
         } catch (Exception e) {
             System.out.println("OceanFile : erreur de lecture de l'ocean : " + e);

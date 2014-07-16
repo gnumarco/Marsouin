@@ -20,12 +20,14 @@ import com.marsouin.data.BatchDataMap;
 import com.marsouin.data.WriteTextFile;
 import com.marsouin.data.VortexAnt;
 import com.marsouin.constants.Tracking;
+import com.marsouin.visu.Memory;
 import java.io.File;
-import static java.lang.Math.abs;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import static java.lang.System.getProperty;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -36,12 +38,11 @@ public class TrackEngine extends java.lang.Thread implements Tracking {
     BatchDataMap maCarte;
     int deplacementMax = 6;
     String fichierLog = null;
+    private static final Logger log = Logger.getLogger(TrackEngine.class.getName());
 
-    /**
-     * Creates a new instance of MoteurSuivi
-     */
     public TrackEngine(BatchDataMap d) {
         maCarte = d;
+        log.setLevel(log.getParent().getLevel());
     }
 
     public void LancerSuivi() {
@@ -169,7 +170,7 @@ public class TrackEngine extends java.lang.Thread implements Tracking {
             }
 
         } catch (Exception e) {
-            System.out.println(e.toString());
+            log.log(Level.SEVERE,"Error in tracking",e);
         }
     }
 

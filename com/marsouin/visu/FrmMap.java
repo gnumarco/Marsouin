@@ -33,7 +33,6 @@ public class FrmMap extends javax.swing.JFrame implements com.marsouin.constants
     private CanvRet monCanvasRet = null;
     public int avMax = 0;
 
-    /** Creates new form FrmCarte */
     public FrmMap(Memory m, int moi, boolean mode) {
         initComponents();
         mem = m;

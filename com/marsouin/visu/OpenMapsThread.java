@@ -33,9 +33,6 @@ public class OpenMapsThread extends Thread {
     ArrayList<BatchDataMap> listeDataCartes;
     Memory mem;
 
-    /**
-     * Creates a new instance of OpenMapsThread
-     */
     public OpenMapsThread(String f, int[] prof, int profInd, int[] time, int timeInd, int u, int uInd, int v, int vInd, String MVAtt, boolean noMV, javax.swing.ProgressMonitor p, ArrayList<BatchDataMap> liste, boolean troisD, ArrayList<FrmMap> liste2, int i, Memory m) {
         fichier = f;
         profondeurs = prof;

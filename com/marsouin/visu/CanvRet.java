@@ -29,15 +29,15 @@ import java.awt.Graphics2D;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
-import java.awt.Point;
 import static java.lang.Thread.yield;
 import java.util.ArrayList;
 import static java.util.ResourceBundle.getBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com.marsouin.constants.Colors,com.marsouin.constants.Ant,com.marsouin.constants.Stream, javax.swing.Scrollable {
+public class CanvRet extends CanGen implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Ant, com.marsouin.constants.Stream, javax.swing.Scrollable {
 
-    private final boolean dBugDisplay = true;
-
+    private static final Logger log = Logger.getLogger(CanvRet.class.getName());
     private ThreadAnime threadAnime = null;
 
     private Graphics2D myGraphics = null;
@@ -49,18 +49,20 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
     public CanvRet(Memory m, int moi) {
         mem = m;
         id = moi;
-
+        log.setLevel(log.getParent().getLevel());
         // taille par defaut
         carteWidth = 600;
         carteHeight = 600;
 
         this.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 onMouseClicked(evt);
             }
         });
     }
 
+    @Override
     public Dimension getPreferredSize() {
         return new Dimension(carteWidth, carteHeight);
     }
@@ -87,9 +89,6 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
         this.setSize(carteWidth, carteHeight);
     }
 
-    /**
-     * M�thode permettant d'effectuer un zoom avant sur le canvas
-     */
     public void zoomAvant() {
         carteWidth = (carteWidth * 15) / 13;
         carteHeight = (carteHeight * 15) / 13;
@@ -102,8 +101,6 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
         this.setSize(carteWidth, carteHeight);
     }
 
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     public void processImage() {
         int w = carteWidth;
         int h = carteHeight;
@@ -146,10 +143,7 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
             afficheGrille(myGraphics);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            if (dBugDisplay) {
-                e.printStackTrace();
-            }
+           log.log(Level.SEVERE,"Error in processing image",e);
         }
     }
 
@@ -160,7 +154,7 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
     //@@@@@@@@@@@@@@@@@ LES FLECHES @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
     /**
      * affiche les fleches qui repr�sentent le Stream moyen en chaque point
- d'estimation de la carte
+     * d'estimation de la carte
      */
     private void afficheVecteurs(Graphics2D gra) {
 
@@ -188,37 +182,9 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
         }
     }
 
-    //*********************************************************************************
-    public boolean estAnime() {
-        return (threadAnime != null);
-    }
-
-    //*********************************************************************************
-    //********************************************************************************
-    public void stopAnime() {
-        if (threadAnime != null) {
-            threadAnime.arret();
-            try {
-                threadAnime.wait();
-            } catch (Exception e) {
-                System.out.println("CanvasCarte stopAnime : threadAnim� stopp� " + e);
-            }
-            try {
-                yield();
-            } catch (Exception e) {
-            }
-            threadAnime = null;
-            //mem.getFrmVisu(id).setStatusBar("arret de l'animation ");
-        }
-    }
-
-    /**
-     * renvoie la Colors associ�e � la valeur DEUX TYPES DE DEGRADES : si
- 0<val<1 si -1<val<0
-     */
     public Color getPaletteFond(float valeur) {
         int r = 0, g = 0, b = 0, a = 0;
-        int indic = 0;
+        int indic;
 
         switch (TYPE_DEGRADE) {
             case NOIR_BLANC_NOIR:
@@ -319,7 +285,6 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
         return new Color(r, g, b, a);
     }
 
-
     public void clearRet() {
         gradient = null;
     }
@@ -356,14 +321,9 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
         }
     }
 
-    //*********************************************************************************
-    /**
-     * affiche la surface coti�re, renseign�e par le booleens getSurTerre() en
-     * chaque point
-     */
     private void afficheTerre(Graphics2D gra) {
 
-        int X1, Y1, X2, Y2;
+        int X1, Y1;
         int tX = mem.getDataCarte(id).getXSize();
         int tY = mem.getDataCarte(id).getYSize();
         int largeurCase = carteWidth / tX;
@@ -380,7 +340,7 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
         }
     }
 
-    //*************************************************************************************************
+    @Override
     public void setSize(int param, int param1) {
 
         carteWidth = param;
@@ -399,6 +359,7 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
         processImage();
     }
 
+    @Override
     public void setSize(Dimension dimension) {
         this.setSize(dimension.width, dimension.height);
     }
@@ -489,7 +450,7 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
             this.getGraphics().drawImage(myImage, 0, 0, w, h, this);
         } // milieu >> RAFRAICHIR
         else if (evt.isAltDown() & !evt.isControlDown() & !evt.isShiftDown() & !evt.isMetaDown()) {
-            System.out.println(getBundle("ressources/canvas").getString("bouton_du_milieu"));
+            log.info(getBundle("ressources/canvas").getString("bouton_du_milieu"));
         } // milieu + ctrl >> animation
         else if (evt.isAltDown() & evt.isControlDown() & !evt.isShiftDown() & !evt.isMetaDown()) {
 
@@ -513,21 +474,25 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
                     javax.swing.JMenuItem menuAffTout = new javax.swing.JMenuItem(getBundle("ressources/canvas").getString("Afficher_tout"));
                     javax.swing.JMenuItem menuChgColor = new javax.swing.JMenuItem(getBundle("ressources/canvas").getString("Changer_la_couleur"));
                     menuChgColor.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
                         public void mouseReleased(java.awt.event.MouseEvent evt) {
                             afficherChgColor(vSeul);
                         }
                     });
                     menuProp.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
                         public void mouseReleased(java.awt.event.MouseEvent evt) {
                             afficherProp(vSeul);
                         }
                     });
                     menuAffSeul.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
                         public void mouseReleased(java.awt.event.MouseEvent evt) {
                             afficherSeul();
                         }
                     });
                     menuAffTout.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
                         public void mouseReleased(java.awt.event.MouseEvent evt) {
                             afficherTout();
                         }
@@ -598,30 +563,35 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
         p.setVisible(true);
     }
 
+    @Override
     public Dimension getPreferredScrollableViewportSize() {
         return new Dimension(carteWidth, carteHeight);
     }
 
+    @Override
     public int getScrollableBlockIncrement(java.awt.Rectangle rectangle, int param, int param2) {
         return 50;
     }
 
+    @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;
     }
 
+    @Override
     public boolean getScrollableTracksViewportWidth() {
         return false;
     }
 
+    @Override
     public int getScrollableUnitIncrement(java.awt.Rectangle rectangle, int param, int param2) {
         return 8;
     }
 
+    @Override
     public java.awt.Graphics getGraphics() {
         java.awt.Graphics retValue;
         retValue = super.getGraphics();
-        //retValue = (Graphics)myGraphics;
         return retValue;
     }
 
@@ -641,11 +611,6 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
         int[] ret = {carteWidth, carteHeight};
         return ret;
 
-    }
-
-    public void setZoomLatLon(int z) {
-        zoomLatLon = z;
-        this.repaint();
     }
 
     public double[][] getRetention() {

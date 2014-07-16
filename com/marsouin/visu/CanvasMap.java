@@ -14,11 +14,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-/**
- * Classe d'affichage du graphisme : afficher les vecteurs, un fond, les
- * informations resultats , animer les resultats pour afficher un maximum
- * d'infos
- */
 package com.marsouin.visu;
 
 import com.marsouin.data.VortexAnt;
@@ -33,17 +28,19 @@ import java.awt.image.BufferedImage;
 import java.awt.Point;
 import java.util.ArrayList;
 import static java.util.ResourceBundle.getBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,com.marsouin.constants.Colors,com.marsouin.constants.Ant,com.marsouin.constants.Stream,javax.swing.Scrollable {
+public class CanvasMap extends CanGen implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Ant, com.marsouin.constants.Stream, javax.swing.Scrollable {
 
-    private final boolean dBugDisplay = true;
     private Graphics2D myGraphics = null;
     private int vSeul = 0;
+    private static final Logger log = Logger.getLogger(CanvasMap.class.getName());
 
     public CanvasMap(Memory m, int moi) {
         mem = m;
         id = moi;
-
+        log.setLevel(log.getParent().getLevel());
         // taille par defaut
         carteWidth = 600;
         carteHeight = 600;
@@ -168,10 +165,7 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
             afficheGrille(myGraphics);
 
         } catch (Exception e) {
-            System.out.println(e.getMessage());
-            if (dBugDisplay) {
-                e.printStackTrace();
-            }
+            log.log(Level.SEVERE, "Error processing image", e);
         }
     }
 
@@ -277,22 +271,10 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
         }
     }
 
-
     public Color[] getPalettePhys() {
         return COLOR_CENTRE_PHYSIQUE;
     }
 
-    //****************************************************************************************************************************************
-
-   
-
-
-   
-
-    /**
-     * affiche chaque pixel avec une Colors proportionnelle @ la valeur de la
- table de datacarte. table
-     */
     private void afficheDonneesEnFond(Graphics2D gra) {
         Color col;
         double[][] t;
@@ -319,9 +301,7 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
         int hauteurCase = carteHeight / tY;
         X2 = largeurCase - 2 * BORD;
         Y2 = hauteurCase - 2 * BORD;
-        int i = 0, j = 0;
-
-        float r, g, b, a;
+        int i, j;
 
         // indicateurs de terre
         int indX, indY;
@@ -342,7 +322,7 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
                         col = getPaletteFond((float) t[i][j]);
                     } catch (Exception e) {
                         col = new Color(0.2f, 0.3f, 0.4f, 0.6f);
-                        e.printStackTrace();
+                        log.log(Level.SEVERE, "Error in getting background color", e);
                     }
 
                     gra.setColor(col);
@@ -354,11 +334,6 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
         }
     }
 
-    //@@@@@@@@@@@@@@@@@ LES FLECHES @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    /**
-     * affiche les fleches qui representent le Stream moyen en chaque point
- d'estimation de la carte
-     */
     private void afficheVecteurs(Graphics2D gra) {
 
         int X1, Y1, X2, Y2;
@@ -385,13 +360,9 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
         }
     }
 
-    /**
-     * renvoie la Colors associ�e � la valeur DEUX TYPES DE DEGRADES : si
- 0<val<1 si -1<val<0
-     */
     public Color getPaletteFond(float valeur) {
         int r = 0, g = 0, b = 0, a = 0;
-        int indic = 0;
+        int indic;
 
         switch (TYPE_DEGRADE) {
             case NOIR_BLANC_NOIR:
@@ -492,14 +463,9 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
         return new Color(r, g, b, a);
     }
 
-    //*********************************************************************************
-    /**
-     * affiche la surface coti�re, renseign�e par le booleens getSurTerre() en
-     * chaque point
-     */
     private void afficheTerre(Graphics2D gra) {
 
-        int X1, Y1, X2, Y2;
+        int X1, Y1;
         int tX = mem.getDataCarte(id).getXSize();
         int tY = mem.getDataCarte(id).getYSize();
         int largeurCase = carteWidth / tX;
@@ -516,13 +482,12 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
         }
     }
 
-    //*************************************************************************************************
+    @Override
     public void setSize(int param, int param1) {
 
         carteWidth = param;
         carteHeight = param1;
         if (mem.getFlagAffich(id)[AFF_FOND] != AFF_RIEN) {
-            // $$$$$$$$*******Utiliser une interpolation******�������������������������$$$$$$$$$$$$$$$$$$$$$$$$$$
             if (AFFICHER_FOND_AVEC_INTERPOLATION_GRAND_TABLEAU) {
                 mem.getDataCarte(id).getTable().changeTaille(carteWidth / DENOMINATEUR_TAILLE_INTERPOLATION, carteHeight / DENOMINATEUR_TAILLE_INTERPOLATION);
                 mem.getDataCarte(id).getTable().normaliserGrandTab();
@@ -626,7 +591,7 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
             this.getGraphics().drawImage(myImage, 0, 0, w, h, this);
         } // milieu >> RAFRAICHIR
         else if (evt.isAltDown() & !evt.isControlDown() & !evt.isShiftDown() & !evt.isMetaDown()) {
-            System.out.println(getBundle("ressources/canvas").getString("bouton_du_milieu"));
+            log.info(getBundle("ressources/canvas").getString("bouton_du_milieu"));
         } // milieu + ctrl >> animation
         else if (evt.isAltDown() & evt.isControlDown() & !evt.isShiftDown() & !evt.isMetaDown()) {
 
@@ -650,21 +615,25 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
                     javax.swing.JMenuItem menuAffTout = new javax.swing.JMenuItem(getBundle("ressources/canvas").getString("Afficher_tout"));
                     javax.swing.JMenuItem menuChgColor = new javax.swing.JMenuItem(getBundle("ressources/canvas").getString("Changer_la_couleur"));
                     menuChgColor.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
                         public void mouseReleased(java.awt.event.MouseEvent evt) {
                             afficherChgColor(vSeul);
                         }
                     });
                     menuProp.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
                         public void mouseReleased(java.awt.event.MouseEvent evt) {
                             afficherProp(vSeul);
                         }
                     });
                     menuAffSeul.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
                         public void mouseReleased(java.awt.event.MouseEvent evt) {
                             afficherSeul();
                         }
                     });
                     menuAffTout.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
                         public void mouseReleased(java.awt.event.MouseEvent evt) {
                             afficherTout();
                         }
@@ -735,26 +704,32 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
         p.setVisible(true);
     }
 
+    @Override
     public Dimension getPreferredScrollableViewportSize() {
         return new Dimension(carteWidth, carteHeight);
     }
 
+    @Override
     public int getScrollableBlockIncrement(java.awt.Rectangle rectangle, int param, int param2) {
         return 50;
     }
 
+    @Override
     public boolean getScrollableTracksViewportHeight() {
         return false;
     }
 
+    @Override
     public boolean getScrollableTracksViewportWidth() {
         return false;
     }
 
+    @Override
     public int getScrollableUnitIncrement(java.awt.Rectangle rectangle, int param, int param2) {
         return 8;
     }
 
+    @Override
     public java.awt.Graphics getGraphics() {
         java.awt.Graphics retValue;
         retValue = super.getGraphics();

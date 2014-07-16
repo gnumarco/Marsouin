@@ -25,90 +25,66 @@ import static java.lang.Integer.parseInt;
 import static java.lang.System.getProperty;
 import java.util.ArrayList;
 import static java.util.Calendar.getInstance;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import static javax.swing.JOptionPane.showInputDialog;
 
 public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marsouin.constants.Balise {
 
-    private final boolean dBug = true;
-    private final boolean dBug1 = false;
+    private static final Logger log = Logger.getLogger(ConfigHistoFile.class.getName());
 
     private String nomFichier = null;
 
     public ConfigHistoFile() {
-        // trouver le fichier g�n�ral
+        log.setLevel(log.getParent().getLevel());
         trouverFichier();
     }
 
     private void trouverFichier() {
         // prouve l'existance du fichier g�n�ral, ou le cr�e !
         nomFichier = CONFIG_FILE;
-        FileReader fr;
+
+        File homeDir = null, configDir = null, configFile;
+        String userHome = getProperty("user.home");
         try {
-            // POUR VERIFIER QUE LE FICHIER EXISTE : on essaie de le lire
-            File homeDir, configDir, configFile;
-            String userHome = getProperty("user.home");
-            try {
-                homeDir = new File(userHome);
-                if (!homeDir.isDirectory()) {
-                    throw new Exception("homeDir is no dir");
-                }
-            } catch (Exception e) {
-                System.out.println("ConfigHistoFile : impossible de trouver HomeDirectory " + e);
-                e.printStackTrace();
-                throw e;
+            homeDir = new File(userHome);
+            if (!homeDir.isDirectory()) {
+                throw new Exception("homeDir is no dir");
             }
-
-            try {
-                configDir = new File(homeDir, CONFIG_DIR);
-                if (dBug1) {
-                    System.out.println("repertoire configuration...");
-                }
-                if (configDir.mkdir()) {
-                    System.out.println("cr�ation de " + configDir.getAbsolutePath());
-                }
-                if (dBug1) {
-                    System.out.println("entr�e dans le repertoire de configuration...");
-                }
-            } catch (Exception e) {
-                System.out.println("ConfigHistoFile : Probleme au repertoire de configuration...");
-                e.printStackTrace();
-                throw e;
-            }
-
-            try {
-                configFile = new File(configDir, CONFIG_FILE);
-                if (dBug1) {
-                    System.out.println("fichier configuration...");
-                }
-                // POUR VERIFIER QUE LE FICHIER EXISTE : on essaie de le lire
-                try {
-                    fr = new FileReader(configFile.getAbsolutePath());
-                    fr.close();
-                } catch (IOException e) { // si lengthfichier n'extiste pas
-                    System.out.println("cr�ation du fichier de configuration...");
-                    try {
-                        WriteTextFile nouvo = new WriteTextFile(configFile.getAbsolutePath());
-                        this.ecrireEnteteGeneral(nouvo);
-                        nouvo.fermer();
-                        System.out.println("");
-                    } catch (Exception f) {
-                        System.out.println("ConfigHistoFile : configFile : erreur de creation" + f);
-                        f.printStackTrace();
-                    }
-                }
-                nomFichier = configFile.getAbsolutePath();
-                if (dBug1) {
-                    System.out.println("ok fichier de configuration...");
-                }
-            } catch (Exception e) {
-                System.out.println("ConfigHistoFile : Probleme au fichier de configuration...");
-                e.printStackTrace();
-                throw e;
-            }
-            configFile = null;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Cannot find the Home Directory", e);
+        }
+
+        try {
+            configDir = new File(homeDir, CONFIG_DIR);
+            log.info("repertoire configuration...");
+            if (configDir.mkdir()) {
+                log.log(Level.INFO, "Creation of {0}", configDir.getAbsolutePath());
+            }
+            log.info("Entering config directory...");
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Problem using the config directory", e);
+        }
+
+        try {
+            configFile = new File(configDir, CONFIG_FILE);
+            log.info("starting config file");
+            if (!configFile.exists()) {
+                log.info("Creation of config file");
+                try {
+                    WriteTextFile nouvo = new WriteTextFile(configFile.getAbsolutePath());
+                    this.ecrireEnteteGeneral(nouvo);
+                    nouvo.fermer();
+                    System.out.println("");
+                } catch (Exception f) {
+                    log.log(Level.SEVERE, "Error creating the config file", f);
+                }
+            }
+            nomFichier = configFile.getAbsolutePath();
+            log.info("ok fichier de configuration...");
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error in the config file procedure", e);
         }
     }
 
@@ -136,7 +112,7 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
     public void supprimerConfig(String nomConfig) {
         ArrayList<String> maLigne, oldFile;
         String ligne;
-        int debut = -1, fin = -1, num = -1;
+        int debut = -1, fin = -1, num;
         try {
             trouverFichier();
             oldFile = this.getOldFile(nomFichier);
@@ -198,10 +174,10 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
 
     public void setCommentaire(String nomConf, String comment) {
 
-        ArrayList<String> maLigne, oldFile = null;
+        ArrayList<String> maLigne, oldFile;
         String ligne;
 
-        int num = -1;
+        int num;
         try {
             trouverFichier();
             oldFile = this.getOldFile(nomFichier);
@@ -260,7 +236,7 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
             copyFile(oldFile, fichier);
             fichier.fermer();
         } catch (Exception e) {
-            System.out.println("ConfigHistoFile : setCommentaire erreur " + e);
+            log.log(Level.SEVERE, "Error in setting comment of config file", e);
         }
 
     }
@@ -268,7 +244,7 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
     public void renommerConfig(String oldName, String newName) {
         ArrayList<String> maLigne, oldFile;
         String ligne;
-        int num = -1;
+        int num;
         try {
             trouverFichier();
             oldFile = this.getOldFile(nomFichier);
@@ -317,10 +293,10 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
     }
 
     private ArrayList decouperConfig(String nom) throws Exception {
-        ReadTextFile rtf = null;
+        ReadTextFile rtf;
         ArrayList<String> tab, ligne;
-        ArrayList<ArrayList<String>> ret;
-        int i = -1, lng = 0;
+        ArrayList<ArrayList<String>> ret = null;
+        int i, lng;
         int numero = this.listerNomConfig().indexOf(nom);
         try {
             // LE FICHIER EXISTE : on le parcours
@@ -350,30 +326,21 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
                     }
 
                     lng = parseInt((String) tab.get(1));
-                    if (dBug) {
-                        System.out.println("cfghf lng : " + lng);
-                    }
-
+                        log.log(Level.INFO, "cfghf lng : {0}", lng);
                     ligne = rtf.decomposeLigneEnMots();
                     for (i = 0; i < lng; i++) {
                         tab.add((String) ligne.get(i));
-                        if (dBug1) {
-                            System.out.println("cfghf " + (String) ligne.get(i));
-                        }
+
+                            log.log(Level.INFO, "cfghf {0}", (String) ligne.get(i));
                     }
                     ret.add(tab);
                 }
                 ligne = rtf.decomposeLigneEnMots();
             }
-            if (dBug) {
-                System.out.println("balisefin");
-            }
+                log.info("balisefin");
             rtf.fermer();
         } catch (Exception e) {
-            System.out.println("ConfigHistoFile : decouperConfig erreur " + e);
-            e.printStackTrace();
-            rtf.fermer();
-            throw e;
+            log.log(Level.SEVERE, "Error in split config procedure", e);
         }
         return ret;
     }
@@ -404,7 +371,7 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
     //////////////////////////////////////////////////////////////////////////////////////
     public void ajouterConfig(String nomConfig, String commentaire, Memory m, int id) {
         // cote frm visu et data carte
-        WriteTextFile fichier = null;
+        WriteTextFile fichier;
         // trouver le fichier general
         trouverFichier();
         // on memorise le contenu du fichier existant:
@@ -457,8 +424,7 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
             fichier.uneLigne();
             this.ecrirePiedConfig(fichier);
         } catch (Exception f) {
-            System.out.println(f);
-            f.printStackTrace();
+            log.log(Level.SEVERE, "Error in adding parameter in config", f);
         }
     }
 
@@ -487,8 +453,7 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
             }
             rtf.fermer();
         } catch (Exception e) {
-            System.out.println("ConfigHistoFile : initFile recopy " + e);
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Error in getting old file", e);
         }
         return ret;
     }
@@ -501,7 +466,7 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
             ArrayList<String> src = getOldFile(source);
 
             // verifier les doublons
-            int s = 0;
+            int s;
             ArrayList<String> listeTotale = this.listerNomConfig();
             ArrayList<String> ligne;
             String ret, lenom;
@@ -597,8 +562,8 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
 
         ArrayList liste = new ArrayList();
         ReadTextFile rtf;
-        ArrayList ligne ;
-        String maLigne, comment = null;
+        ArrayList ligne;
+        String maLigne, comment;
         this.trouverFichier();
         try {
             // LE FICHIER EXISTE : on le parcours
@@ -638,8 +603,7 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
             }
 
         } catch (Exception e) {
-            System.out.println("ConfigHistoFile : listerCommConfig erreur " + e);
-            e.printStackTrace();
+            log.log(Level.SEVERE, "Error in listing comm config", e);
         }
         return liste;
     }
@@ -652,7 +616,7 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
             fr = new FileReader(new File(nomFichier));
             fr.close();
         } catch (IOException f) {
-            System.out.println("ConfigHistoFile : erreur d'ouverture de fichier " + f);
+            log.log(Level.SEVERE, "Error opening the config file", f);
         }
     }
 
@@ -663,7 +627,7 @@ public class ConfigHistoFile implements com.marsouin.constants.Centre, com.marso
                 fileToWrite.uneLigne((String) fileToCopy1);
             }
         } catch (Exception e) {
-            System.out.println("ConfigHistoFile : copyFile erreur " + e);
+            log.log(Level.SEVERE, "Error opening the config file", e);
         }
     }
 

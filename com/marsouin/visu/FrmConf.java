@@ -23,6 +23,7 @@ import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import static java.lang.System.exit;
 import static java.lang.System.getProperty;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
 
@@ -334,7 +335,7 @@ public final class FrmConf extends javax.swing.JFrame implements com.marsouin.co
             configDir = new File(homeDir,CONFIG_DIR);
             //System.out.println("repertoire configuration...");
             if (configDir.mkdir())
-                log.info("Creation of "+configDir.getAbsolutePath() );
+                log.log(Level.INFO, "Creation of {0}", configDir.getAbsolutePath());
             log.info("Entering config directory...");
             configFile = new File(configDir,CONFIG_FILE);
             if(configFile.createNewFile()){

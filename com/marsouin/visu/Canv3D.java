@@ -36,7 +36,6 @@ public class Canv3D {
     private final BatchDataMap mother;
     private Canvas3D c;
     
-    /** Creates a new instance of Canvas3D */
     public Canv3D(BatchDataMap m) {
         System.out.println("Constructeur canvas 3D");
         mother = m;
