@@ -100,7 +100,7 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
     }
 
     public int ajoutCarte(String fln) {
-
+        log.log(Level.INFO,"Starting add map procedure");
         listeDataCarte = new ArrayList<>();
         listeFrmVisu = new ArrayList<>();
         // liste de booleens
@@ -158,6 +158,8 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
         listeModeBatch.add(false);
         listeStreamlinesParam.add(streamlinesParam);
 
+        log.log(Level.INFO,"All config done");
+        log.log(Level.INFO,"Opening NetCDF file");
         OpenNetCdfFile f = new OpenNetCdfFile(frmConfig, true, fln);
         f.setVisible(true);
         if (f.getOK()) {

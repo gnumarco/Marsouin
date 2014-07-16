@@ -18,10 +18,12 @@ package com.marsouin.visu;
 
 import java.io.File;
 import com.marsouin.data.SimpleSaxParser;
+import com.marsouin.data.WriteTextFile;
 import static java.lang.Double.parseDouble;
 import static java.lang.Integer.parseInt;
 import static java.lang.System.exit;
 import static java.lang.System.getProperty;
+import java.util.logging.Logger;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
@@ -31,6 +33,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public final class FrmConf extends javax.swing.JFrame implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Balise, com.marsouin.constants.Ant, com.marsouin.constants.Streamlines{
     
     private Memory mem = null;
+    private static final Logger log = Logger.getLogger(FrmConf.class.getName());
     
     /** Creates new form FrmVisual */
     public FrmConf() {
@@ -331,12 +334,12 @@ public final class FrmConf extends javax.swing.JFrame implements com.marsouin.co
             configDir = new File(homeDir,CONFIG_DIR);
             //System.out.println("repertoire configuration...");
             if (configDir.mkdir())
-                System.out.println("Creation of "+configDir.getAbsolutePath() );
-            System.out.println("Entering config directory...");
+                log.info("Creation of "+configDir.getAbsolutePath() );
+            log.info("Entering config directory...");
             configFile = new File(configDir,CONFIG_FILE);
             if(configFile.createNewFile()){
-                System.out.println("New conf file ceated");
-                com.marsouin.data.WriteTextFile wtf = new com.marsouin.data.WriteTextFile(configFile.getAbsolutePath());
+                log.info("New conf file ceated");
+                WriteTextFile wtf = new WriteTextFile(configFile.getAbsolutePath());
                 wtf.uneLigne("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
                 wtf.uneLigne("<fourmis nbfourm=\"4\" nbgen=\"500\"  nbcolo=\"5\" depot=\"5.0\" evap=\"10.0\" biais=\"60.0\"></fourmis>");
                 wtf.fermer();
@@ -355,14 +358,14 @@ public final class FrmConf extends javax.swing.JFrame implements com.marsouin.co
             if (!homeDir.isDirectory())
                 throw new Exception("homeDir is no dir");
             configDir = new File(homeDir,CONFIG_DIR);
-            System.out.println("Entering config directory...");
+            log.info("Entering config directory...");
             configFile = new File(configDir,CONFIG_FILE);
-            System.out.println("Saving config");
+            log.info("Saving config");
             com.marsouin.data.WriteTextFile wtf = new com.marsouin.data.WriteTextFile(configFile.getAbsolutePath());
             wtf.uneLigne("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
             wtf.uneLigne("<fourmis nbfourm=\""+getFourmiNB()[FOURMI_NB_INTRA_ESPECE]+"\" nbgen=\""+getFourmiNB()[FOURMI_NB_GENERATIONS]+"\"  nbcolo=\""+getFourmiNB()[FOURMI_NB_ESPECES]+"\" depot=\""+getFourmiCoeff()[FOURMI_QTE_DEPOT]+"\" evap=\""+getFourmiCoeff()[FOURMI_COEFF_EVAPORATION]+"\" biais=\""+getFourmiCoeff()[FOURMI_TAUX_COURBURE]+"\"></fourmis>");
             wtf.fermer();
-            System.out.println("Config saved");
+            log.info("Config saved");
         }catch(Exception e){ System.out.println(e.toString());}
     }
     

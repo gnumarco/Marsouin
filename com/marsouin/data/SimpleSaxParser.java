@@ -22,26 +22,34 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 import com.marsouin.visu.FrmConf;
+import com.marsouin.visu.Memory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author segond
  */
 public class SimpleSaxParser {
-    
+
     private final XMLReader saxReader;
-    
-    /** Creates a new instance of SimpleSaxParser */
+    private static final Logger log = Logger.getLogger(Memory.class.getName());
+
+    /**
+     * Creates a new instance of SimpleSaxParser
+     */
     public SimpleSaxParser(FrmConf frm) throws SAXException, IOException {
         saxReader = XMLReaderFactory.createXMLReader();
         saxReader.setContentHandler(new XmlWorker(frm));
+        log.setLevel(log.getParent().getLevel());
     }
-    
-    public void parse(String s){
-        try{
-        saxReader.parse(s);
-        }catch(IOException | SAXException e){System.out.println(e.toString());}
+
+    public void parse(String s) {
+        try {
+            saxReader.parse(s);
+        } catch (IOException | SAXException e) {
+            log.log(Level.SEVERE, "Problem in the Sax Parser", e);
+        }
     }
-    
-    
+
 }

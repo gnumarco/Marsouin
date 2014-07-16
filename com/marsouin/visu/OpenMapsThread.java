@@ -16,24 +16,27 @@
  */
 package com.marsouin.visu;
 
+import com.marsouin.data.BatchDataMap;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- *
- * @author marco
- */
 public class OpenMapsThread extends Thread {
-    
+
+    private static final Logger log = Logger.getLogger(OpenMapsThread.class.getName());
     int[] profondeurs, dates;
     int indexProfondeurs, indexDates, uZ, indexU, vZ, indexV, id;
     String missingValue, fichier;
     boolean noMissingValue, Ok3D;
     javax.swing.ProgressMonitor prog;
-    ArrayList listeDataCartes, listeFrmVisu;
+    ArrayList<FrmMap> listeFrmVisu;
+    ArrayList<BatchDataMap> listeDataCartes;
     Memory mem;
-    
-    /** Creates a new instance of OpenMapsThread */
-    public OpenMapsThread(String f,int[] prof,int profInd, int[] time, int timeInd, int u, int uInd, int v, int vInd, String MVAtt, boolean noMV, javax.swing.ProgressMonitor p, ArrayList liste, boolean troisD, ArrayList liste2, int i, Memory m) {
+
+    /**
+     * Creates a new instance of OpenMapsThread
+     */
+    public OpenMapsThread(String f, int[] prof, int profInd, int[] time, int timeInd, int u, int uInd, int v, int vInd, String MVAtt, boolean noMV, javax.swing.ProgressMonitor p, ArrayList<BatchDataMap> liste, boolean troisD, ArrayList<FrmMap> liste2, int i, Memory m) {
         fichier = f;
         profondeurs = prof;
         dates = time;
@@ -49,25 +52,28 @@ public class OpenMapsThread extends Thread {
         listeDataCartes = liste;
         listeFrmVisu = liste2;
         mem = m;
+        log.setLevel(log.getParent().getLevel());
     }
-    
+
     @Override
-    public void run(){
-        listeDataCartes.add(new com.marsouin.data.BatchDataMap(fichier,profondeurs,indexProfondeurs,dates,indexDates,uZ,indexU,vZ,indexV,missingValue,noMissingValue,prog));
-        try{
-            if(Ok3D)
-                listeFrmVisu.add( new FrmCarte3D(mem,id, true) );
-            else
-                listeFrmVisu.add( new FrmMap(mem,id, true) );
-            ((FrmMap) listeFrmVisu.get(id)).setVisible(true);
-            ((FrmMap) listeFrmVisu.get(id)).toFront();
-            ((FrmMap) listeFrmVisu.get(id)).MajTaille();
-        }catch (Exception e){System.out.println("Mem : erreur a l'ajout de FrmVisu !");
-        e.printStackTrace();
-        mem.retraitCarte(id);
-        id = -1;
-        mem.modifierParametres(id);}
-        
+    public void run() {
+        listeDataCartes.add(new BatchDataMap(fichier, profondeurs, indexProfondeurs, dates, indexDates, uZ, indexU, vZ, indexV, missingValue, noMissingValue, prog));
+        try {
+            if (Ok3D) {
+                listeFrmVisu.add(new FrmCarte3D(mem, id, true));
+            } else {
+                listeFrmVisu.add(new FrmMap(mem, id, true));
+            }
+            listeFrmVisu.get(id).setVisible(true);
+            listeFrmVisu.get(id).toFront();
+            listeFrmVisu.get(id).MajTaille();
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "Error trying to add a FrmVisu", e);
+            mem.retraitCarte(id);
+            id = -1;
+            mem.modifierParametres(id);
+        }
+
     }
-    
+
 }
