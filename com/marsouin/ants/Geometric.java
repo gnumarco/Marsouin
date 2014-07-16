@@ -18,7 +18,7 @@ package com.marsouin.ants;
 
 public class Geometric {
 
-    private double p;
+    private final double p;
 
     public Geometric() {
         p = 0.5;
@@ -28,15 +28,6 @@ public class Geometric {
         p = proba;
     }
 
-    public int tirage() {
-        int n = 0;
-        double U;
-        do {
-            U = Math.random();
-            n++;
-        } while (U > p);
-        return (n);
-    }
 
     public double calcul(double p, double x) {
         double res;

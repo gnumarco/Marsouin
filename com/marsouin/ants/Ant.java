@@ -30,7 +30,7 @@ public class Ant implements com.marsouin.constants.Ant, com.marsouin.constants.S
     
     private final SearchEngine context;
     
-    private ArrayList<Loop> result=new ArrayList<>();
+    private final ArrayList<Loop> result=new ArrayList<>();
     
     private final double bias;
     
@@ -46,11 +46,10 @@ public class Ant implements com.marsouin.constants.Ant, com.marsouin.constants.S
     /** M�moire contenant la liste des cellules sur lesquelles est pass�e la Ant. */    
     private ArrayList<Point> trace;
     /** Num�ro de l'esp�ce � laquelle appartient la Ant */    
-    private int specie;
+    private final int specie;
     /** Identifiant de la Ant � l'int�rieur de son esp�ce */    
-    private int id;
+    private final int id;
     
-    private double drop;
     Random rdGen;
     
     /** Creates a new instance of Fourmi
@@ -64,7 +63,6 @@ public class Ant implements com.marsouin.constants.Ant, com.marsouin.constants.S
      */
     public Ant(SearchEngine c, double b, int x, int y, int esp, int ident, double dep, Random r) {
         context = c;
-        drop = dep;
         bias = b*(java.lang.Math.PI/3);
         X = x;
         Y = y;
@@ -79,7 +77,7 @@ public class Ant implements com.marsouin.constants.Ant, com.marsouin.constants.S
     public void move(){
         Geometric loi = new Geometric();
         Candidates cdtes = new Candidates();
-        int NextCell = 0;
+        int NextCell;
         
         if(context.getMaCarte().getC(X,Y).getXBase() == 0.0 && context.getMaCarte().getC(X,Y).getYBase() == 0.0)
             reInit();
@@ -159,7 +157,7 @@ public class Ant implements com.marsouin.constants.Ant, com.marsouin.constants.S
             if(cdtes.getCand()[i].isChoosen())
                 TotalFitness += cdtes.getCand()[i].getFitness();
         }
-        double SpinVal = 0.0;
+        double SpinVal;
         double val = 0.0;
         SpinVal = rdGen.nextDouble()*TotalFitness;
         int i = 0;
@@ -267,7 +265,7 @@ public class Ant implements com.marsouin.constants.Ant, com.marsouin.constants.S
             tmp.add(new Point(X,Y));
             if(i>=0 && tmp.size()>=5){
                 int[] max = new int[2];
-                boolean orientBool = false;
+                boolean orientBool;
                 max[0]=0;
                 max[1]=0;
                 int[] tX = new int[tmp.size()];

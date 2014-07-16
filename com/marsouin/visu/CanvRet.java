@@ -153,24 +153,6 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
         }
     }
 
-    private void dessineUneBoucle(Graphics2D gra, Point poly[], int ux, int uy, int ty) {
-        int X1, Y1, Y2, X2, i;
-        if (poly != null) {
-            for (i = 0; i < poly.length - 1; i++) {
-                X1 = poly[i].x * ux + ux / 2;
-                Y1 = (ty - 1 - poly[i].y) * uy + uy / 2;
-                X2 = poly[i + 1].x * ux + ux / 2;
-                Y2 = (ty - 1 - poly[i + 1].y) * uy + uy / 2;
-                afficheFleche(gra, X2, Y2, X1, Y1);
-            }
-            X1 = poly[0].x * ux + ux / 2;
-            Y1 = (ty - 1 - poly[0].y) * uy + uy / 2;
-            X2 = poly[i].x * ux + ux / 2;
-            Y2 = (ty - 1 - poly[i].y) * uy + uy / 2;
-            afficheFleche(gra, X2, Y2, X1, Y1);
-        }
-    }
-
     public Color[] getPalettePhys() {
         return COLOR_CENTRE_PHYSIQUE;
     }
@@ -337,28 +319,6 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
         return new Color(r, g, b, a);
     }
 
-    //************************************************************************
-    private void geomAfficheCombinerGC(Graphics2D gra) {
-
-        int X1, Y1, X2, Y2;
-        int tX = mem.getDataCarte(id).getXSize();
-        int tY = mem.getDataCarte(id).getYSize();
-        int largeurCase = carteWidth / tX;
-        int hauteurCase = carteHeight / tY;
-        int offsetX = largeurCase / 2;
-        int offsetY = hauteurCase / 2;
-
-        gra.setColor(COLOR_COMBINER_GC);
-        for (int i = 0; i < tX; i++) {
-            for (int j = 0; j < tY; j++) {
-                if (mem.getDataCarte(id).getC(i, j).getCfgCentre(COMBINER_GC)) {
-                    X1 = (i * largeurCase);
-                    Y1 = ((tY - j - 1) * hauteurCase);
-                    gra.fillOval(X1 + offsetX / 2, Y1 + offsetY / 2, offsetX, offsetY);
-                }
-            }
-        }
-    }
 
     public void clearRet() {
         gradient = null;
@@ -629,7 +589,6 @@ public class CanvRet extends CanGen implements com.marsouin.constants.Centre,com
     public void afficherProp(int num) {
         DataMap d = mem.getBatchDataCarte(id).getCarteActive();
         VortexProperties p = new VortexProperties(d.getVortexAnt().get(vSeul).getNum());
-        p.setUnit(d.getUnit());
         p.setAire(d.getVortexAnt().get(vSeul).getAire());
         p.setRayonMoyen(d.getVortexAnt().get(vSeul).getRayonMoyen());
         p.setPeriode(d.getVortexAnt().get(vSeul).getPeriod(mem.getDataCarte(id).getOcean()));

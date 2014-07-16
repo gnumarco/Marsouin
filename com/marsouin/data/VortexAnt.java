@@ -67,9 +67,6 @@ public class VortexAnt extends Loop{
         
     }
     
-    public void addBoucle(Loop b){
-        mesVortex.add(b);
-    }
     
     public ArrayList getBoucles(){
         return mesVortex;

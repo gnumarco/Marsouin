@@ -21,55 +21,47 @@ import com.marsouin.data.BatchDataMap;
 import com.marsouin.data.WriteTextFile;
 import com.marsouin.data.AttributesChoice;
 import com.marsouin.data.DataMap;
-import com.marsouin.ants.SearchEngine;
+import com.marsouin.tracking.TrackEngine;
 import java.io.File;
 import java.io.IOException;
 import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.String.valueOf;
-import static java.lang.System.exit;
-import static java.lang.System.gc;
 import static java.lang.System.getProperty;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ProgressMonitor;
 import ucar.nc2.*;
 import ucar.ma2.*;
 import static ucar.nc2.NetcdfFileWriter.createNew;
 
 public class Memory implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Ant, com.marsouin.constants.DefaultValues, com.marsouin.constants.Stream, com.marsouin.constants.Streamlines {
 
+    private static final Logger log = Logger.getLogger(Memory.class.getName());
+
     private boolean Ok3D = false;
-
-    private static final boolean dBug = false;
-    private static final boolean dBugFileInterpoler = false;
-
-    private static int nbTrouverCentre = 0;
 
     private String memCheminExplo = null;
 
-    private ArrayList listeDataCarte = null;
+    private ArrayList<BatchDataMap> listeDataCarte = null;
 
-    private ArrayList listeFrmVisu = null;
+    private ArrayList<FrmMap> listeFrmVisu = null;
 
     // liste de int[]
-    private ArrayList listeFlagAffich = null;
+    private ArrayList<int[]> listeFlagAffich = null;
     private ArrayList<int[]> listeFourmiNB = null;
-    private ArrayList listeTypeInit = null;
+    private ArrayList<boolean[]> listeTypeInit = null;
 
     // liste les coeff (double) pour la frmConfig de chaque carte
-    private ArrayList listeFourmiCoeff = null;
+    private ArrayList<double[]> listeFourmiCoeff = null;
     private ArrayList<double[]> listeStreamlinesParam = null;
 
     // liste de booleens
     private ArrayList<boolean[]> listeUseMethod = null;
-    private ArrayList listePhysiqueBAff = null;
-    private ArrayList<Boolean> listeModeBatch = null; //true = batch, false = pas batch
-    private ArrayList listeAntialias = null;
-
-    ArrayList listeAvancement = null;
+    private ArrayList<Boolean> listeModeBatch = null; //true = batch, false = no batch
+    private ArrayList<Boolean> listeAntialias = null;
 
     // liste de String
-    private ConfigHistoFile configHistoFile = null;
+    private final ConfigHistoFile configHistoFile = null;
     //private ArrayList listeFConfigHisto=null;
     //private ArrayList listeFResultat=null;
 
@@ -79,12 +71,11 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
      * Creates a new instance of Memoire
      */
     public Memory() {
-        //configHistoFile = new ConfigHistoFile();
-        //moteurFourmi = new Ant.SearchEngine();
+        log.setLevel(log.getParent().getLevel());
     }
 
     public FrmMap getFrmVisu(int id) {
-        return (FrmMap) listeFrmVisu.get(id);
+        return listeFrmVisu.get(id);
     }
 
     public FrmConf getFrmConfig() {
@@ -110,22 +101,21 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
 
     public int ajoutCarte(String fln) {
 
-        listeDataCarte = new ArrayList();
-        listeFrmVisu = new ArrayList();
+        listeDataCarte = new ArrayList<>();
+        listeFrmVisu = new ArrayList<>();
         // liste de booleens
-        listeUseMethod = new ArrayList();
-        listeTypeInit = new ArrayList();
-        listeModeBatch = new ArrayList();
-        listeAntialias = new ArrayList();
+        listeUseMethod = new ArrayList<>();
+        listeTypeInit = new ArrayList<>();
+        listeModeBatch = new ArrayList<>();
+        listeAntialias = new ArrayList<>();
         // double
-        listeFourmiCoeff = new ArrayList();
-        listeStreamlinesParam = new ArrayList();
+        listeFourmiCoeff = new ArrayList<>();
+        listeStreamlinesParam = new ArrayList<>();
         //int
-        listeFlagAffich = new ArrayList();
-        listeFourmiNB = new ArrayList();
+        listeFlagAffich = new ArrayList<>();
+        listeFourmiNB = new ArrayList<>();
 
         int id;
-        double[] limitC = new double[LENGTH_LIMITC];
 
         double[] fourmiCoeff = new double[LENGTH_FOURMI_COEFF];
         double[] streamlinesParam = new double[LENGTH_STREAMLINES_PARAM];
@@ -179,7 +169,7 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
                 omt.start();
                 c.dispose();
             } catch (java.lang.Exception e) {
-                System.out.println(e.toString());
+                log.log(Level.SEVERE, "Failed to add the map", e);
             }
 
         }
@@ -202,7 +192,7 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
     //public final String getFRes(int id) { return (String)listeFResultat.get(id);}
     //public final String getFConfigHisto(int id) { return (String)listeFConfigHisto.get(id);}
     public final int[] getFlagAffich(int id) {
-        return (int[]) listeFlagAffich.get(id);
+        return listeFlagAffich.get(id);
     }
 
     public final boolean get3D() {
@@ -225,36 +215,24 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
         return (int[]) listeFourmiNB.get(id);
     }
 
-    public final boolean[] getTypeInit(int id) {
-        return (boolean[]) listeTypeInit.get(id);
-    }
-
-    public final boolean[] getPhysiqueBaff(int id) {
-        return (boolean[]) listePhysiqueBAff.get(id);
-    }
-
     public final boolean getAntialias(int id) {
-        return ((Boolean) listeAntialias.get(id));
+        return listeAntialias.get(id);
     }
 
     public void setFourmiCoeff(int id, double[] tb) {
-        listeFourmiCoeff.set(id,((double[]) tb.clone()));
+        listeFourmiCoeff.set(id, ((double[]) tb.clone()));
     }
 
     public void setFourmiNB(int id, int[] tb) {
-        listeFourmiNB.set(id,((int[]) tb.clone()));
+        listeFourmiNB.set(id, ((int[]) tb.clone()));
     }
 
     public void setUseMethod(int id, boolean[] tb) {
-        listeUseMethod.set(id,((boolean[]) tb.clone()));
-    }
-
-    public void setPhysiqueBAff(int id, boolean[] tb) {
-        listePhysiqueBAff.set(id,((boolean[]) tb.clone()));
+        listeUseMethod.set(id, ((boolean[]) tb.clone()));
     }
 
     public void setStreamlinesParam(int id, double[] tb) {
-        listeStreamlinesParam.set(id,((double[]) tb.clone()));
+        listeStreamlinesParam.set(id, ((double[]) tb.clone()));
     }
 
     public void setAntialias(int id, boolean b) {
@@ -262,9 +240,7 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
     }
 
     public void modifierParametres(int id) {
-        if (frmConfig == null) {
-            System.out.println(" memoire : PAS de formConfig !");
-        } else {
+        try{
             for (Object listeFrmVisu1 : listeFrmVisu) {
                 frmConfig.toFront();
             }
@@ -274,6 +250,8 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
             //frmConfig.setFourmiCoeff((double[])listeFourmiCoeff.get(id));
             frmConfig.setFourmiNB((int[]) listeFourmiNB.get(id));
 
+        }catch(Exception e){
+            log.log(Level.SEVERE,"Problem in updating parameters",e);
         }
     }
 
@@ -328,7 +306,7 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
 
                     //System.out.println("Fichier cre");
                 } else {
-                    System.out.println("Nom de fichier = null");
+                    log.info("No file selected");
                 }
             }
         } catch (IOException e) {
@@ -340,7 +318,7 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
         com.marsouin.data.WriteTextFile wtf;
         int[][] tab;
         javax.swing.JFileChooser F = new javax.swing.JFileChooser("../");
-        F.setDialogTitle(" Choose a name to save vortices ");
+        F.setDialogTitle("Choose a name to save vortices");
         int returnVal = F.showSaveDialog(null);
         try {
             if (returnVal == javax.swing.JFileChooser.APPROVE_OPTION) {
@@ -412,27 +390,22 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
                 }
             }
         } catch (Exception e) {
-            System.out.println(" FrmVisu : erreur sauver Vortex ");
+            log.log(Level.SEVERE, "Error is saving a vortex", e);
         }
     }
 
     public void appliquerParametres(int id) {
-        if (frmConfig == null) {
-            System.out.println(" memoire : PAS de formConfig !");
-        } else {
 
-            try {
-                listeUseMethod.set(id,frmConfig.getUseMethod().clone());
+        try {
+            listeUseMethod.set(id, frmConfig.getUseMethod().clone());
 
-                listeStreamlinesParam.set(id,frmConfig.getStreamParams().clone());
-                listeFourmiNB.set(id,frmConfig.getFourmiNB().clone());
+            listeStreamlinesParam.set(id, frmConfig.getStreamParams().clone());
+            listeFourmiNB.set(id, frmConfig.getFourmiNB().clone());
 
-            } catch (Exception e) {
-                System.out.println("memoire : appliquer parametres : pb");
-                e.printStackTrace();
-            };
+        } catch (Exception e) {
+            log.log(Level.SEVERE, "problem in applying the parameters", e);
+        };
 
-        }
     }
 
     private boolean hasOnlyOneLeft(int id) {
@@ -483,12 +456,9 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
                 // liste d int
                 listeFlagAffich.set(id, null);
                 listeFourmiNB.set(id, null);
-
-                listeAvancement.set(id, null);
-
             }
         } else {
-            System.out.println(" memoire : pas de carte a retirer ");
+            log.info("No map to remove");
         }
 
     }
@@ -506,20 +476,20 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
 
     public void suivi(int id) {
         //System.out.println("Moteur suivi");
-        com.marsouin.tracking.MoteurSuivi s = new com.marsouin.tracking.MoteurSuivi(((BatchDataMap) (listeDataCarte.get(id))));
+        TrackEngine s = new TrackEngine((listeDataCarte.get(id)));
         s.LancerSuivi();
     }
 
     public void demarrer(int id) {
 
         this.appliquerParametres(id);
-        BatchDataMap bdc = ((BatchDataMap) (listeDataCarte.get(id)));
+        BatchDataMap bdc = listeDataCarte.get(id);
         FrmMap frmv = ((FrmMap) (listeFrmVisu.get(id)));
-        javax.swing.ProgressMonitor prog = new javax.swing.ProgressMonitor(this.getFrmVisu(id), "Processing detection...", "Processing...", 0, 0);
+        ProgressMonitor prog = new ProgressMonitor(this.getFrmVisu(id), "Processing detection...", "Processing...", 0, 0);
         int tmpAv = 0;
         //**************** FOURMIS ***********************
 
-        if (this.getUseMethod(id)[USE_METHOD_FOURMI]) {
+        if (this.getUseMethod(id)[USE_METHOD_ANTS]) {
             //System.out.println("Moteur Ant mode batch");
             for (int i = 0; i < bdc.getNbDataCartesTps(); i++) {
                 for (int j = 0; j < bdc.getNbDataCartesProf(); j++) {
@@ -539,47 +509,17 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
             tmpAv += bdc.getNbDataCartesTps() * bdc.getNbDataCartesProf() * bdc.getCarteActive().getOcean()[0].length;
         }
         prog.setMaximum(tmpAv);
-        //		****************** le  fond :*****************
-        if (this.getFlagAffich(id)[AFF_FOND] != AFF_RIEN) {
-
-            if (dBug) {
-                System.out.println("maj tab ini");
-            }
-
-            if (AFFICHER_FOND_AVEC_INTERPOLATION_GRAND_TABLEAU) {
-                // Enc apsuler avant d'utiliser
-                int[] dim = getFrmVisu(id).getMonCanvas().getDimension();
-
-                if (dBug) {
-                    System.out.println("maj ok ini : maj grand tab");
-                }
-
-                getDataCarte(id).getTable().changeTaille(dim[0] / DENOMINATEUR_TAILLE_INTERPOLATION, dim[1] / DENOMINATEUR_TAILLE_INTERPOLATION);
-                if (dBug) {
-                    System.out.println("maj grand tab ok");
-                }
-                if (dBugFileInterpoler) {
-                    getDataCarte(id).getTable().saveGrandTab("c:\\Grandtabini.xls");
-                }
-
-                getDataCarte(id).getTable().normaliserGrandTab();
-                if (dBugFileInterpoler) {
-                    getDataCarte(id).getTable().saveGrandTab("c:\\grandtabNORME.xls");
-                }
-            }
-
-        }
 
         //demarrage des moteurs
         if (this.getUseMethod(id)[USE_METHOD_STREAMLINES]) {
-            demarrerStreamlines(id, prog);
+            startStreamlines(id, prog);
         }
-        if (this.getUseMethod(id)[USE_METHOD_FOURMI]) {
-            trouverFourmiBoucle(id, prog);
+        if (this.getUseMethod(id)[USE_METHOD_ANTS]) {
+            findLoopAnt(id, prog);
         }
     }
 
-    public void trouverFourmiBoucle(int id, javax.swing.ProgressMonitor p) {
+    public void findLoopAnt(int id, javax.swing.ProgressMonitor p) {
         // on suppose que la mis a jour est faite !!
         int i, j, ind, esp, runs;
         DataMap dc = (DataMap) listeDataCarte.get(id);
@@ -601,11 +541,9 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
         ((FrmMap) listeFrmVisu.get(id)).toFront();
         int generations;
         double evap, depot;
-        boolean intType;
         generations = this.getFourmiNB(id)[FOURMI_NB_GENERATIONS];
         evap = this.getFourmiCoeff(id)[FOURMI_COEFF_EVAPORATION];
         depot = this.getFourmiCoeff(id)[FOURMI_QTE_DEPOT];
-        intType = getTypeInit(id)[0];
         runs = getFourmiNB(id)[FOURMI_NB_RUNS];
 
         ((BatchDataMap) (dc)).setCarteActive(0, 0);
@@ -618,7 +556,7 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
         }
     }
 
-    private void demarrerStreamlines(int id, javax.swing.ProgressMonitor p) {
+    private void startStreamlines(int id, javax.swing.ProgressMonitor p) {
 
         ((BatchDataMap) listeDataCarte.get(id)).resetVortexStreamlines();
         //System.out.println("Streamlines mode batch");
@@ -626,18 +564,4 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
         com.marsouin.streamlines.StreamlinesEngine moteur = new com.marsouin.streamlines.StreamlinesEngine((BatchDataMap) listeDataCarte.get(id), this, id, p);
         moteur.start();
     }
-
-    //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-    //***************************************************************************************
-    /**
-     * un genre de destructeur
-     */
-    public void fin() {
-        configHistoFile = null;
-        frmConfig = null;
-        gc();
-        System.out.println(" memoire : GC ok ;   Fin. ");
-        exit(0);
-    }
-
 }

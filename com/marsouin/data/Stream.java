@@ -186,17 +186,7 @@ public class Stream implements com.marsouin.constants.Centre, com.marsouin.const
         ((double[]) (pheromone.get(i)))[j] = value;
     }
 
-    public void deposePheromone(int i, int j, double val) {
-        ((double[]) (pheromone.get(i)))[j] += val;
-    }
 
-    public void evaporePheromone(int i, int j, double coefDEvaporation) {
-        if ((coefDEvaporation < 0.0) | (coefDEvaporation > 1.0)) {
-            System.out.println(" Courant : coef d'evaporation de la pheromone INCORRECT : doit etre compris entre 0.0 et 1.0" + coefDEvaporation);
-        } else {
-            ((double[]) (pheromone.get(i)))[j] = (1.0 - coefDEvaporation) * ((double[]) (pheromone.get(i)))[j];
-        }
-    }
 
     public void evaporePheromone(double coefDEvaporation) {
         if ((coefDEvaporation < 0.0) | (coefDEvaporation > 1.0)) {
@@ -210,25 +200,7 @@ public class Stream implements com.marsouin.constants.Centre, com.marsouin.const
         }
     }
 
-    public boolean hasPheromone() {
-        boolean ret;
-        ret = (pheromone != null);
-        if (ret) {
-            double ph;
-            ph = getPheromoneTotale();
-            ret = (ph >= PHEROMONE_ABSENTE);
-        }
-        return ret;
-    }
 
-    public boolean hasPheromone(int i, int j) {
-        boolean ret;
-        ret = (pheromone != null);
-        if (ret) {
-            ret = (((double[]) (pheromone.get(i)))[j] > PHEROMONE_ABSENTE);
-        }
-        return ret;
-    }
 
     public Stream(Stream c) {
         this.XBase = c.getXBase();

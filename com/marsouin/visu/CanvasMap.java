@@ -157,7 +157,7 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
             }
 
             // ***************** FOURMIS *****************
-            if (mem.getUseMethod(id)[USE_METHOD_FOURMI]) {
+            if (mem.getUseMethod(id)[USE_METHOD_ANTS]) {
 
                 this.afficheMeta(myGraphics);
                 this.afficheCentreMeta(myGraphics);
@@ -492,29 +492,6 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
         return new Color(r, g, b, a);
     }
 
-    //************************************************************************
-    private void geomAfficheCombinerGC(Graphics2D gra) {
-
-        int X1, Y1, X2, Y2;
-        int tX = mem.getDataCarte(id).getXSize();
-        int tY = mem.getDataCarte(id).getYSize();
-        int largeurCase = carteWidth / tX;
-        int hauteurCase = carteHeight / tY;
-        int offsetX = largeurCase / 2;
-        int offsetY = hauteurCase / 2;
-
-        gra.setColor(COLOR_COMBINER_GC);
-        for (int i = 0; i < tX; i++) {
-            for (int j = 0; j < tY; j++) {
-                if (mem.getDataCarte(id).getC(i, j).getCfgCentre(COMBINER_GC)) {
-                    X1 = (i * largeurCase);
-                    Y1 = ((tY - j - 1) * hauteurCase);
-                    gra.fillOval(X1 + offsetX / 2, Y1 + offsetY / 2, offsetX, offsetY);
-                }
-            }
-        }
-    }
-
     //*********************************************************************************
     /**
      * affiche la surface coti�re, renseign�e par le booleens getSurTerre() en
@@ -749,7 +726,6 @@ public class CanvasMap extends CanGen implements com.marsouin.constants.Centre,c
     public void afficherProp(int num) {
         DataMap d = mem.getBatchDataCarte(id).getCarteActive();
         VortexProperties p = new VortexProperties(d.getVortexAnt().get(vSeul).getNum());
-        p.setUnit(d.getUnit());
         p.setAire(d.getVortexAnt().get(vSeul).getAire());
         p.setRayonMoyen(d.getVortexAnt().get(vSeul).getRayonMoyen());
         p.setPeriode(d.getVortexAnt().get(vSeul).getPeriod(mem.getDataCarte(id).getOcean()));

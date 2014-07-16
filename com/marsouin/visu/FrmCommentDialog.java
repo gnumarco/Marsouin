@@ -176,10 +176,6 @@ public class FrmCommentDialog extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_jButtonRenameActionPerformed
 
-    private void jTBRenameStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTBRenameStateChanged
-
-    }//GEN-LAST:event_jTBRenameStateChanged
-
     private void jButtonSupprimerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSupprimerActionPerformed
         // Add your handling code here:
         mem.getConfigHistoFile().supprimerConfig(nomConfig);

@@ -18,7 +18,6 @@ package com.marsouin.visu;
 
 import com.marsouin.data.BatchDataMap;
 import static java.lang.Math.round;
-import static java.lang.Math.round;
 import static java.lang.Math.sqrt;
 import static java.lang.System.gc;
 import static java.lang.System.getProperty;
@@ -33,7 +32,6 @@ public class FrmMap extends javax.swing.JFrame implements com.marsouin.constants
     private CanvasMap monCanvas = null;
     private CanvRet monCanvasRet = null;
     public int avMax = 0;
-    private boolean antialias = false;
 
     /** Creates new form FrmCarte */
     public FrmMap(Memory m, int moi, boolean mode) {

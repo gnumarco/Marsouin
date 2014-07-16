@@ -26,7 +26,6 @@ import java.util.logging.Logger;
 
 public class SearchEngine extends Thread implements com.marsouin.constants.Colors {
 
-    private static final Logger log = Logger.getLogger(SearchEngine.class.getName());
     private final int nbAnts;
     private final int nbSpecies;
     private final int nbGenerations;

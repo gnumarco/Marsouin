@@ -367,7 +367,7 @@ public final class FrmConf extends javax.swing.JFrame implements com.marsouin.co
     }
     
     public void setUseMethod(final boolean[] tb) {
-        jCheckBoxUseMethodFourmi.setSelected(tb[USE_METHOD_FOURMI]);
+        jCheckBoxUseMethodFourmi.setSelected(tb[USE_METHOD_ANTS]);
         jCheckBoxUseMethodStreamlines.setSelected(tb[USE_METHOD_STREAMLINES]);
     }
     
@@ -436,7 +436,7 @@ public final class FrmConf extends javax.swing.JFrame implements com.marsouin.co
     
     public final boolean[] getUseMethod() {
         boolean[] tb = new boolean[LENGTH_USE_METHOD];
-        tb[USE_METHOD_FOURMI]=jCheckBoxUseMethodFourmi.isSelected();
+        tb[USE_METHOD_ANTS]=jCheckBoxUseMethodFourmi.isSelected();
         tb[USE_METHOD_STREAMLINES]=jCheckBoxUseMethodStreamlines.isSelected();
         return tb;
     }

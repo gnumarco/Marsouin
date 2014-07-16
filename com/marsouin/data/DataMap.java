@@ -26,18 +26,10 @@ public class DataMap implements com.marsouin.constants.Centre, com.marsouin.cons
     
     /** booleens qui activent des println() pour un debuggage -manuel- avec "pelle et sceau" */
     private String maDate;
-    private final boolean dBug = true;
-    private final boolean dBugPlus = true;
-    protected int profondeur = 0;
-    protected int[] prof = null;
-    protected int[] times = null;
     /** les donnees pricipales : un tableau 2D de vecteurs courants cf data.Stream */
     private Stream[][] ocean;
     /** taille du tableau */
     private int tailleX,tailleY;
-    
-    public int avancement = 0;
-    public int avMax = 0;
     
     private double normeMax;
     /** concerne lengthfichier de carte */
@@ -267,13 +259,6 @@ public class DataMap implements com.marsouin.constants.Centre, com.marsouin.cons
         return ret;
     }
     
-    public boolean isBorderLine(int x, int y) {
-        // verifier que les coordonn�es sont sur LE BORD DE LA CARTE !
-        boolean ret = false;
-        ret = (ret | ((x==0) | (y==0)) );
-        ret = (ret | ((x==tailleX) | (y==tailleY)) );
-        return ret;
-    }
     
     protected final int computeNbValidCells(){
         int cpt=0;

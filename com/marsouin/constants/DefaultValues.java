@@ -78,63 +78,6 @@ public interface DefaultValues {
 	 */
     static final int DEFAULT_SEUIL_COMBINER_GC = 2;
 
-	/** valeur du curseur de ponderation, par defaut, que l'on peut attribuer @ une methode :
-	 * cela positionne le curseur de la JSlideBar */
-    static final int[] DEFAULT_COMBINER_GC = {
-        1,    // "V_" + "PLUS ",
-        1,    // "V_" + "X ",
-        1,    // "V_" + "O ",
-        1,    // "V_" + "CARRE ",
-        1,    // "V_U_" + "PLUS ",
-        1,    // "V_U_" + "X ",
-        1,    // "V_U_" + "O ",
-        1,    // "V_U_" + "CARRE ",
-        1,    // "V_T_"+ "PLUS ",
-        1,    // "V_T_"+ "X ",
-        1,    // "V_T_"+ "O ",
-        1,    // "V_T_"+ "CARRE ",
-        1,    // "V_T_U_" + "PLUS ",
-        1,    // "V_T_U_" + "X ",
-        1,    // "V_T_U_" + "O ",
-        1,    // "V_T_U_" + "CARRE ",
-        1,    // "V_CF_"+ "PLUS ",
-        1,    // "V_CF_"+ "X ",
-        1,    // "V_CF_"+ "O ",
-        1,    // "V_CF_"+ "CARRE ",
-        1,    // "V_CF_U_"+ "PLUS ",
-        1,    // "V_CF_U_"+ "X ",
-        1,    // "V_CF_U_"+ "O ",
-        1    // "V_CF_U_"+ "CARRE ",
-    };
-
-    /** valeur du seuil attribu� � chaque methode */
-    static final double[] DEFAULT_LIMITC = {
-        0.2,    // "V_" + "PLUS ",
-        0.2,    // "V_" + "X ",
-        0.2,    // "V_" + "O ",
-        0.2,    // "V_" + "CARRE ",
-        0.5,    // "V_U_" + "PLUS ",
-        0.5,    // "V_U_" + "X ",
-        0.5,    // "V_U_" + "O ",
-        0.5,    // "V_U_" + "CARRE ",
-        0.2,    // "V_T_"+ "PLUS ",
-        0.2,    // "V_T_"+ "X ",
-        0.2,    // "V_T_"+ "O ",
-        0.2,    // "V_T_"+ "CARRE ",
-        0.43,    // "V_T_U_" + "PLUS ",
-        0.35,    // "V_T_U_" + "X ",
-        0.2,    // "V_T_U_" + "O ",
-        0.3,    // "V_T_U_" + "CARRE ",
-        0.2,    // "V_CF_"+ "PLUS ",
-        0.2,    // "V_CF_"+ "X ",
-        0.2,    // "V_CF_"+ "O ",
-        0.5,    // "V_CF_"+ "CARRE ",
-        0.25,    // "V_CF_U_"+ "PLUS ",
-        0.4,    // "V_CF_U_"+ "X ",
-        0.5,    // "V_CF_U_"+ "O ",
-        0.35    // "V_CF_U_"+ "CARRE ",
-    };
-
     /** selection de chaque methode :
      * cela conditionne case @ cocher */
     static final boolean[] DEFAULT_CHECKBOXC = {

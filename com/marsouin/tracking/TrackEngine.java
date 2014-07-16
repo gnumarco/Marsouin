@@ -31,7 +31,7 @@ import static java.lang.System.getProperty;
  *
  * @author segond
  */
-public class MoteurSuivi extends java.lang.Thread implements Tracking {
+public class TrackEngine extends java.lang.Thread implements Tracking {
 
     BatchDataMap maCarte;
     int deplacementMax = 6;
@@ -40,7 +40,7 @@ public class MoteurSuivi extends java.lang.Thread implements Tracking {
     /**
      * Creates a new instance of MoteurSuivi
      */
-    public MoteurSuivi(BatchDataMap d) {
+    public TrackEngine(BatchDataMap d) {
         maCarte = d;
     }
 

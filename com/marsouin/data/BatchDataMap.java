@@ -17,7 +17,6 @@
 package com.marsouin.data;
 
 import java.io.IOException;
-import javax.swing.*;
 import java.util.ArrayList;
 import ucar.nc2.*;
 import ucar.ma2.*;
@@ -30,7 +29,6 @@ public class BatchDataMap extends DataMap{
     private javax.swing.ProgressMonitor p;
     private int varX, varY;
     private final double[][][][] meansList;
-    private int nbCartes;
     public final static int ONE_SECOND = 1000;
     
     /** Creates a new instance of BatchDataCarte */
@@ -45,7 +43,6 @@ public class BatchDataMap extends DataMap{
         active = new int[2];
         active[0]=0;
         active[1]=0;
-        nbCartes = time.length*prof.length;
         try{
             NetcdfFile fch;
             fch = NetcdfFile.open(f);
@@ -115,20 +112,6 @@ public class BatchDataMap extends DataMap{
         return tmp;
     }
     
-    public double[] getLonLat(int x, int y){
-        int tX= getXSize();
-        int tY= getYSize();
-        double[] tmp = new double[2];
-        double ttX = Math.abs(getTabX()[getTabX().length-1]-getTabX()[0]);
-        double ttY = Math.abs(getTabY()[getTabY().length-1]-getTabY()[0]);
-        double baryX = ((double)x*ttX)/(double)tX;
-        double baryY = ((double)y*ttY)/(double)tY;
-        baryX= Math.min(getTabX()[0],getTabX()[getTabX().length-1]) + baryX;
-        baryY= Math.min(getTabY()[0],getTabY()[getTabY().length-1]) + baryY;
-        tmp[0]=baryX;
-        tmp[1]=baryY;
-        return tmp;
-    }
     
     public double[] getLonLat(double x, double y){
         int tX= getXSize();

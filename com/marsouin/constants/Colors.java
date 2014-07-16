@@ -37,7 +37,7 @@ public interface Colors {
 
     // Tableau d'utilisation des methodes;
     public static final int USE_METHOD_GEOMETRIQUE = 0;
-    public static final int USE_METHOD_FOURMI = 1;
+    public static final int USE_METHOD_ANTS = 1;
     public static final int USE_METHOD_PHYSIQUE = 2;
 	public static final int USE_METHOD_STREAMLINES = 3;
     

@@ -23,7 +23,6 @@ package com.marsouin.visu;
 public class VortexProperties extends javax.swing.JFrame {
     
     int numVortex = 0;
-    String unit="";
     
     /** Creates new form ProprietesVortex */
     public VortexProperties() {
@@ -55,10 +54,6 @@ public class VortexProperties extends javax.swing.JFrame {
     
     public void setCentre(double a, double b){
         this.jLabelCentre.setText("Center coordinates: "+a+"°E;"+b+"°N");
-    }
-    
-    public void setUnit(String u){
-        unit = u;
     }
     
     /** This method is called from within the constructor to

@@ -21,7 +21,6 @@ import java.io.*;
 
 
 public class randomHotBits extends randomX {
-    long state;
     int nuflen = 256, buflen = 0;
     byte[] buffer;
     int bufptr = -1;
