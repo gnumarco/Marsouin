@@ -16,10 +16,8 @@
  */
 package com.marsouin.data;
 
-import static java.awt.Toolkit.getDefaultToolkit;
 import java.io.IOException;
-import static java.lang.System.gc;
-import static javax.swing.BorderFactory.createEtchedBorder;
+import java.util.logging.Logger;
 import ucar.nc2.*;
 import static ucar.nc2.NetcdfFile.open;
 
@@ -32,15 +30,18 @@ public class OpenNetCdfFile extends javax.swing.JDialog {
     String fichierNetcdf;
     private boolean ok = false;
     private NetcdfFile monFichier = null;
+    private static final Logger log = Logger.getLogger(OpenNetCdfFile.class.getName());
     
     /** Creates new form openFile */
     public OpenNetCdfFile(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        log.setLevel(log.getParent().getLevel());
         initComponents();
     }
     
     public OpenNetCdfFile(java.awt.Frame parent, boolean modal, String fich) {
         super(parent, modal);
+        log.setLevel(log.getParent().getLevel());
         initComponents();
         fichierNetcdf = fich;
         try{
@@ -291,7 +292,7 @@ public class OpenNetCdfFile extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void closing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_closing
-        System.out.println("closing chooser");
+        log.info("closing chooser");
         try{
         monFichier.close();
         }catch(IOException e){System.out.println(e.toString());}
