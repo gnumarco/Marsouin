@@ -16,6 +16,7 @@ package com.marsouin;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import java.io.IOException;
 import static java.lang.System.gc;
 import ucar.nc2.*;
 import ucar.ma2.*;
@@ -59,10 +60,8 @@ public class Comparator {
                 else
                     ref[z][i][j] = 0;
                     }
-            tab = null;
-            var = null;
             f.close();
-        }catch(java.lang.Exception e){System.out.println(e.toString());}
+        }catch(IOException e){System.out.println(e.toString());}
         gc();
         
         System.out.println("lecture des detections");
@@ -92,10 +91,8 @@ public class Comparator {
                 else
                     detect[z][i][j] = 0;
                     }
-            tab = null;
-            var = null;
             f.close();
-        }catch(java.lang.Exception e){System.out.println(e.toString());}
+        }catch(IOException e){System.out.println(e.toString());}
         gc();
     }
     

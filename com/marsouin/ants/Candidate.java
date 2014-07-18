@@ -16,7 +16,6 @@
  */
 package com.marsouin.ants;
 
-/** Une cellule candidate � la s�lection par une fourmi. */
 public class Candidate {
     
 
@@ -27,10 +26,7 @@ public class Candidate {
     private double angle;
      
     private double diff;
-    
-    /** Creates a new instance of candidate
-     * @param a Angle entre la cellule et le 0 du cercle trigonometrique.
-     */
+
     public Candidate(double a) {
         setChoosen(false);
         setAngle(a);
