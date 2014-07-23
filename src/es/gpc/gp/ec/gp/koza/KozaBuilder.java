@@ -25,6 +25,7 @@ import es.gpc.gp.ec.gp.GPNodeBuilder;
 import es.gpc.gp.ec.gp.GPNode;
 import es.gpc.gp.ec.gp.GPNodeParent;
 import es.gpc.gp.ec.EvolutionState;
+import es.gpc.gp.ec.app.control.func.RegERC;
 
 /* 
  * KozaBuilder.java
@@ -65,6 +66,7 @@ public abstract class KozaBuilder extends GPNodeBuilder
     /** The smallest maximum tree depth RAMPED HALF-AND-HALF can specify. */
     public int minDepth;
 
+    @Override
     public void setup(final EvolutionState state, final Parameter base)
         {
         super.setup(state,base);
@@ -123,6 +125,7 @@ public abstract class KozaBuilder extends GPNodeBuilder
             n.resetNode(state,thread);  // give ERCs a chance to randomize
             n.argposition = (byte)argposition;
             n.parent = parent;
+                
             return n;
             }
                         
@@ -169,7 +172,6 @@ public abstract class KozaBuilder extends GPNodeBuilder
 
         int t = type.type;
         GPNode[] terminals = set.terminals[t];
-        GPNode[] nonterminals = set.nonterminals[t];
         GPNode[] nodes = set.nodes[t];          
 
         if (nodes.length == 0)

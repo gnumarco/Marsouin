@@ -193,19 +193,20 @@ public abstract class Fitness implements Prototype, Comparable
     public void printFitnessForHumans(EvolutionState state, int log, 
         int verbosity)
         {
-        String s = fitnessToStringForHumans();
+            StringBuilder s = new StringBuilder();
+        s.append(fitnessToStringForHumans());
         if (context != null)
             {
             for(int i = 0; i < context.length; i++)
                 {
                 if (context[i] != null)
                     {
-                    s += "\nCollaborator " + i + ": ";
+                    s.append("\nCollaborator " + i + ": ");
                     // temporarily de-link the context of the collaborator
                     // to avoid loops
                     Individual[] c = context[i].fitness.context;
                     context[i].fitness.context = null;
-                    s += context[i].genotypeToStringForHumans();
+                    s.append(context[i].genotypeToStringForHumans());
                     // relink
                     context[i].fitness.context = c;
                     }
@@ -215,7 +216,7 @@ public abstract class Fitness implements Prototype, Comparable
                     }
                 }
             }
-        state.output.println( s, verbosity, log);
+        state.output.println(s.toString(), log);
         }
 
     /** Should print the fitness out in a computer-readable fashion, 

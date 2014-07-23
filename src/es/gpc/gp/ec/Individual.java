@@ -218,26 +218,6 @@ public abstract class Individual implements Prototype, Comparable
         state.output.println( genotypeToString(), log );
         }
 
-
-    /** Should print the individual in a way that can be read by computer,
-        including its fitness, using state.output.println(...,verbosity,log)
-        You can get fitness to print itself at the appropriate time by calling 
-        fitness.printFitness(state,log,verbosity);
-                
-        <p>The default form of this method simply prints out whether or not the
-        individual has been evaluated, its fitness, and then calls Individual.genotypeToString().
-        Feel free to override this to produce more sophisticated behavior, 
-        though it is rare to need to -- instead you could just override genotypeToString().
-        @deprecated Verbosity no longer used.
-    */
-
-    public final void printIndividual(final EvolutionState state,
-        final int log, 
-        final int verbosity)
-        {
-        printIndividual( state, log,  Output.V_NO_GENERAL);
-        }
-
     /** Should print the individual in a way that can be read by computer,
         including its fitness.  You can get fitness to print itself at the
         appropriate time by calling fitness.printFitness(state,log,writer); 

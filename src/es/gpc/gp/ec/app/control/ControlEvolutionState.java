@@ -53,6 +53,9 @@ import es.gpc.gp.ec.util.Checkpoint;
  */
 public class ControlEvolutionState extends EvolutionState {
 
+    
+    private static final long serialVersionUID = 1;
+    
     /**
      *
      */

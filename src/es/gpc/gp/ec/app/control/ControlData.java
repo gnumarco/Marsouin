@@ -37,6 +37,7 @@ public class ControlData extends GPData
     public double x;
     public double[] b;
 
+    @Override
     public void copyTo(final GPData gpd) 
         { ((ControlData)gpd).x = x;
         ((ControlData)gpd).b = b;}

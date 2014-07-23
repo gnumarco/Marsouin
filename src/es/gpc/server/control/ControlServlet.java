@@ -46,7 +46,7 @@ import java.util.logging.Logger;
  */
 public class ControlServlet extends HttpServlet {
 
-    private String greeting = "Hello World";
+    private final String greeting = "Hello World";
     private final es.gpc.generic.GPCApp app;
     GlobalLog glog = null;
 

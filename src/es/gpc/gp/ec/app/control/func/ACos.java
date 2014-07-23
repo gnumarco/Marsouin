@@ -39,6 +39,8 @@ import es.gpc.gp.ec.EvolutionState;
 
 public class ACos extends GPNode
     {
+    private static final long serialVersionUID = 1;
+    
     public String toString() { return "arccos"; }
 
 /*

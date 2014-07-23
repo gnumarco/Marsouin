@@ -540,7 +540,8 @@ public class Evolve extends Thread {
                 ? breedthreads : evalthreads];
         seeds = new int[random.length];
 
-        String seedMessage = "Seed: ";
+        StringBuilder buf = new StringBuilder();
+        buf.append("Seed: ");
         int time = (int) (System.currentTimeMillis());
         for (x = 0; x < random.length; x++) {
             seeds[x] = determineSeed(output, parameters, new Parameter(P_SEED).push("" + x),
@@ -551,7 +552,7 @@ public class Evolve extends Thread {
                 }
             }
             random[x] = Evolve.primeGenerator(new MersenneTwisterFast(seeds[x]));    // we prime the generator to be more sure of randomness.
-            seedMessage = seedMessage + seeds[x] + " ";
+            buf.append(seeds[x]).append(" ");
         }
 
         // 4.  Start up the evolution
@@ -566,7 +567,7 @@ public class Evolve extends Thread {
         state.randomSeedOffset = randomSeedOffset;
 
         output.systemMessage("Threads:  breed/" + breedthreads + " eval/" + evalthreads);
-        output.systemMessage(seedMessage);
+        output.systemMessage(buf.toString());
 
         return state;
     }
@@ -753,7 +754,7 @@ public class Evolve extends Thread {
 
     public ParameterDatabase parameters = null;
 
-    public void config(Memory mem, String[] ar) {
+    public void config(Memory mem, final String[] ar) {
         m = mem;
         args = ar;
         try {
@@ -790,6 +791,8 @@ public class Evolve extends Thread {
                 }
                 args = state.runtimeArguments;                          // restore runtime arguments from checkpoint
                 currentJob = ((Integer) (state.job[0])) + 1;  // extract next job number
+            } catch (RuntimeException e) {
+                throw e;
             } catch (Exception e) {
                 Output.initialError("EvolutionState's jobs variable is not set up properly.  Exiting...");
             }

@@ -19,19 +19,16 @@
 package es.gpc.gp.ec.app.control;
 
 import es.gpc.gp.ec.util.Parameter;
-import es.gpc.gp.ec.simple.SimpleProblemForm;
 import es.gpc.gp.ec.gp.koza.KozaFitness;
 import es.gpc.gp.ec.gp.GPProblem;
 import es.gpc.gp.ec.gp.GPIndividual;
 import es.gpc.gp.ec.Individual;
 import es.gpc.gp.ec.EvolutionState;
-import java.io.*;
-import java.util.*;
 import es.gpc.utils.Memory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Control extends GPProblem implements SimpleProblemForm {
+public class Control extends GPProblem{
 
     private static final long serialVersionUID = 1;
     public static final String P_SIZE = "sensors";
@@ -45,8 +42,8 @@ public class Control extends GPProblem implements SimpleProblemForm {
     public static final String P_DEBUG = "debug";
     public double[] currentValue;
     public int sensors;
-    public String RelativePathToExecOrig = "";
-    public String RelativePathToFilesOrig = "";
+    public String relativePathToExecOrig = "";
+    public String relativePathToFilesOrig = "";
     public String fullPathToBaseDir = "";
     public String execName = "";
     public double upBound, lowBound;
@@ -58,7 +55,7 @@ public class Control extends GPProblem implements SimpleProblemForm {
         Control prob = (Control) (super.clone());
 
         prob.fullPathToBaseDir = this.fullPathToBaseDir;
-        prob.RelativePathToFilesOrig = this.RelativePathToFilesOrig;
+        prob.relativePathToFilesOrig = this.relativePathToFilesOrig;
         prob.execName = this.execName;
         prob.upBound = this.upBound;
         prob.lowBound = this.lowBound;
@@ -73,7 +70,7 @@ public class Control extends GPProblem implements SimpleProblemForm {
         // very important, remember this
         super.setup(state, base);
 
-        // verify our input is the right class (or subclasses from it)
+        // verify our inputLocal is the right class (or subclasses from it)
         if (!(input instanceof ControlData)) {
             state.output.fatal("GPData class must subclass from " + ControlData.class,
                     base.push(P_DATA), null);
@@ -108,7 +105,7 @@ public class Control extends GPProblem implements SimpleProblemForm {
             final int threadnum) {
         if (!ind.evaluated) // don't bother reevaluating
         {
-            ControlData input = (ControlData) (this.input);
+            ControlData inputLocal = (ControlData) (this.input);
 
             int hits = 0;
 
@@ -121,9 +118,8 @@ public class Control extends GPProblem implements SimpleProblemForm {
                     Logger.getLogger(Control.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 currentValue = mem.sens;
-                ((GPIndividual) ind).trees[0].child.eval(
-                        state, threadnum, input, stack, ((GPIndividual) ind), this);
-                mem.act = new double[]{input.x};
+                ((GPIndividual) ind).trees[0].child.eval(state, threadnum, inputLocal, stack, ((GPIndividual) ind), this);
+                mem.act = new double[]{inputLocal.x};
                 System.out.println("Kernel releasing actu");
                 mem.actu.release();
             }
