@@ -16,11 +16,11 @@
  */
 package com.marsouin.visu;
 
-import com.marsouin.data.OpenNetCdfFile;
-import com.marsouin.data.BatchDataMap;
-import com.marsouin.data.WriteTextFile;
 import com.marsouin.data.AttributesChoice;
+import com.marsouin.data.BatchDataMap;
 import com.marsouin.data.DataMap;
+import com.marsouin.data.OpenNetCdfFile;
+import com.marsouin.data.WriteTextFile;
 import com.marsouin.tracking.TrackEngine;
 import java.io.File;
 import java.io.IOException;
@@ -30,11 +30,12 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ProgressMonitor;
-import ucar.nc2.*;
-import ucar.ma2.*;
+import ucar.ma2.ArrayInt;
+import ucar.ma2.DataType;
+import ucar.nc2.NetcdfFileWriter;
 import static ucar.nc2.NetcdfFileWriter.createNew;
 
-public class Memory implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Ant, com.marsouin.constants.DefaultValues, com.marsouin.constants.Stream, com.marsouin.constants.Streamlines {
+public class Memory implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Ants, com.marsouin.constants.DefaultValues, com.marsouin.constants.Stream, com.marsouin.constants.Streamlines {
 
     private static final Logger log = Logger.getLogger(Memory.class.getName());
 
@@ -491,7 +492,7 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
         //**************** FOURMIS ***********************
 
         if (this.getUseMethod(id)[USE_METHOD_ANTS]) {
-            //System.out.println("Moteur Ant mode batch");
+            //System.out.println("Moteur Ants mode batch");
             for (int i = 0; i < bdc.getNbDataCartesTps(); i++) {
                 for (int j = 0; j < bdc.getNbDataCartesProf(); j++) {
                     bdc.getDataCarte(i, j).initCollections();
@@ -549,7 +550,7 @@ public class Memory implements com.marsouin.constants.Centre, com.marsouin.const
 
         ((BatchDataMap) (dc)).setCarteActive(0, 0);
 
-        com.marsouin.ants.SearchEngine moteur = new com.marsouin.ants.SearchEngine(((BatchDataMap) (dc)), getFrmVisu(id), ind, esp, generations, depot, evap, runs, p);
+        com.marsouin.ants.AntsEngine moteur = new com.marsouin.ants.AntsEngine(((BatchDataMap) (dc)), getFrmVisu(id), ind, esp, generations, depot, evap, runs, p);
         moteur.start();
 
         if (((BatchDataMap) (dc)).getNbDataCartesTps() > 1) {

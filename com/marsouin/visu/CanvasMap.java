@@ -31,7 +31,7 @@ import static java.util.ResourceBundle.getBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CanvasMap extends CanGen implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Ant, com.marsouin.constants.Stream, javax.swing.Scrollable {
+public class CanvasMap extends CanGen implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Ants, com.marsouin.constants.Stream, javax.swing.Scrollable {
 
     private Graphics2D myGraphics = null;
     private int vSeul = 0;

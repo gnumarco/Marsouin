@@ -31,7 +31,7 @@ public class Comparator {
     public Comparator() {
     }
     
-    private void OpenData(String r, String d){
+    private void openData(String r, String d){
         int tailleX, tailleY, times;
         
         System.out.println("Lecture des exemples");
@@ -62,7 +62,6 @@ public class Comparator {
                     }
             f.close();
         }catch(IOException e){System.out.println(e.toString());}
-        gc();
         
         System.out.println("lecture des detections");
         try{
@@ -119,7 +118,7 @@ public class Comparator {
         }
     }
     
-    private void PrintResuls(){
+    private void printResuls(){
         System.out.println("nbr TP:"+TP);
         System.out.println("nbr FP:"+FP);
         System.out.println("max TP:"+maxTP);
@@ -128,9 +127,9 @@ public class Comparator {
     
     public static void main(String[] args) {
         Comparator c = new Comparator();
-        c.OpenData(args[0],args[1]);
+        c.openData(args[0],args[1]);
         c.compare();
-        c.PrintResuls();
+        c.printResuls();
     }
     
 }

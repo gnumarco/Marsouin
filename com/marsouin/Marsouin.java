@@ -44,7 +44,7 @@ public class Marsouin {
         // First check if the class is already loaded
         boolean found = true;
         try {
-            Class c = getSystemClassLoader().loadClass(className);
+            getSystemClassLoader().loadClass(className);
         } catch (ClassNotFoundException e) {
             found = false;
             log.log(Level.WARNING, "Java3D was not detected, you will not be able to use the 3D view", e);

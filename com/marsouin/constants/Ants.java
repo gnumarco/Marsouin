@@ -16,7 +16,7 @@
  */
 package com.marsouin.constants;
 
-public interface Ant {
+public interface Ants {
     //**********************************************************
     // classe Fourmi
 
@@ -25,11 +25,11 @@ public interface Ant {
 
     public static final int TRACE_MIN = 3;
 
-    // on multiplie Cette Angle par lengthTaux de courbure d'une Ant
-    // pour obtenir l'amplitude finale ( acceleration centripete) de cette Ant
+    // on multiplie Cette Angle par lengthTaux de courbure d'une Ants
+    // pour obtenir l'amplitude finale ( acceleration centripete) de cette Ants
     public final static double AMPLITUDE_DE_COURBURE = java.lang.Math.PI/7.0;// 7d;
 
-    // nombre de cibles candidates pour acceuillir la Ant
+    // nombre de cibles candidates pour acceuillir la Ants
     public final static int NB_CHOIX = 8;
 
     // utile lors de la selection basee sur la difference entre l'angle intention et l' angle d'un candidat

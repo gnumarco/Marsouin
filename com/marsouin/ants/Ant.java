@@ -22,48 +22,48 @@ import java.awt.Point;
 import java.util.Random;
 
 /**
- * Une Ant capable de se d�placer de fa�on autonome dans un champ de vecteurs �
- * deux dimensions.
+ * Une Ants capable de se d�placer de fa�on autonome dans un champ de vecteurs �
+ deux dimensions.
  */
-public class Ant implements com.marsouin.constants.Ant, com.marsouin.constants.Stream {
+public class Ant implements com.marsouin.constants.Ants, com.marsouin.constants.Stream {
 
-    private final SearchEngine context;
+    private final AntsEngine context;
 
     private final ArrayList<Loop> result = new ArrayList<>();
 
     private final double bias;
 
     /**
-     * coordonn�e courante en X de la Ant
+     * coordonn�e courante en X de la Ants
      */
     private int X;
 
     /**
-     * coordonn�e courante en X de la Ant
+     * coordonn�e courante en X de la Ants
      */
     private int Y;
 
     /**
-     * bias de la Ant. Compris entre -1 et 1.
+     * bias de la Ants. Compris entre -1 et 1.
      */
     private double orient;
 
     /**
-     * M�moire contenant la liste des cellules sur lesquelles est pass�e la Ant.
+     * M�moire contenant la liste des cellules sur lesquelles est pass�e la Ants.
      */
     private ArrayList<Point> trace;
     /**
-     * Num�ro de l'esp�ce � laquelle appartient la Ant
+     * Num�ro de l'esp�ce � laquelle appartient la Ants
      */
     private final int specie;
     /**
-     * Identifiant de la Ant � l'int�rieur de son esp�ce
+     * Identifiant de la Ants � l'int�rieur de son esp�ce
      */
     private final int id;
 
     Random rdGen;
 
-    public Ant(SearchEngine c, double b, int x, int y, int esp, int ident, double dep, Random r) {
+    public Ant(AntsEngine c, double b, int x, int y, int esp, int ident, double dep, Random r) {
         context = c;
         bias = b * (java.lang.Math.PI / 3);
         X = x;
@@ -323,7 +323,7 @@ public class Ant implements com.marsouin.constants.Ant, com.marsouin.constants.S
     }
 
     /**
-     * M�thode de r�initialisation de la Ant
+     * M�thode de r�initialisation de la Ants
      */
     public void reInit() {
         java.util.Random rd = new java.util.Random();

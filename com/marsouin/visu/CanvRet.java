@@ -35,7 +35,7 @@ import static java.util.ResourceBundle.getBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class CanvRet extends CanGen implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Ant, com.marsouin.constants.Stream, javax.swing.Scrollable {
+public class CanvRet extends CanGen implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Ants, com.marsouin.constants.Stream, javax.swing.Scrollable {
 
     private static final Logger log = Logger.getLogger(CanvRet.class.getName());
     private ThreadAnime threadAnime = null;

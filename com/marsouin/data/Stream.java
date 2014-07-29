@@ -18,7 +18,7 @@ package com.marsouin.data;
 
 import java.util.ArrayList;
 
-public class Stream implements com.marsouin.constants.Centre, com.marsouin.constants.Ant, com.marsouin.constants.Stream {
+public class Stream implements com.marsouin.constants.Centre, com.marsouin.constants.Ants, com.marsouin.constants.Stream {
 
     // coordonnees du vecteur initial.
     private double XBase;

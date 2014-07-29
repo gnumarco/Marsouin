@@ -31,7 +31,7 @@ import static java.lang.String.valueOf;
  *
  * @author marco
  */
-public class CanGen extends javax.swing.JPanel implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Ant, com.marsouin.constants.Stream{
+public class CanGen extends javax.swing.JPanel implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Ants, com.marsouin.constants.Stream{
     
     protected BufferedImage myImage = null;
     protected int id;

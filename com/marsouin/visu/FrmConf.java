@@ -31,7 +31,7 @@ import static javax.swing.JOptionPane.showMessageDialog;
  *
  * @author  Marc Segond
  */
-public final class FrmConf extends javax.swing.JFrame implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Balise, com.marsouin.constants.Ant, com.marsouin.constants.Streamlines{
+public final class FrmConf extends javax.swing.JFrame implements com.marsouin.constants.Centre, com.marsouin.constants.Colors, com.marsouin.constants.Balise, com.marsouin.constants.Ants, com.marsouin.constants.Streamlines{
     
     private Memory mem = null;
     private static final Logger log = Logger.getLogger(FrmConf.class.getName());

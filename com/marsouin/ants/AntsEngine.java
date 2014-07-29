@@ -22,21 +22,18 @@ import java.util.ArrayList;
 import com.marsouin.data.DataMap;
 import com.marsouin.data.Loop;
 import com.marsouin.data.VortexAnt;
-import java.util.logging.Logger;
 
-public class SearchEngine extends Thread implements com.marsouin.constants.Colors {
+public class AntsEngine extends Thread implements com.marsouin.constants.Colors {
 
     private final int nbAnts;
     private final int nbSpecies;
     private final int nbGenerations;
     private final double pheromoneAmount;
     private final double evapCoef;
-    private ArrayList<Ant[]> team;
+    private final ArrayList<Ant[]> team;
     private ArrayList<Loop> tmp;
 
     private com.marsouin.data.DataMap myMap;
-
-    public static int status = 0;
 
     private ArrayList<Loop> vortX;
     private ArrayList<VortexAnt> metaVortX;
@@ -44,7 +41,7 @@ public class SearchEngine extends Thread implements com.marsouin.constants.Color
     private final FrmMap visu;
     private final javax.swing.ProgressMonitor prog;
 
-    public SearchEngine(com.marsouin.data.BatchDataMap bdc, FrmMap v, int f, int esp, int g, double p, double c, int nbRuns, javax.swing.ProgressMonitor pm) {
+    public AntsEngine(com.marsouin.data.BatchDataMap bdc, FrmMap v, int f, int esp, int g, double p, double c, int nbRuns, javax.swing.ProgressMonitor pm) {
         myDataMap = bdc;
         visu = v;
         nbAnts = f;
@@ -53,6 +50,7 @@ public class SearchEngine extends Thread implements com.marsouin.constants.Color
         pheromoneAmount = p;
         evapCoef = c;
         prog = pm;
+        team = new ArrayList<>();
     }
 
     @Override
@@ -71,14 +69,10 @@ public class SearchEngine extends Thread implements com.marsouin.constants.Color
                         maData.getC(i, j).resetPheromone(nbAnts, nbSpecies);
                     }
                 }
-
-                reInit();
                 setMaCarte(maData);
 
                 vortX = maData.getCollLoop();
                 metaVortX = maData.getVortexAnt();
-
-                team = new ArrayList<>();
                 for (int i = 0; i < nbSpecies; i++) {
                     team.add(new Ant[nbAnts]);
                 }
@@ -94,8 +88,6 @@ public class SearchEngine extends Thread implements com.marsouin.constants.Color
                         ((Ant[]) (team.get(i)))[j] = (new Ant(this, b, rdGen.nextInt(getMaCarte().getXSize()), rdGen.nextInt(getMaCarte().getYSize()), i, j, pheromoneAmount, rdGen));
                     }
                 }
-
-                SearchEngine.status = 0;
 
                 //System.out.println("Moteur fourmi "+nbGenerations+" generations");
                 for (int i = 0; i < nbGenerations; i++) {
@@ -116,10 +108,6 @@ public class SearchEngine extends Thread implements com.marsouin.constants.Color
                 }
 
                 creationMetaVortex();
-
-                team = null;
-                status = 100;
-                System.gc();
             }
         }
         tmp = null;
@@ -153,10 +141,6 @@ public class SearchEngine extends Thread implements com.marsouin.constants.Color
                 getMaCarte().getC(i, j).evaporePheromone(evapCoef);
             }
         }
-    }
-
-    public void reInit() {
-        SearchEngine.status = 0;
     }
 
     private void creationMetaVortex() {

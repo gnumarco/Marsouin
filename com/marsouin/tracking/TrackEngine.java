@@ -20,7 +20,6 @@ import com.marsouin.data.BatchDataMap;
 import com.marsouin.data.WriteTextFile;
 import com.marsouin.data.VortexAnt;
 import com.marsouin.constants.Tracking;
-import com.marsouin.visu.Memory;
 import java.io.File;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;

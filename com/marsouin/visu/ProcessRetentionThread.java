@@ -29,7 +29,7 @@ public class ProcessRetentionThread extends Thread{
     private int[][][] degrade = null;
     private double[][] retention = null;
     boolean clockwize = false;
-    /** Creates a new instance of ProcessRetentionThread */
+
     public ProcessRetentionThread(Memory m, int[][][] d, double[][] r, int i, javax.swing.ProgressMonitor p, boolean clock) {
         mem = m;
         degrade = d;
