@@ -24,6 +24,11 @@ import es.gpc.gp.ec.gp.GPProblem;
 import es.gpc.gp.ec.gp.GPIndividual;
 import es.gpc.gp.ec.Individual;
 import es.gpc.gp.ec.EvolutionState;
+import es.gpc.gp.ec.app.control.func.RegERC;
+import es.gpc.gp.ec.gp.GPFunctionSet;
+import es.gpc.gp.ec.gp.GPInitializer;
+import es.gpc.gp.ec.gp.GPNode;
+import es.gpc.gp.ec.gp.GPTree;
 import es.gpc.utils.Memory;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -131,5 +136,93 @@ public class Control extends GPProblem{
             f.hits = hits;
             //ind.evaluated = true;
         }
+    }
+    
+    public void simplifyTrees(final EvolutionState state,
+            final Individual ind,
+            final int subpopulation,
+            final int threadnum) {
+
+        // loop on all the trees (we usually only have 1)
+        for (GPTree tree : ((GPIndividual) ind).trees) {
+            if (tree.child.expectedChildren() > 0) {
+                //Retrieving the ERC "factory" --> Ugly. to test!!!!!!!
+                //  Retrieveing the initializer and the functionset to be able to create new ERCs 
+                GPInitializer initializer = ((GPInitializer) state.initializer);
+                GPFunctionSet set = tree.constraints(initializer).functionset;
+                int index = 0, index2 = 0;
+                int i = 0;
+                for (GPNode[] tab : set.terminals) {
+                    int j = 0;
+                    for (GPNode gpn : tab) {
+                        //state.output.message(((GPNode) gpn).name());
+                        if (((GPNode) gpn).name().equalsIgnoreCase("ERC")) {
+                            index = i;
+                            index2 = j;
+                        }
+                        j++;
+                    }
+                    i++;
+                }
+                RegERC ERCFact = (RegERC) set.terminals[index][index2];
+                // Here we want to go down the tree and see if we can simplify 
+                //state.output.message("Entering Constant simplification for individual ".concat(tree.child.makeLispTree()));
+                simplifyTree(state, tree.child, subpopulation, threadnum, tree, (byte) 0, ERCFact);
+                //state.output.message("Simplified individual: ".concat(tree.child.makeLispTree()));
+            }
+        }
+
+    }
+
+    public void simplifyTree(final EvolutionState state,
+            final GPNode n,
+            final int subpopulation,
+            final int threadnum, GPTree tree, byte position, RegERC fact) {
+
+        ControlData inputData = (ControlData) (this.input);
+        GPNode node = n;
+        // We want to test if all the children of the node are ERCs
+        boolean allERC = true;
+        for (GPNode nd : node.children) {
+            if (!nd.name().equalsIgnoreCase("ERC")) {
+                allERC = false;
+            }
+        }
+
+        // Here starts the simplification. We will go up the Tree as long as we have nodes with all ERC children
+        while (allERC) {
+
+            //simplify
+            //state.output.message("Simplifying: ".concat(node.toString()));
+            // We calculate the value of the subtree
+            node.eval(state, threadnum, inputData, stack, null, this);
+            // Now we will replace this subtree by an ERC of the same value
+
+            GPNode newERC = fact.lightClone();
+            newERC.resetNode(state, threadnum);
+            ((RegERC) newERC).value = inputData.x;
+            newERC.argposition = position;
+            node.replaceWithNoChildren(newERC);
+            if (!(node.parent instanceof GPNode)) {
+                allERC = false;
+            } else {
+                node = (GPNode) node.parent;
+                allERC = true;
+                for (GPNode nd : node.children) {
+                    if (!nd.name().equalsIgnoreCase("ERC")) {
+                        allERC = false;
+                    }
+                }
+            }
+
+        }
+
+        // Lets see the children
+        for (byte i = 0; i < node.children.length; i++) {
+            if (node.children[i].expectedChildren() > 0) {
+                simplifyTree(state, node.children[i], subpopulation, threadnum, tree, i, fact);
+            }
+        }
+
     }
 }

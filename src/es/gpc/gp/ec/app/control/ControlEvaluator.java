@@ -21,12 +21,10 @@ package es.gpc.gp.ec.app.control;
 import es.gpc.gp.ec.util.Parameter;
 import es.gpc.gp.ec.util.ThreadPool;
 import es.gpc.gp.ec.simple.SimpleProblemForm;
-import es.gpc.gp.ec.Population;
 import es.gpc.gp.ec.Evaluator;
 import es.gpc.gp.ec.Individual;
 import es.gpc.gp.ec.Subpopulation;
 import es.gpc.gp.ec.EvolutionState;
-import es.gpc.gp.ec.Fitness;
 
 /* 
  * SimpleEvaluator.java
@@ -147,7 +145,7 @@ public class ControlEvaluator extends Evaluator {
                 from[i] = 0;
             }
 
-            SimpleProblemForm prob = null;
+            SimpleProblemForm prob;
             if (cloneProblem) {
                 prob = (SimpleProblemForm) (p_problem.clone());
             } else {
@@ -161,11 +159,11 @@ public class ControlEvaluator extends Evaluator {
                 run.threadnum = i;
                 run.state = state;
                 run.prob = (SimpleProblemForm) (p_problem.clone());
-                threads[i] = pool.startThread("ECJ Evaluation Thread " + i, run);
+                threads[i] = pool.startThread("GP-Control Evaluation Thread " + i, run);
             }
             // join
-            for (int i = 0; i < threads.length; i++) {
-                pool.joinAndReturn(threads[i]);
+            for (Thread thread : threads) {
+                pool.joinAndReturn(thread);
             }
         }
     }
@@ -174,11 +172,14 @@ public class ControlEvaluator extends Evaluator {
      * The SimpleEvaluator determines that a run is complete by asking each
      * individual in each population if he's optimal; if he finds an individual
      * somewhere that's optimal, he signals that the run is complete.
+     * @param state
+     * @return 
      */
+    @Override
     public boolean runComplete(final EvolutionState state) {
-        for (int x = 0; x < state.population.subpops.length; x++) {
-            for (int y = 0; y < state.population.subpops[x].individuals.length; y++) {
-                if (state.population.subpops[x].individuals[y].fitness.isIdealFitness()) {
+        for (Subpopulation subpop : state.population.subpops) {
+            for (Individual individual : subpop.individuals) {
+                if (individual.fitness.isIdealFitness()) {
                     return true;
                 }
             }
@@ -191,6 +192,11 @@ public class ControlEvaluator extends Evaluator {
      * of individuals in a subpopulation for a given thread. Although this
      * method is declared public (for the benefit of a private helper class in
      * this file), you should not call it.
+     * @param state
+     * @param numinds
+     * @param from
+     * @param threadnum
+     * @param p
      */
     protected void evalPopChunk(EvolutionState state, int[] numinds, int[] from,
             int threadnum, SimpleProblemForm p) {
@@ -205,6 +211,7 @@ public class ControlEvaluator extends Evaluator {
             int upperbound = fp + numinds[pop];
             Individual[] inds = subpops[pop].individuals;
             for (int x = fp; x < upperbound; x++) {
+                ((es.gpc.gp.ec.app.control.Control) p).simplifyTrees(state, state.population.subpops[pop].individuals[x], pop, threadnum);
                 p.evaluate(state, inds[x], pop, threadnum);
             }
         }
@@ -238,6 +245,7 @@ public class ControlEvaluator extends Evaluator {
         public EvolutionState state;
         public SimpleProblemForm prob = null;
 
+        @Override
         public void run() {
             Subpopulation[] subpops = state.population.subpops;
 

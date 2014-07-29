@@ -137,7 +137,9 @@ public class ADF extends GPNode
         return (associatedTree==adf.associatedTree && name.equals(adf.name));
         }
 
-    /** Checks type-compatibility constraints between the ADF, its argument terminals, and the tree type of its associated tree, and also checks to make sure the tree exists, there aren't invalid argument terminals in it, and there are sufficient argument terminals (a warning).  Whew! */
+    /** Checks type-compatibility constraints between the ADF, its argument terminals, and the tree type of its associated tree, and also checks to make sure the tree exists, there aren't invalid argument terminals in it, and there are sufficient argument terminals (a warning).  Whew!
+     * @param tree */
+    @Override
     public void checkConstraints(final EvolutionState state,
         final int tree,
         final GPIndividual typicalIndividual,
