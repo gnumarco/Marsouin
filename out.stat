@@ -1,0 +1,87 @@
+
+Generation: 0
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.0 Adjusted=1.0 Hits=0
+Tree 0:
+ (cos (ln 0.049))
+
+Generation: 1
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.0 Adjusted=1.0 Hits=0
+Tree 0:
+ (ln 0.049)
+
+Generation: 2
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.0 Adjusted=1.0 Hits=0
+Tree 0:
+ (ln 0.049)
+
+Generation: 3
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.0 Adjusted=1.0 Hits=0
+Tree 0:
+ (ln 0.049)
+
+Generation: 4
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.0 Adjusted=1.0 Hits=0
+Tree 0:
+ (ln 0.049)
+
+Generation: 5
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.0 Adjusted=1.0 Hits=0
+Tree 0:
+ (ln 0.049)
+
+Generation: 6
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.0 Adjusted=1.0 Hits=0
+Tree 0:
+ (ln 0.049)
+
+Generation: 7
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.0 Adjusted=1.0 Hits=0
+Tree 0:
+ (ln 0.049)
+
+Generation: 8
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.0 Adjusted=1.0 Hits=0
+Tree 0:
+ (ln 0.049)
+
+Generation: 9
+Best Individual:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.0 Adjusted=1.0 Hits=0
+Tree 0:
+ (ln 0.049)
+
+Best Individual of Run:
+Subpopulation 0:
+Evaluated: false
+Fitness: Standardized=0.0 Adjusted=1.0 Hits=0
+Tree 0:
+ (cos (ln 0.049))
